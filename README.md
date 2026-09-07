@@ -1,23 +1,47 @@
 # Tidence — design workspace
 
-Working files for Tidence's brand and landing page design.
+`app/` is the live Vite + React source. `logo/` and `landing/` are the
+earlier static HTML explorations, kept as design history/reference.
 
 ## Structure
 
 ```
-logo/
+app/                 Vite + React app (current source of truth)
+  src/
+    components/
+      WaveLogo.jsx    the tilted wave mark, color as a prop
+      Nav.jsx         logo left, plain nav elements from center to right
+      Hero.jsx        photo-background hero, English copy, left-aligned
+      Services.jsx    3-column services strip
+      Footer.jsx
+    App.jsx           assembles Hero + Services + Footer
+    index.css         CSS variables for the ocean palette
+  public/
+    wave-sunset.jpg   hero background photo
+
+logo/                 reference only
   tidence_logo_v5_oneline.html   original wave mark, orange accent
   tidence_logo_v6_ocean.html     same mark, ocean color palette
 
-landing/
-  tidence_landing_v1_home.html          homepage: nav, hero, services strip
-  tidence_landing_v2_hero_inspired.html hero variant, dark background, split-color headline
-  tidence_landing_v3_hero_photo.html    current hero: photo background, left-aligned copy, nav from center-right
-  assets/
-    wave-sunset.jpg               hero background photo
+landing/              reference only
+  tidence_landing_v1_home.html
+  tidence_landing_v2_hero_inspired.html
+  tidence_landing_v3_hero_photo.html
+  assets/wave-sunset.jpg
 ```
 
-Each file is a standalone HTML snippet (Google Fonts link + a wrapper `div`) meant to be dropped into a page, not a full document.
+## Running the app
+
+```
+cd app
+npm install
+npm run dev
+```
+
+Note: if `npm install` skips `vite` itself, it's because `NODE_ENV=production`
+is set in this shell, which makes npm omit devDependencies by default.
+`app/.npmrc` sets `omit=` to override this, but if you ever see
+"'vite' is not recognized", run `npm install --include=dev` once.
 
 ## Brand
 

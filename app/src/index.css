@@ -1,0 +1,23 @@
+:root {
+  --foam: #F5F8F7;
+  --teal: #2E8B93;
+  --navy: #123240;
+  --slate: #7C99A0;
+  --line: #D8E5E3;
+  --bg: #FFFFFF;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--navy);
+  background: var(--bg);
+}
+
+a {
+  color: inherit;
+}
