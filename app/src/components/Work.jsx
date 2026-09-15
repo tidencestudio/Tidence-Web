@@ -58,10 +58,10 @@ const projects = [
 const linkStyle = {
   fontSize: 11,
   letterSpacing: 1,
-  color: 'var(--teal)',
+  color: 'var(--navy)',
   textDecoration: 'none',
-  borderBottom: '1px solid var(--line)',
-  paddingBottom: 2,
+  border: '1px solid var(--navy)',
+  padding: '7px 13px',
 };
 
 export default function Work() {
@@ -121,7 +121,6 @@ export default function Work() {
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                background: 'var(--bg)',
                 padding: '1.75rem',
               }}
             >
@@ -150,7 +149,7 @@ export default function Work() {
                 style={{
                   fontSize: 14,
                   lineHeight: 1.65,
-                  color: 'var(--slate)',
+                  color: 'var(--navy)',
                   margin: '0 0 1.25rem',
                 }}
               >
@@ -171,7 +170,7 @@ export default function Work() {
                     style={{
                       fontSize: 11,
                       letterSpacing: 0.5,
-                      color: 'var(--navy)',
+                      color: 'var(--slate)',
                       border: '1px solid var(--line)',
                       padding: '3px 9px',
                     }}
@@ -186,11 +185,11 @@ export default function Work() {
                   marginTop: 'auto',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '1.25rem',
+                  gap: '0.6rem',
                 }}
               >
                 {p.live && (
-                  <a
+                  <a className="cardbtn"
                     href={p.live}
                     target="_blank"
                     rel="noreferrer noopener"
@@ -200,6 +199,7 @@ export default function Work() {
                   </a>
                 )}
                 <a
+                  className="cardbtn"
                   href={p.repo}
                   target="_blank"
                   rel="noreferrer noopener"

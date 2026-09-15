@@ -89,7 +89,6 @@ export default function Contact() {
             <Reveal key={p.name} delay={i * 120}>
             <article
               className="card"
-              style={{ background: 'var(--bg)' }}
             >
               <CardGlow />
               <SiteEmbed src={p.site} label={p.siteLabel} />
@@ -130,7 +129,7 @@ export default function Contact() {
                   style={{
                     fontSize: 14,
                     lineHeight: 1.65,
-                    color: 'var(--slate)',
+                    color: 'var(--navy)',
                     margin: '0 0 1.5rem',
                   }}
                 >

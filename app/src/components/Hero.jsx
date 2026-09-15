@@ -1,6 +1,18 @@
+import { useRef } from 'react';
 import Nav from './Nav';
+import useScrollEffect from './useScrollEffect';
 
 export default function Hero() {
+  const parallaxRef = useRef(null);
+
+  useScrollEffect(() => {
+    const el = parallaxRef.current;
+    if (!el) return;
+    // Only the first viewport of scroll matters — past that the hero is gone.
+    const travel = Math.min(window.scrollY, window.innerHeight) * 0.22;
+    el.style.transform = `translate3d(0, ${travel.toFixed(1)}px, 0)`;
+  });
+
   return (
     <div
       className="hero"
@@ -10,9 +22,12 @@ export default function Hero() {
         color: '#F5F8F7',
       }}
     >
-      {/* The photo lives on its own layer so it can drift without moving
-          the copy on top of it. */}
-      <div className="hero-bg" aria-hidden="true" />
+      {/* The photo sits on its own layers so it can move without taking the
+          copy with it: the outer one is driven by scroll for parallax, the
+          inner one carries the slow idle drift. */}
+      <div className="hero-parallax" ref={parallaxRef} aria-hidden="true">
+        <div className="hero-bg" />
+      </div>
 
       <Nav />
 

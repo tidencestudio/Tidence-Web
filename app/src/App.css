@@ -11,6 +11,15 @@
   min-height: 100svh;
 }
 
+/* Scroll-driven parallax layer. The extra 25% top and bottom is the travel
+   budget: the photo lags the page by 0.22 of scroll for at most one viewport,
+   so it can never expose an edge. */
+.hero-parallax {
+  position: absolute;
+  inset: -25% 0;
+  will-change: transform;
+}
+
 /* Hero photo layer. Separate from .hero so it can drift under the copy. */
 .hero-bg {
   position: absolute;
@@ -123,7 +132,6 @@ html {
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 18px 40px -24px rgba(18, 50, 64, 0.45);
 }
 
 /* Where the glow runs, the shader draws the border, so drop the CSS one.
@@ -205,4 +213,64 @@ html {
   inset: 0;
   pointer-events: none;
   z-index: 1;
+}
+
+/* ---- Scroll phrases ---------------------------------------------------- */
+
+.phrase {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 62vh;
+  padding: 4rem clamp(1.25rem, 5vw, 3rem);
+  overflow: hidden;
+}
+
+.phrase-inner {
+  max-width: 880px;
+  text-align: center;
+  will-change: transform, opacity;
+}
+
+.phrase-eyebrow {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--teal);
+  margin-bottom: 1.25rem;
+}
+
+.phrase-text {
+  margin: 0;
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: clamp(28px, 5vw, 50px);
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  color: var(--navy);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Nothing drives these without the scroll handler, so pin them visible. */
+  .phrase-inner {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Card buttons. The card itself is hollow, so these and the edge carry it. */
+.cardbtn {
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.cardbtn:hover {
+  background: var(--navy);
+  color: var(--foam) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cardbtn {
+    transition: none;
+  }
 }

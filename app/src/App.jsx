@@ -1,4 +1,5 @@
 import Hero from './components/Hero';
+import ScrollPhrase from './components/ScrollPhrase';
 import Work from './components/Work';
 import Contact from './components/Contact';
 import GradualBlur from './components/GradualBlur';
@@ -8,7 +9,17 @@ function App() {
   return (
     <>
       <Hero />
+
+      <ScrollPhrase eyebrow="OUR METHOD">
+        Here is the work that shows how we build.
+      </ScrollPhrase>
+
       <Work />
+
+      <ScrollPhrase eyebrow="THE TEAM">
+        Two people build all of it. You talk to both.
+      </ScrollPhrase>
+
       <Contact />
 
       {/* Fixed bottom blur, same configuration as the portfolio. */}
