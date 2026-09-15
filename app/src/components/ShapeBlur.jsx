@@ -117,16 +117,13 @@ void main() {
             vec2 b = vec2(0.5 * aspect, 0.5) * size;
             float r = min(roundness, min(b.x, b.y));
             vec2 q = abs(p) - b + r;
-            float d = min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
-
-            // Keep the cursor response on the border. Feeding sdfCircle in as
-            // the smoothstep width (as the stock path does) widens the band
-            // until it fills a disc inward from the edge — fine over a dark
-            // demo, a grey smear over a white card. Instead: a constant thin
-            // stroke, plus a wider stroke gated by proximity to the cursor.
-            float base = strokeAA(d, 0.0, borderSize, 0.004);
-            float glow = strokeAA(d, 0.0, borderSize * 7.0, 0.02) * sdfCircle;
-            sdf = clamp(base * 0.5 + glow, 0.0, 1.0);
+            // x4.2 matches the scale sdRoundRect works in, so borderSize and
+            // the cursor falloff keep their stock meaning. The stroke is then
+            // built exactly as upstream: sdfCircle widens the smoothstep band
+            // until its two edges cancel, disintegrating the border near the
+            // cursor.
+            float d = (min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r) * 4.2;
+            sdf = strokeAA(d, 0.0, borderSize, sdfCircle) * 4.0;
         } else {
             sdf = sdRoundRect(st, vec2(size), roundness);
             sdf = strokeAA(sdf, 0.0, borderSize, sdfCircle) * 4.0;
@@ -156,8 +153,8 @@ void main() {
  *    which is invisible against this site's white cards.
  *  - `fitBounds` prop. The stock VAR 0 path draws a centred square, so on a
  *    non-square card it floats inside the bounds instead of tracing them. It
- *    also keeps the cursor response confined to the border rather than
- *    letting it flood inward — see the comment in the shader.
+ *    The stock cursor behaviour — the border disintegrating where the
+ *    pointer is near — is preserved.
  *  - `paused` prop. Each instance owns a WebGLRenderer and a rAF loop, and a
  *    browser only grants a page so many live WebGL contexts, so cards off
  *    screen stop rendering and give theirs back.
@@ -187,8 +184,12 @@ const ShapeBlur = ({
     let time = 0,
       lastTime = 0;
 
-    const vMouse = new THREE.Vector2();
-    const vMouseDamp = new THREE.Vector2();
+    // (0,0) is the element's top-left, so an untouched mouse would render the
+    // effect parked in that corner on every card. Start far outside instead.
+    const IDLE = 1e5;
+    let hasMoved = false;
+    const vMouse = new THREE.Vector2(IDLE, IDLE);
+    const vMouseDamp = new THREE.Vector2(IDLE, IDLE);
     const vResolution = new THREE.Vector2();
 
     let w = 1,
@@ -229,6 +230,11 @@ const ShapeBlur = ({
     const onPointerMove = e => {
       const rect = mount.getBoundingClientRect();
       vMouse.set(e.clientX - rect.left, e.clientY - rect.top);
+      if (!hasMoved) {
+        // Jump to the real position rather than damping in from far away.
+        hasMoved = true;
+        vMouseDamp.copy(vMouse);
+      }
     };
 
     document.addEventListener('mousemove', onPointerMove);

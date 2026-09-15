@@ -20,7 +20,7 @@ const wantsGlow = () =>
  * these per page, and the ones past the cap get dropped, which kills the
  * effect on arbitrary cards rather than the ones you cannot see.
  */
-export default function CardGlow({ color = '#2E8B93' }) {
+export default function CardGlow({ color = '#D8E5E3' }) {
   const ref = useRef(null);
   const [nearViewport, setNearViewport] = useState(false);
   const [enabled] = useState(wantsGlow);
@@ -31,7 +31,7 @@ export default function CardGlow({ color = '#2E8B93' }) {
 
     const observer = new IntersectionObserver(
       ([entry]) => setNearViewport(entry.isIntersecting),
-      { rootMargin: '200px' }
+      { rootMargin: '400px' }
     );
 
     observer.observe(el);
@@ -51,10 +51,10 @@ export default function CardGlow({ color = '#2E8B93' }) {
           }
           fitBounds
           shapeSize={0.98}
-          roundness={0.03}
-          borderSize={0.014}
-          circleSize={0.35}
-          circleEdge={0.3}
+          roundness={0.012}
+          borderSize={0.02}
+          circleSize={0.1}
+          circleEdge={0.5}
           color={color}
         />
         </Suspense>
