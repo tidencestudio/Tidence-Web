@@ -1,3 +1,4 @@
+import CardGlow from './CardGlow';
 import Reveal from './Reveal';
 
 const projects = [
@@ -124,6 +125,7 @@ export default function Work() {
                 padding: '1.75rem',
               }}
             >
+              <CardGlow />
               <div
                 style={{
                   fontSize: 11,

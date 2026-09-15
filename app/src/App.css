@@ -112,6 +112,7 @@ html {
 
 /* Cards lift toward the reader on hover. */
 .card {
+  position: relative;
   height: 100%;
   border: 1px solid var(--line);
   transition:
@@ -188,4 +189,13 @@ html {
   .cta:hover .cta-arrow {
     transform: none;
   }
+}
+
+/* ShapeBlur edge glow, layered over the card and inert to the pointer. */
+.card-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.9;
 }

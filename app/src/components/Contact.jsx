@@ -1,3 +1,4 @@
+import CardGlow from './CardGlow';
 import Reveal from './Reveal';
 import SiteEmbed from './SiteEmbed';
 
@@ -90,6 +91,7 @@ export default function Contact() {
               className="card"
               style={{ background: 'var(--bg)' }}
             >
+              <CardGlow />
               <SiteEmbed src={p.site} label={p.siteLabel} />
 
               <div style={{ padding: '1.75rem' }}>
