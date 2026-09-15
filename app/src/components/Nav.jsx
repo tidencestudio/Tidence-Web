@@ -1,6 +1,9 @@
 import WaveLogo from './WaveLogo';
 
-const links = ['SERVICES', 'WORK', 'INFO', 'CONTACT'];
+const links = [
+  ['WORK', '#work'],
+  ['CONTACT', '#contact'],
+];
 
 export default function Nav({ textColor = '#F5F8F7' }) {
   return (
@@ -34,24 +37,25 @@ export default function Nav({ textColor = '#F5F8F7' }) {
         style={{
           position: 'absolute',
           top: '2.15rem',
-          left: '50%',
           right: '3rem',
           display: 'flex',
-          justifyContent: 'space-between',
+          gap: '2.5rem',
           fontSize: 12,
           letterSpacing: 1,
           zIndex: 2,
         }}
       >
-        {links.map((label) => (
-          <span
+        {links.map(([label, href]) => (
+          <a
             key={label}
+            href={href}
             style={{
               color: label === 'CONTACT' ? textColor : `${textColor}bf`,
+              textDecoration: 'none',
             }}
           >
             {label}
-          </span>
+          </a>
         ))}
       </div>
     </>
