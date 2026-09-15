@@ -8,10 +8,12 @@ export default function Hero() {
         position: 'relative',
         overflow: 'hidden',
         color: '#F5F8F7',
-        background:
-          "linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.25) 42%, rgba(0,0,0,0) 62%), url('/wave-sunset.jpg') center/cover no-repeat",
       }}
     >
+      {/* The photo lives on its own layer so it can drift without moving
+          the copy on top of it. */}
+      <div className="hero-bg" aria-hidden="true" />
+
       <Nav />
 
       <div
@@ -25,6 +27,7 @@ export default function Hero() {
         }}
       >
         <h1
+          className="hero-enter"
           style={{
             fontFamily: "'Fraunces', serif",
             fontWeight: 500,
@@ -32,6 +35,7 @@ export default function Hero() {
             lineHeight: 1.08,
             letterSpacing: -1,
             margin: '0 0 6px',
+            animationDelay: '0.1s',
           }}
         >
           Web design and
@@ -41,6 +45,7 @@ export default function Hero() {
           businesses that grow.
         </h1>
         <div
+          className="hero-enter"
           style={{
             fontFamily: "'Fraunces', serif",
             fontWeight: 500,
@@ -48,22 +53,26 @@ export default function Hero() {
             color: '#2E8B93',
             letterSpacing: -1,
             margin: '0 0 24px',
+            animationDelay: '0.25s',
           }}
         >
           Without borders.
         </div>
         <a
           href="#work"
+          className="hero-enter cta"
           style={{
+            display: 'inline-block',
             fontSize: 13,
             letterSpacing: 0.5,
             color: '#F5F8F7',
             borderBottom: '1px solid #2E8B93',
             paddingBottom: 2,
             textDecoration: 'none',
+            animationDelay: '0.4s',
           }}
         >
-          See our work →
+          See our work <span className="cta-arrow">→</span>
         </a>
       </div>
     </div>

@@ -1,3 +1,5 @@
+import Reveal from './Reveal';
+
 const projects = [
   {
     kind: '2D ARCADE GAME',
@@ -68,6 +70,7 @@ export default function Work() {
       style={{ background: 'var(--foam)', padding: '6rem clamp(1.25rem, 5vw, 3rem)' }}
     >
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <Reveal>
         <div
           style={{
             fontSize: 13,
@@ -101,6 +104,7 @@ export default function Work() {
           Games, platforms, bots and internal tools — built across the front
           end, the back end and the infrastructure in between.
         </p>
+        </Reveal>
 
         <div
           style={{
@@ -109,14 +113,14 @@ export default function Work() {
             gap: '1.5rem',
           }}
         >
-          {projects.map((p) => (
+          {projects.map((p, i) => (
+            <Reveal key={p.name} delay={i * 80}>
             <article
-              key={p.name}
+              className="card"
               style={{
                 display: 'flex',
                 flexDirection: 'column',
                 background: 'var(--bg)',
-                border: '1px solid var(--line)',
                 padding: '1.75rem',
               }}
             >
@@ -213,6 +217,7 @@ export default function Work() {
                 </span>
               </div>
             </article>
+            </Reveal>
           ))}
         </div>
       </div>

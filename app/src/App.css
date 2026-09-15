@@ -11,6 +11,26 @@
   min-height: 100svh;
 }
 
+/* Hero photo layer. Separate from .hero so it can drift under the copy. */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.25) 42%, rgba(0, 0, 0, 0) 62%),
+    url('/wave-sunset.jpg') center / cover no-repeat;
+  animation: hero-drift 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes hero-drift {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
 /* Nav. The four links sit beside the logo on desktop; below ~720px they
    drop to their own row so SERVICES…CONTACT stop colliding with the mark. */
 .hero-brand {
@@ -51,5 +71,121 @@
     right: 1.25rem;
     font-size: 10px;
     letter-spacing: 0.5px;
+  }
+}
+
+/* ---- Motion ------------------------------------------------------------ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Scroll reveal, driven by Reveal.jsx toggling .reveal-in. */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero copy rises in on load; each element sets its own animation-delay. */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hero-enter {
+  animation: hero-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Cards lift toward the reader on hover. */
+.card {
+  height: 100%;
+  border: 1px solid var(--line);
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--teal);
+  box-shadow: 0 18px 40px -24px rgba(18, 50, 64, 0.45);
+}
+
+/* Nav links grow an underline from the left. */
+.hero-navlinks a {
+  position: relative;
+}
+
+.hero-navlinks a:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 1px;
+  background: var(--teal);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-navlinks a:hover:after {
+  transform: scaleX(1);
+}
+
+/* Hero CTA arrow nudges right on hover. */
+.cta-arrow {
+  display: inline-block;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cta:hover .cta-arrow {
+  transform: translateX(5px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal,
+  .reveal-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .hero-enter,
+  .hero-bg {
+    animation: none;
+  }
+
+  .card,
+  .cta-arrow,
+  .hero-navlinks a:after {
+    transition: none;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+
+  .cta:hover .cta-arrow {
+    transform: none;
   }
 }

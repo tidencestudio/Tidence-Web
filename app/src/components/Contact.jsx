@@ -1,3 +1,4 @@
+import Reveal from './Reveal';
 import SiteEmbed from './SiteEmbed';
 
 const people = [
@@ -40,6 +41,7 @@ export default function Contact() {
   return (
     <section id="contact" style={{ padding: '6rem clamp(1.25rem, 5vw, 3rem) 7rem' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <Reveal>
         <div
           style={{
             fontSize: 13,
@@ -73,6 +75,7 @@ export default function Contact() {
           No account managers in between — you work directly with the two of us.
           Both sites below are live.
         </p>
+        </Reveal>
 
         <div
           style={{
@@ -81,10 +84,11 @@ export default function Contact() {
             gap: '1.5rem',
           }}
         >
-          {people.map((p) => (
+          {people.map((p, i) => (
+            <Reveal key={p.name} delay={i * 120}>
             <article
-              key={p.name}
-              style={{ border: '1px solid var(--line)', background: 'var(--bg)' }}
+              className="card"
+              style={{ background: 'var(--bg)' }}
             >
               <SiteEmbed src={p.site} label={p.siteLabel} />
 
@@ -225,6 +229,7 @@ export default function Contact() {
                 </ul>
               </div>
             </article>
+            </Reveal>
           ))}
         </div>
       </div>
