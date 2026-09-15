@@ -3,3 +3,53 @@
   padding: 0;
   max-width: none;
 }
+
+/* Fullscreen hero. svh keeps mobile browser chrome from pushing the
+   section taller than the visible viewport; vh is the fallback. */
+.hero {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* Nav. The four links sit beside the logo on desktop; below ~720px they
+   drop to their own row so SERVICES…CONTACT stop colliding with the mark. */
+.hero-brand {
+  position: absolute;
+  top: 2rem;
+  left: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 2;
+}
+
+.hero-navlinks {
+  position: absolute;
+  top: 2.15rem;
+  left: 50%;
+  right: 3rem;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  letter-spacing: 1px;
+  z-index: 2;
+}
+
+.hero-navlinks a {
+  text-decoration: none;
+}
+
+@media (max-width: 720px) {
+  .hero-brand {
+    top: 1.5rem;
+    left: 1.25rem;
+  }
+
+  .hero-navlinks {
+    top: 4.5rem;
+    left: 1.25rem;
+    right: 1.25rem;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+  }
+}

@@ -3,9 +3,9 @@ import Nav from './Nav';
 export default function Hero() {
   return (
     <div
+      className="hero"
       style={{
         position: 'relative',
-        minHeight: 640,
         overflow: 'hidden',
         color: '#F5F8F7',
         background:
@@ -17,7 +17,8 @@ export default function Hero() {
       <div
         style={{
           position: 'absolute',
-          left: '3rem',
+          left: 'clamp(1.25rem, 5vw, 3rem)',
+          right: 'clamp(1.25rem, 5vw, 3rem)',
           bottom: '4rem',
           maxWidth: 520,
           zIndex: 2,
@@ -27,7 +28,7 @@ export default function Hero() {
           style={{
             fontFamily: "'Fraunces', serif",
             fontWeight: 500,
-            fontSize: 52,
+            fontSize: 'clamp(32px, 7vw, 52px)',
             lineHeight: 1.08,
             letterSpacing: -1,
             margin: '0 0 6px',
@@ -43,7 +44,7 @@ export default function Hero() {
           style={{
             fontFamily: "'Fraunces', serif",
             fontWeight: 500,
-            fontSize: 52,
+            fontSize: 'clamp(32px, 7vw, 52px)',
             color: '#2E8B93',
             letterSpacing: -1,
             margin: '0 0 24px',

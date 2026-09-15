@@ -1,24 +1,18 @@
 import WaveLogo from './WaveLogo';
 
+// SERVICES and INFO have no section to point at yet, so they render as
+// plain labels rather than links that go nowhere.
 const links = [
+  ['SERVICES', null],
   ['WORK', '#work'],
+  ['INFO', null],
   ['CONTACT', '#contact'],
 ];
 
 export default function Nav({ textColor = '#F5F8F7' }) {
   return (
     <>
-      <div
-        style={{
-          position: 'absolute',
-          top: '2rem',
-          left: '3rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10,
-          zIndex: 2,
-        }}
-      >
+      <div className="hero-brand">
         <WaveLogo color="#2E8B93" />
         <span
           style={{
@@ -33,30 +27,19 @@ export default function Nav({ textColor = '#F5F8F7' }) {
         </span>
       </div>
 
-      <div
-        style={{
-          position: 'absolute',
-          top: '2.15rem',
-          right: '3rem',
-          display: 'flex',
-          gap: '2.5rem',
-          fontSize: 12,
-          letterSpacing: 1,
-          zIndex: 2,
-        }}
-      >
-        {links.map(([label, href]) => (
-          <a
-            key={label}
-            href={href}
-            style={{
-              color: label === 'CONTACT' ? textColor : `${textColor}bf`,
-              textDecoration: 'none',
-            }}
-          >
-            {label}
-          </a>
-        ))}
+      <div className="hero-navlinks">
+        {links.map(([label, href]) => {
+          const color = label === 'CONTACT' ? textColor : `${textColor}bf`;
+          return href ? (
+            <a key={label} href={href} style={{ color }}>
+              {label}
+            </a>
+          ) : (
+            <span key={label} style={{ color }}>
+              {label}
+            </span>
+          );
+        })}
       </div>
     </>
   );
