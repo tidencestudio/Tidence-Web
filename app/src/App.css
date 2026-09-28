@@ -3,3 +3,274 @@
   padding: 0;
   max-width: none;
 }
+
+/* Fullscreen hero. svh keeps mobile browser chrome from pushing the
+   section taller than the visible viewport; vh is the fallback. */
+.hero {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* Scroll-driven parallax layer. The extra 25% top and bottom is the travel
+   budget: the photo lags the page by 0.22 of scroll for at most one viewport,
+   so it can never expose an edge. */
+.hero-parallax {
+  position: absolute;
+  inset: -25% 0;
+  will-change: transform;
+}
+
+/* Hero photo layer. Separate from .hero so it can drift under the copy. */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.25) 42%, rgba(0, 0, 0, 0) 62%),
+    url('/wave-sunset.jpg') center / cover no-repeat;
+  animation: hero-drift 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes hero-drift {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+/* Nav. The four links sit beside the logo on desktop; below ~720px they
+   drop to their own row so SERVICES…CONTACT stop colliding with the mark. */
+.hero-brand {
+  position: absolute;
+  top: 2rem;
+  left: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 2;
+}
+
+.hero-navlinks {
+  position: absolute;
+  top: 2.15rem;
+  left: 50%;
+  right: 3rem;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  letter-spacing: 1px;
+  z-index: 2;
+}
+
+.hero-navlinks a {
+  text-decoration: none;
+}
+
+@media (max-width: 720px) {
+  .hero-brand {
+    top: 1.5rem;
+    left: 1.25rem;
+  }
+
+  .hero-navlinks {
+    top: 4.5rem;
+    left: 1.25rem;
+    right: 1.25rem;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+  }
+}
+
+/* ---- Motion ------------------------------------------------------------ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Scroll reveal, driven by Reveal.jsx toggling .reveal-in. */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero copy rises in on load; each element sets its own animation-delay. */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hero-enter {
+  animation: hero-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Cards lift toward the reader on hover. */
+.card {
+  position: relative;
+  height: 100%;
+  border: 1px solid var(--line);
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+/* Where the glow runs, the shader draws the border, so drop the CSS one.
+   This query mirrors wantsGlow() in CardGlow.jsx exactly — anywhere the
+   effect is not mounted (touch, reduced motion) the real border stays. */
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .card {
+    border-color: transparent;
+  }
+}
+
+/* Nav links grow an underline from the left. */
+.hero-navlinks a {
+  position: relative;
+}
+
+.hero-navlinks a:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 1px;
+  background: var(--teal);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-navlinks a:hover:after {
+  transform: scaleX(1);
+}
+
+/* Hero CTA arrow nudges right on hover. */
+.cta-arrow {
+  display: inline-block;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cta:hover .cta-arrow {
+  transform: translateX(5px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal,
+  .reveal-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .hero-enter,
+  .hero-bg {
+    animation: none;
+  }
+
+  .card,
+  .cta-arrow,
+  .hero-navlinks a:after {
+    transition: none;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+
+  .cta:hover .cta-arrow {
+    transform: none;
+  }
+}
+
+/* ShapeBlur edge glow, layered over the card and inert to the pointer. */
+.card-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ---- Scroll phrases ---------------------------------------------------- */
+
+.phrase {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 62vh;
+  padding: 4rem clamp(1.25rem, 5vw, 3rem);
+  overflow: hidden;
+}
+
+.phrase-inner {
+  max-width: 880px;
+  text-align: center;
+  will-change: transform, opacity;
+}
+
+.phrase-eyebrow {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--teal);
+  margin-bottom: 1.25rem;
+}
+
+.phrase-text {
+  margin: 0;
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: clamp(28px, 5vw, 50px);
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  color: var(--navy);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Nothing drives these without the scroll handler, so pin them visible. */
+  .phrase-inner {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Card buttons. The card itself is hollow, so these and the edge carry it. */
+.cardbtn {
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.cardbtn:hover {
+  background: var(--navy);
+  color: var(--foam) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cardbtn {
+    transition: none;
+  }
+}
