@@ -1,238 +1,224 @@
-import CardGlow from './CardGlow';
+import { useRef, useState } from 'react';
+import { ArrowUpRight, CircleNotch, Warning } from '@phosphor-icons/react';
 import Reveal from './Reveal';
-import SiteEmbed from './SiteEmbed';
+import { useT } from '../prefs/hooks';
 
-const people = [
-  {
-    name: 'Alexander Ross',
-    role: 'FOUNDER',
-    site: 'https://alexanderross.vercel.app',
-    siteLabel: 'alexanderross.vercel.app',
-    text: 'Web development, database architecture and pentesting. Builds the front end and keeps the security honest.',
-    focus: ['React', 'Vite', 'Python', 'PostgreSQL', 'Linux'],
-    meta: [
-      ['BASED', 'Student at ITESA'],
-      ['STATUS', 'Available for hire'],
-    ],
-    links: [
-      ['EMAIL', 'alexrosstrabajo@gmail.com', 'mailto:alexrosstrabajo@gmail.com'],
-      ['GITHUB', 'alexrosstrabajo-design', 'https://github.com/alexrosstrabajo-design'],
-      ['INSTAGRAM', '@alexanderross2312', 'https://instagram.com/alexanderross2312'],
-    ],
-  },
-  {
-    name: 'Bryan De Jesus',
-    role: 'CO-FOUNDER',
-    site: 'https://www.bryandejesusmejia.dev/en',
-    siteLabel: 'bryandejesusmejia.dev',
-    text: 'Backend developer building robust APIs and server-side systems — scalable architectures that move data and automate workflows.',
-    focus: ['Python', 'Node.js', 'REST APIs', 'PostgreSQL', 'Docker'],
-    meta: [
-      ['BASED', 'National District, DR'],
-      ['RESPONSE', 'Under 24 hours'],
-    ],
-    links: [
-      ['GITHUB', 'Bryan-De-Jesus-Mejia', 'https://github.com/Bryan-De-Jesus-Mejia'],
-      ['CONTACT', 'bryandejesusmejia.dev', 'https://www.bryandejesusmejia.dev/en#contact'],
-    ],
-  },
-];
+const STUDIO_EMAIL = 'alexrosstrabajo@gmail.com';
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+// Takes `t` so the messages follow the active language. Validation returns
+// dictionary paths' resolved strings, not keys, because they are rendered
+// straight into the field and into the summary.
+function validate({ name, email, brief }, t) {
+  const errors = {};
+  if (!name.trim()) errors.name = t('contact.errors.name');
+  if (!email.trim()) errors.email = t('contact.errors.emailMissing');
+  else if (!EMAIL_RE.test(email.trim())) errors.email = t('contact.errors.emailInvalid');
+  if (!brief.trim()) errors.brief = t('contact.errors.briefMissing');
+  else if (brief.trim().length < 20) errors.brief = t('contact.errors.briefShort');
+  return errors;
+}
+
+/**
+ * Full-width closing CTA with a real form. There is no backend, so a valid
+ * submission hands off to the reader's mail client with the message already
+ * written. Validation runs on blur and again on submit; errors sit below their
+ * field and are announced.
+ */
 export default function Contact() {
+  const t = useT();
+  const [values, setValues] = useState({ name: '', email: '', brief: '' });
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
+  const [status, setStatus] = useState('idle'); // idle | sending | sent
+  const summaryRef = useRef(null);
+
+  const set = (field) => (event) => {
+    const next = { ...values, [field]: event.target.value };
+    setValues(next);
+    if (touched[field]) setErrors(validate(next, t));
+  };
+
+  const blur = (field) => () => {
+    setTouched((t) => ({ ...t, [field]: true }));
+    setErrors(validate(values, t));
+  };
+
+  const submit = (event) => {
+    event.preventDefault();
+    const found = validate(values, t);
+    setErrors(found);
+    setTouched({ name: true, email: true, brief: true });
+
+    if (Object.keys(found).length > 0) {
+      // More than one error needs a summary to land on; a single error sends
+      // focus straight to the field that caused it.
+      requestAnimationFrame(() => {
+        if (Object.keys(found).length > 1) summaryRef.current?.focus();
+        else document.getElementById(Object.keys(found)[0])?.focus();
+      });
+      return;
+    }
+
+    setStatus('sending');
+    const subject = encodeURIComponent(
+      t('contact.subject').replace('{name}', values.name.trim())
+    );
+    const body = encodeURIComponent(`${values.brief.trim()}\n\n${values.name.trim()}\n${values.email.trim()}`);
+    window.location.href = `mailto:${STUDIO_EMAIL}?subject=${subject}&body=${body}`;
+    window.setTimeout(() => setStatus('sent'), 600);
+  };
+
+  const errorList = Object.entries(errors);
+  const showSummary = errorList.length > 1 && touched.name && touched.email && touched.brief;
+
   return (
-    <section id="contact" style={{ padding: '6rem clamp(1.25rem, 5vw, 3rem) 7rem' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+    <section className="section contact" id="contact">
+      <div className="container contact-inner">
         <Reveal>
-        <div
-          style={{
-            fontSize: 13,
-            letterSpacing: 1,
-            color: 'var(--teal)',
-            marginBottom: '0.75rem',
-          }}
-        >
-          CONTACT
-        </div>
-        <h2
-          style={{
-            fontFamily: "'Fraunces', serif",
-            fontWeight: 500,
-            fontSize: 38,
-            letterSpacing: -0.5,
-            margin: '0 0 0.75rem',
-          }}
-        >
-          Talk to the people who build it.
-        </h2>
-        <p
-          style={{
-            fontSize: 16,
-            lineHeight: 1.6,
-            color: 'var(--slate)',
-            maxWidth: 560,
-            margin: '0 0 3.5rem',
-          }}
-        >
-          No account managers in between — you work directly with the two of us.
-          Both sites below are live.
-        </p>
+          <h2 className="contact-head">{t('contact.title')}</h2>
+          <p className="lead contact-lead">{t('contact.lead')}</p>
         </Reveal>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(380px, 100%), 1fr))',
-            gap: '1.5rem',
-          }}
-        >
-          {people.map((p, i) => (
-            <Reveal key={p.name} delay={i * 120}>
-            <article
-              className="card"
-            >
-              <CardGlow />
-              <SiteEmbed src={p.site} label={p.siteLabel} />
-
-              <div style={{ padding: '1.75rem' }}>
+        <Reveal as="div" delay={90} className="contact-form-wrap">
+          {status === 'sent' ? (
+            <div className="form-done" role="status">
+              <h3>{t('contact.doneTitle')}</h3>
+              <p>
+                {t('contact.doneText')}{' '}
+                <a className="link" href={`mailto:${STUDIO_EMAIL}`}>
+                  {STUDIO_EMAIL}
+                </a>
+                .
+              </p>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={() => {
+                  setStatus('idle');
+                  setValues({ name: '', email: '', brief: '' });
+                  setTouched({});
+                  setErrors({});
+                }}
+              >
+                {t('contact.again')}
+              </button>
+            </div>
+          ) : (
+            <form className="form" onSubmit={submit} noValidate>
+              {showSummary && (
                 <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'baseline',
-                    justifyContent: 'space-between',
-                    gap: '1rem',
-                    marginBottom: '0.6rem',
-                  }}
+                  className="form-summary"
+                  role="alert"
+                  tabIndex={-1}
+                  ref={summaryRef}
                 >
-                  <h3
-                    style={{
-                      fontFamily: "'Fraunces', serif",
-                      fontWeight: 500,
-                      fontSize: 25,
-                      margin: 0,
-                    }}
-                  >
-                    {p.name}
-                  </h3>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      letterSpacing: 1,
-                      color: 'var(--teal)',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {p.role}
-                  </span>
+                  <Warning size={16} weight="regular" aria-hidden="true" />
+                  <div>
+                    <p>{t('contact.summary').replace('{count}', errorList.length)}</p>
+                    <ul>
+                      {errorList.map(([field, message]) => (
+                        <li key={field}>
+                          <a href={`#${field}`}>{message}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+              <div className="field-row">
+                <div className="field">
+                  <label htmlFor="name">
+                    {t('contact.name')} <span aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    autoComplete="name"
+                    required
+                    value={values.name}
+                    onChange={set('name')}
+                    onBlur={blur('name')}
+                    aria-invalid={touched.name && !!errors.name}
+                    aria-describedby={touched.name && errors.name ? 'name-error' : undefined}
+                  />
+                  {touched.name && errors.name && (
+                    <p className="field-error" id="name-error">
+                      {errors.name}
+                    </p>
+                  )}
                 </div>
 
-                <p
-                  style={{
-                    fontSize: 14,
-                    lineHeight: 1.65,
-                    color: 'var(--navy)',
-                    margin: '0 0 1.5rem',
-                  }}
-                >
-                  {p.text}
-                </p>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: '0.4rem',
-                    marginBottom: '1.5rem',
-                  }}
-                >
-                  {p.focus.map((f) => (
-                    <span
-                      key={f}
-                      style={{
-                        fontSize: 11,
-                        letterSpacing: 0.5,
-                        border: '1px solid var(--line)',
-                        padding: '3px 9px',
-                      }}
-                    >
-                      {f}
-                    </span>
-                  ))}
+                <div className="field">
+                  <label htmlFor="email">
+                    {t('contact.email')} <span aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    required
+                    value={values.email}
+                    onChange={set('email')}
+                    onBlur={blur('email')}
+                    aria-invalid={touched.email && !!errors.email}
+                    aria-describedby={touched.email && errors.email ? 'email-error' : undefined}
+                  />
+                  {touched.email && errors.email && (
+                    <p className="field-error" id="email-error">
+                      {errors.email}
+                    </p>
+                  )}
                 </div>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    gap: '2.5rem',
-                    paddingBottom: '1.25rem',
-                    marginBottom: '1.25rem',
-                    borderBottom: '1px solid var(--line)',
-                  }}
-                >
-                  {p.meta.map(([k, v]) => (
-                    <div key={k}>
-                      <div
-                        style={{
-                          fontSize: 10,
-                          letterSpacing: 1,
-                          color: 'var(--slate)',
-                          marginBottom: 4,
-                        }}
-                      >
-                        {k}
-                      </div>
-                      <div style={{ fontSize: 13 }}>{v}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <ul
-                  style={{
-                    listStyle: 'none',
-                    margin: 0,
-                    padding: 0,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.6rem',
-                  }}
-                >
-                  {p.links.map(([k, v, href]) => (
-                    <li
-                      key={k}
-                      style={{ display: 'flex', alignItems: 'baseline', gap: '1rem' }}
-                    >
-                      <span
-                        style={{
-                          fontSize: 10,
-                          letterSpacing: 1,
-                          color: 'var(--slate)',
-                          width: 74,
-                          flexShrink: 0,
-                        }}
-                      >
-                        {k}
-                      </span>
-                      <a
-                        href={href}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        style={{
-                          fontSize: 13,
-                          color: 'var(--navy)',
-                          textDecoration: 'none',
-                          borderBottom: '1px solid var(--line)',
-                          paddingBottom: 1,
-                        }}
-                      >
-                        {v} ↗
-                      </a>
-                    </li>
-                  ))}
-                </ul>
               </div>
-            </article>
-            </Reveal>
-          ))}
-        </div>
+
+              <div className="field">
+                <label htmlFor="brief">
+                  {t('contact.brief')} <span aria-hidden="true">*</span>
+                </label>
+                <textarea
+                  id="brief"
+                  name="brief"
+                  rows={5}
+                  required
+                  value={values.brief}
+                  onChange={set('brief')}
+                  onBlur={blur('brief')}
+                  aria-invalid={touched.brief && !!errors.brief}
+                  aria-describedby={
+                    touched.brief && errors.brief ? 'brief-error brief-help' : 'brief-help'
+                  }
+                />
+                <p className="field-help" id="brief-help">
+                  {t('contact.briefHelp')}
+                </p>
+                {touched.brief && errors.brief && (
+                  <p className="field-error" id="brief-error">
+                    {errors.brief}
+                  </p>
+                )}
+              </div>
+
+              <button className="btn btn-lg" type="submit" disabled={status === 'sending'}>
+                {status === 'sending' ? (
+                  <>
+                    <CircleNotch size={16} weight="regular" className="spin" aria-hidden="true" />
+                    {t('contact.sending')}
+                  </>
+                ) : (
+                  <>
+                    {t('contact.submit')}
+                    <ArrowUpRight size={16} weight="regular" aria-hidden="true" />
+                  </>
+                )}
+              </button>
+            </form>
+          )}
+        </Reveal>
       </div>
     </section>
   );

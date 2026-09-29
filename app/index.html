@@ -2,14 +2,67 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tidence</title>
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#122229" />
+
+    <title>Tidence — Web design and development studio</title>
+    <meta
+      name="description"
+      content="Tidence is a two-person studio building websites, platforms and internal tools. You work directly with the people writing the code."
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Tidence — Web design and development studio" />
+    <meta
+      property="og:description"
+      content="A two-person studio building websites, platforms and internal tools. You work directly with the people writing the code."
+    />
+    <meta property="og:image" content="/og.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fanwood+Text:ital@0;1&family=Goudy+Bookletter+1911&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- The hero image is the LCP element on every viewport. -->
+    <link rel="preload" as="image" href="/wave-sunset.jpg" fetchpriority="high" />
   </head>
   <body>
+    <!-- Runs before first paint so the page never renders in the wrong theme
+         and flips. This is the only inline script on the page; everything
+         else it touches is read back by React on mount. -->
+    <script>
+      (function () {
+        var root = document.documentElement;
+        try {
+          var theme = localStorage.getItem('tidence-theme');
+          if (theme !== 'light' && theme !== 'dark') {
+            theme = window.matchMedia('(prefers-color-scheme: light)').matches
+              ? 'light'
+              : 'dark';
+          }
+          root.dataset.theme = theme;
+
+          var lang = localStorage.getItem('tidence-lang');
+          if (lang !== 'en' && lang !== 'es') {
+            lang = (navigator.language || 'en').toLowerCase().indexOf('es') === 0 ? 'es' : 'en';
+          }
+          root.lang = lang;
+        } catch (e) {
+          // Private mode can throw on localStorage. Dark is the design default.
+          root.dataset.theme = 'dark';
+          root.lang = 'en';
+        }
+      })();
+    </script>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

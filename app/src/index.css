@@ -1,23 +1,246 @@
+/* ==========================================================================
+   Tidence - design tokens
+   Single source: design-system/tidence/MASTER.md
+   Dark theme is locked. There is no light variant by design: the tidal
+   identity does not survive a light ground, and a half-built second mode
+   reads as two different sites.
+   ========================================================================== */
+
+/* Dark is the design default. The boot script in index.html always writes
+   data-theme before first paint, and this is a React app that renders nothing
+   without JS, so there is no need for a prefers-color-scheme fallback here. */
 :root {
-  --foam: #F5F8F7;
-  --teal: #2E8B93;
-  --navy: #123240;
-  --slate: #7C99A0;
-  --line: #D8E5E3;
-  --bg: #FFFFFF;
+  color-scheme: dark;
+
+  /* --- Color: dark ------------------------------------------------------
+     Lifted roughly 2.3x in luminance from the original near-black (#0B1417),
+     which read as heavy rather than deep. Surfaces are separated further than
+     before so cards sit off the page instead of dissolving into it, and the
+     hairlines and muted text were raised to keep their weight against the
+     lighter ground. Every pair is verified in MASTER.md; the floor is 4.72:1. */
+  --bg: #122229;
+  --surface: #1b3038;
+  --surface-2: #24404a;
+
+  --fg: #eaf1f0;
+  --fg-muted: #a2b8bd;
+  --fg-dim: #93acb3;
+
+  --accent: #5cc9be;
+  --accent-hover: #7ad7ce;
+  --accent-soft: rgba(92, 201, 190, 0.16);
+  --on-accent: #07191c;
+
+  --line: rgba(234, 241, 240, 0.13);
+  --line-strong: rgba(234, 241, 240, 0.22);
+
+  --dot: rgba(234, 241, 240, 0.06);
+  --grain-opacity: 0.03;
+  --shadow: 0 24px 60px -24px rgba(6, 16, 20, 0.85);
 }
 
-* {
+/* Light is a designed palette, not an inversion. The original brand teal
+   (#2E8B93) only reaches 3.69:1 on a light ground and fails AA, so the accent
+   deepens to #12727A: same hue, 5.19:1. Verified pairs are in MASTER.md. */
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #f2f6f5;
+  --surface: #ffffff;
+  --surface-2: #e7efee;
+
+  --fg: #0e1c21;
+  --fg-muted: #4a6068;
+  --fg-dim: #5a7078;
+
+  --accent: #12727a;
+  --accent-hover: #0e5f66;
+  --accent-soft: rgba(18, 114, 122, 0.1);
+  --on-accent: #ffffff;
+
+  --line: rgba(14, 28, 33, 0.12);
+  --line-strong: rgba(14, 28, 33, 0.22);
+
+  --dot: rgba(14, 28, 33, 0.055);
+  --grain-opacity: 0.022;
+  --shadow: 0 24px 60px -28px rgba(14, 28, 33, 0.22);
+}
+
+:root {
+  /* --- Color: on media -------------------------------------------------
+     These do NOT follow the theme. They sit on the hero photograph, which is
+     a dark wave in both modes: flipping them to near-black in light mode
+     would make the headline unreadable over the image. */
+  --on-media: #f4f8f7;
+  --on-media-muted: #c8d8d6;
+  --accent-on-media: #5cc9be;
+  --on-accent-media: #07191c;
+  /* Deeper than the page, but only by a step. Left at the old near-black it
+     opened a visible seam between the hero and the lifted background below. */
+  --scrim: #0e1b21;
+
+  /* --- Type ------------------------------------------------------------- */
+  --font-display: 'Goudy Bookletter 1911', 'Fanwood Text', Georgia, serif;
+  --font-body: 'Fanwood Text', Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --step--1: 0.875rem; /* 14 */
+  --step-0: 1.0625rem; /* 17 */
+  --step-1: 1.1875rem; /* 19 */
+  --step-2: 1.4375rem; /* 23 */
+  --step-3: 1.875rem; /* 30 */
+  --step-4: clamp(1.75rem, 1.2rem + 2.4vw, 2.375rem);
+  --step-5: clamp(2rem, 1.1rem + 3.4vw, 2.875rem);
+  --step-6: clamp(2.5rem, 1rem + 5.4vw, 3.875rem);
+
+  /* --- Space ------------------------------------------------------------ */
+  --gutter: clamp(1.25rem, 5vw, 3rem);
+  --space-section: clamp(6rem, 12vw, 10rem);
+  --container: 1280px;
+
+  /* --- Motion ----------------------------------------------------------- */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-enter: 600ms;
+  --dur-exit: 380ms;
+  --dur-hover: 200ms;
+
+  /* --- Layers ----------------------------------------------------------- */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-nav: 20;
+  --z-overlay: 30;
+  --z-grain: 40;
+  --z-skip: 50;
+}
+
+/* Theme changes should feel like a light switch, not a crossfade of every
+   element on the page. One short tint on the surfaces only. */
+@media (prefers-reduced-motion: no-preference) {
+  body {
+    transition:
+      background-color var(--dur-hover) var(--ease),
+      color var(--dur-hover) var(--ease);
+  }
+}
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  /* Anchor targets clear the sticky nav instead of hiding under it. */
+  scroll-padding-top: 6rem;
 }
 
 body {
   margin: 0;
-  font-family: 'Space Grotesk', sans-serif;
-  color: var(--navy);
   background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  /* Neither serif ships a bold. Blocking synthesis keeps the browser from
+     smearing one on and makes any stray font-weight visible in review. */
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  /* Goudy has long ascenders and descenders and a wide set width. It needs
+     more leading and none of the negative tracking a grotesque wants. */
+  line-height: 1.12;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+  margin: 0;
+}
+
+p {
+  text-wrap: pretty;
+  margin: 0;
+}
+
+/* URLs, repo names and other unbreakable tokens reflow instead of
+   widening their container. */
+a,
+li,
+p,
+dd {
+  overflow-wrap: anywhere;
 }
 
 a {
   color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Data-ish figures never jitter as they change. */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Focus --------------------------------------------------------------
+   One visible ring for every interactive element. Never removed. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 0;
+}
+
+/* --- Skip link ---------------------------------------------------------- */
+.skip {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: var(--z-skip);
+  padding: 0.75rem 1.25rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: 500 var(--step--1) / 1 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform var(--dur-hover) var(--ease);
+}
+
+/* Plain :focus, not :focus-visible. A skip link has to appear whenever it
+   holds focus, including when script moves focus to it. */
+.skip:focus {
+  transform: none;
+}
+
+/* --- Screen reader only ------------------------------------------------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
