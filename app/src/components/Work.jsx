@@ -1,224 +1,135 @@
-import CardGlow from './CardGlow';
+import { ArrowUpRight, GithubLogo } from '@phosphor-icons/react';
+import StoryThread from './StoryThread';
 import Reveal from './Reveal';
+import { useT } from '../prefs/hooks';
 
+/* Names, tech tags and URLs are proper nouns and stay untranslated. Only the
+   kind label and the description come from the dictionary.
+
+   TODO: replace the `shot` values with real screenshots of each project.
+   Seeded placeholders stand in until those exist. */
 const projects = [
   {
-    kind: '2D ARCADE GAME',
+    key: 'birdie',
     name: 'Birdie',
-    text: "Drive a little blue bird's taxi — pick up passengers and dodge potholes before the tank runs dry. 22 unlockable hats, a day/night cycle and global leaderboards.",
     tags: ['React', 'TypeScript', 'Canvas', 'Redis'],
     live: 'https://playbirdie.vercel.app/',
     repo: 'https://github.com/alexrosstrabajo-design/pajarito',
     by: 'Alexander',
+    span: 'wide',
+    shot: 'https://picsum.photos/seed/tidence-birdie-arcade/1200/760',
   },
   {
-    kind: 'AI AUTOMATION PLATFORM',
+    key: 'textnode',
+    name: 'TextNode',
+    tags: ['React', 'JavaScript'],
+    live: 'https://text-node.vercel.app/',
+    repo: 'https://github.com/alexrosstrabajo-design/TextNode',
+    by: 'Alexander',
+    span: 'narrow',
+    shot: 'https://picsum.photos/seed/tidence-textnode-notes/760/900',
+  },
+  {
+    key: 'automator',
     name: 'Automator AI',
-    text: 'A conversational platform wired into Automator, fronted by a 3D interface built with Three.js.',
     tags: ['React', 'Three.js', 'OpenAI', 'Tailwind'],
     live: 'https://agoar.vercel.app/',
     repo: 'https://github.com/alexrosstrabajo-design/ai-chat',
     by: 'Alexander',
+    span: 'half',
+    shot: 'https://picsum.photos/seed/tidence-automator-ai/900/700',
   },
   {
-    kind: 'NOTE TAKING APP',
-    name: 'TextNode',
-    text: 'A note-taking app for organising thoughts quickly — clean UI, full CRUD, no ceremony.',
-    tags: ['React', 'JavaScript', 'Web App'],
-    live: 'https://text-node.vercel.app/',
-    repo: 'https://github.com/alexrosstrabajo-design/TextNode',
-    by: 'Alexander',
-  },
-  {
-    kind: 'FULLSTACK PLATFORM',
+    key: 'attendance',
     name: 'Student Attendance System',
-    text: 'Attendance management end to end — an Express backend, a React frontend and REST APIs driving real-time reporting.',
-    tags: ['Node.js', 'React', 'PostgreSQL', 'REST API'],
+    tags: ['Node.js', 'React', 'PostgreSQL'],
     repo: 'https://github.com/Bryan-De-Jesus-Mejia',
     by: 'Bryan',
+    span: 'half',
+    shot: 'https://picsum.photos/seed/tidence-attendance-platform/900/700',
   },
   {
-    kind: 'DESKTOP APPLICATION',
-    name: 'Currency Exchange System',
-    text: 'Desktop app pulling live exchange rates from an external API, with the business logic handled in C#.',
-    tags: ['C#', 'WinForms', 'Guna UI', 'API Integration'],
-    repo: 'https://github.com/Bryan-De-Jesus-Mejia',
-    by: 'Bryan',
-  },
-  {
-    kind: 'DISCORD BOT',
+    key: 'ecobot',
     name: 'EcoBot',
-    text: 'Environmental awareness bot with interactive commands, eco quizzes, green points and custom reminders.',
-    tags: ['Python', 'discord.py', 'Async'],
+    tags: ['Python', 'discord.py'],
     repo: 'https://github.com/Bryan-De-Jesus-Mejia',
     by: 'Bryan',
+    span: 'narrow',
+    shot: 'https://picsum.photos/seed/tidence-ecobot-discord/760/900',
+  },
+  {
+    key: 'currency',
+    name: 'Currency Exchange System',
+    tags: ['C#', 'WinForms', 'API'],
+    repo: 'https://github.com/Bryan-De-Jesus-Mejia',
+    by: 'Bryan',
+    span: 'wide',
+    shot: 'https://picsum.photos/seed/tidence-currency-desktop/1200/760',
   },
 ];
 
-const linkStyle = {
-  fontSize: 11,
-  letterSpacing: 1,
-  color: 'var(--navy)',
-  textDecoration: 'none',
-  border: '1px solid var(--navy)',
-  padding: '7px 13px',
-};
-
+/**
+ * Asymmetric portfolio grid on a six-column track. Spans are 4+2, 3+3, 2+4,
+ * so the six projects fill exactly six cells with no blanks and no row that
+ * repeats the one above it.
+ */
 export default function Work() {
+  const t = useT();
+
   return (
-    <section
-      id="work"
-      style={{ background: 'var(--foam)', padding: '6rem clamp(1.25rem, 5vw, 3rem)' }}
-    >
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+    <section className="section work" id="work">
+      <div className="container">
+          <StoryThread />
         <Reveal>
-        <div
-          style={{
-            fontSize: 13,
-            letterSpacing: 1,
-            color: 'var(--teal)',
-            marginBottom: '0.75rem',
-          }}
-        >
-          WORK
-        </div>
-        <h2
-          style={{
-            fontFamily: "'Fraunces', serif",
-            fontWeight: 500,
-            fontSize: 38,
-            letterSpacing: -0.5,
-            margin: '0 0 0.75rem',
-          }}
-        >
-          Things we have shipped.
-        </h2>
-        <p
-          style={{
-            fontSize: 16,
-            lineHeight: 1.6,
-            color: 'var(--slate)',
-            maxWidth: 560,
-            margin: '0 0 3.5rem',
-          }}
-        >
-          Games, platforms, bots and internal tools — built across the front
-          end, the back end and the infrastructure in between.
-        </p>
+          <h2 className="work-head">{t('work.title')}</h2>
         </Reveal>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px, 100%), 1fr))',
-            gap: '1.5rem',
-          }}
-        >
+        <div className="work-grid">
           {projects.map((p, i) => (
-            <Reveal key={p.name} delay={i * 80}>
-            <article
-              className="card"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                padding: '1.75rem',
-              }}
+            <Reveal
+              as="article"
+              key={p.key}
+              delay={(i % 2) * 90}
+              className={`project is-${p.span}`}
             >
-              <CardGlow />
-              <div
-                style={{
-                  fontSize: 11,
-                  letterSpacing: 1,
-                  color: 'var(--teal)',
-                  marginBottom: '0.6rem',
-                }}
-              >
-                {p.kind}
-              </div>
-              <h3
-                style={{
-                  fontFamily: "'Fraunces', serif",
-                  fontWeight: 500,
-                  fontSize: 23,
-                  margin: '0 0 0.6rem',
-                }}
-              >
-                {p.name}
-              </h3>
-              <p
-                style={{
-                  fontSize: 14,
-                  lineHeight: 1.65,
-                  color: 'var(--navy)',
-                  margin: '0 0 1.25rem',
-                }}
-              >
-                {p.text}
-              </p>
-
-              <div
-                style={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: '0.4rem',
-                  marginBottom: '1.5rem',
-                }}
-              >
-                {p.tags.map((t) => (
-                  <span
-                    key={t}
-                    style={{
-                      fontSize: 11,
-                      letterSpacing: 0.5,
-                      color: 'var(--slate)',
-                      border: '1px solid var(--line)',
-                      padding: '3px 9px',
-                    }}
-                  >
-                    {t}
-                  </span>
-                ))}
+              <div className="project-shot">
+                <img
+                  src={p.shot}
+                  alt={t('work.shotAlt').replace('{name}', p.name)}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  width="1200"
+                  height="760"
+                />
               </div>
 
-              <div
-                style={{
-                  marginTop: 'auto',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.6rem',
-                }}
-              >
-                {p.live && (
-                  <a className="cardbtn"
-                    href={p.live}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    style={linkStyle}
-                  >
-                    LIVE ↗
+              <div className="project-body">
+                <p className="project-kind">{t(`work.projects.${p.key}.kind`)}</p>
+                <h3>{p.name}</h3>
+                <p className="project-text">{t(`work.projects.${p.key}.text`)}</p>
+
+                <ul className="tags">
+                  {p.tags.map((tag) => (
+                    <li key={tag}>{tag}</li>
+                  ))}
+                </ul>
+
+                <div className="project-foot">
+                  {p.live && (
+                    <a className="link" href={p.live} target="_blank" rel="noreferrer noopener">
+                      {t('work.live')}
+                      <ArrowUpRight size={13} weight="regular" aria-hidden="true" />
+                      <span className="sr-only">{t('meta.openOutside')}</span>
+                    </a>
+                  )}
+                  <a className="link" href={p.repo} target="_blank" rel="noreferrer noopener">
+                    <GithubLogo size={14} weight="regular" aria-hidden="true" />
+                    {t('work.source')}
+                    <span className="sr-only">{t('meta.openOutside')}</span>
                   </a>
-                )}
-                <a
-                  className="cardbtn"
-                  href={p.repo}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  style={linkStyle}
-                >
-                  GITHUB ↗
-                </a>
-                <span
-                  style={{
-                    marginLeft: 'auto',
-                    fontSize: 11,
-                    letterSpacing: 0.5,
-                    color: 'var(--slate)',
-                  }}
-                >
-                  {p.by}
-                </span>
+                  <span className="project-by">{p.by}</span>
+                </div>
               </div>
-            </article>
             </Reveal>
           ))}
         </div>

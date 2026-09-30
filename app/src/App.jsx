@@ -1,41 +1,58 @@
-import Hero from './components/Hero';
-import ScrollPhrase from './components/ScrollPhrase';
+import Nav from './components/Nav';
+import ScrollExpandHero from './components/ScrollExpandHero';
+import Manifesto from './components/Manifesto';
+import Capabilities from './components/Capabilities';
 import Work from './components/Work';
+import Approach from './components/Approach';
+import Studio from './components/Studio';
 import Contact from './components/Contact';
-import GradualBlur from './components/GradualBlur';
+import Footer from './components/Footer';
+import useHashLanding from './components/useHashLanding';
+import { ThemeProvider } from './prefs/theme';
+import { LocaleProvider } from './prefs/locale';
+import { useT } from './prefs/hooks';
 import './App.css';
 
-function App() {
+function Site() {
+  const t = useT();
+
+  // A shared /#work link has to land on the work section, not the top.
+  useHashLanding();
+
   return (
     <>
-      <Hero />
+      <a className="skip" href="#main">
+        {t('meta.skip')}
+      </a>
 
-      <ScrollPhrase eyebrow="OUR METHOD">
-        Here is the work that shows how we build.
-      </ScrollPhrase>
+      <Nav />
 
-      <Work />
+      <main id="main">
+        <ScrollExpandHero />
+        <Manifesto />
+        <Capabilities />
+        <Work />
+        <Approach />
+        <Studio />
+        <Contact />
+      </main>
 
-      <ScrollPhrase eyebrow="THE TEAM">
-        Two people build all of it. You talk to both.
-      </ScrollPhrase>
+      <Footer />
 
-      <Contact />
-
-      {/* Fixed bottom blur, same configuration as the portfolio. */}
-      <GradualBlur
-        target="page"
-        position="bottom"
-        height="5rem"
-        strength={2.5}
-        divCount={4}
-        curve="bezier"
-        exponential
-        opacity={1}
-        style={{ zIndex: 50 }}
-      />
+      {/* Both fixed, inert and never on a scrolling container: a texture that
+          repaints with the page destroys frame budget on mobile. */}
+      <div className="texture" aria-hidden="true" />
+      <div className="grain" aria-hidden="true" />
     </>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <ThemeProvider>
+      <LocaleProvider>
+        <Site />
+      </LocaleProvider>
+    </ThemeProvider>
+  );
+}

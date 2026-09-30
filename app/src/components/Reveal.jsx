@@ -5,11 +5,14 @@ const prefersReducedMotion = () =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /**
- * Fades and lifts its children in the first time they scroll into view.
- * Readers who asked for reduced motion start in the shown state, so nothing
- * animates and nothing can leave content stuck invisible.
+ * Reveals its children the first time they scroll into view.
+ *
+ * IntersectionObserver rather than a scroll listener: a scroll handler runs on
+ * every frame and re-renders React with it. Readers who asked for reduced
+ * motion start in the shown state, so nothing animates and nothing can be
+ * left stranded invisible.
  */
-export default function Reveal({ children, delay = 0, style }) {
+export default function Reveal({ as: Tag = 'div', delay = 0, className = '', children, ...rest }) {
   const ref = useRef(null);
   const [shown, setShown] = useState(prefersReducedMotion);
 
@@ -24,16 +27,13 @@ export default function Reveal({ children, delay = 0, style }) {
           observer.disconnect();
         }
       },
-      { threshold: 0.15, rootMargin: '0px 0px -8% 0px' }
+      { threshold: 0.12, rootMargin: '0px 0px -6% 0px' }
     );
-
     observer.observe(el);
 
-    // A hash link or a restored scroll position is applied before React
-    // mounts, which can leave the observer's first computation working from
-    // pre-scroll geometry — nothing then re-triggers it until the reader
-    // scrolls, so the section renders blank. Re-check once the browser has
-    // settled on a scroll position.
+    // A hash link or a restored scroll position lands before React mounts, so
+    // the observer's first pass can run against pre-scroll geometry and never
+    // fire again until the reader moves. Re-check once layout has settled.
     const frame = requestAnimationFrame(() =>
       requestAnimationFrame(() => {
         const rect = el.getBoundingClientRect();
@@ -51,12 +51,13 @@ export default function Reveal({ children, delay = 0, style }) {
   }, [shown]);
 
   return (
-    <div
+    <Tag
       ref={ref}
-      className={shown ? 'reveal reveal-in' : 'reveal'}
-      style={{ transitionDelay: `${delay}ms`, ...style }}
+      className={`reveal ${shown ? 'is-in' : ''} ${className}`.trim()}
+      style={{ transitionDelay: `${delay}ms` }}
+      {...rest}
     >
       {children}
-    </div>
+    </Tag>
   );
 }

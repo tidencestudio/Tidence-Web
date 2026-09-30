@@ -1,178 +1,1777 @@
-#root {
-  margin: 0;
-  padding: 0;
-  max-width: none;
+/* ==========================================================================
+   Tidence - layout, components, motion
+   Tokens live in index.css. Nothing here hardcodes a colour.
+   ========================================================================== */
+
+/* --- Shell -------------------------------------------------------------- */
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
 }
 
-/* Fullscreen hero. svh keeps mobile browser chrome from pushing the
-   section taller than the visible viewport; vh is the fallback. */
-.hero {
-  min-height: 100vh;
-  min-height: 100svh;
+.section {
+  padding-block: var(--space-section);
 }
 
-/* Scroll-driven parallax layer. The extra 25% top and bottom is the travel
-   budget: the photo lags the page by 0.22 of scroll for at most one viewport,
-   so it can never expose an edge. */
-.hero-parallax {
-  position: absolute;
-  inset: -25% 0;
-  will-change: transform;
+/* Optical correction: an equal top and bottom reads bottom-heavy once the
+   section below starts with a headline. */
+.section + .section {
+  padding-top: calc(var(--space-section) * 0.86);
 }
 
-/* Hero photo layer. Separate from .hero so it can drift under the copy. */
-.hero-bg {
-  position: absolute;
+.prewrap {
+  white-space: pre-line;
+}
+
+.lead {
+  max-width: 44ch;
+  font-size: var(--step-1);
+  line-height: 1.55;
+  color: var(--fg-muted);
+}
+
+/* --- Grain -------------------------------------------------------------- */
+
+/* A dot lattice over the whole page. It sits above the section backgrounds
+   rather than behind them, so the band sections keep the same texture as the
+   transparent ones instead of punching a smooth hole in it. At this alpha it
+   never competes with text.
+
+   For a ruled grid instead of dots, swap background-image for:
+     repeating-linear-gradient(to right, var(--dot) 0 1px, transparent 1px 100%),
+     repeating-linear-gradient(to bottom, var(--dot) 0 1px, transparent 1px 100%) */
+.texture {
+  position: fixed;
   inset: 0;
-  background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.25) 42%, rgba(0, 0, 0, 0) 62%),
-    url('/wave-sunset.jpg') center / cover no-repeat;
-  animation: hero-drift 28s ease-in-out infinite alternate;
-  will-change: transform;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  background-image: radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 0);
+  background-size: 26px 26px;
 }
 
-@keyframes hero-drift {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.08);
-  }
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Nav. The four links sit beside the logo on desktop; below ~720px they
-   drop to their own row so SERVICES…CONTACT stop colliding with the mark. */
-.hero-brand {
-  position: absolute;
-  top: 2rem;
-  left: 3rem;
+/* --- Buttons ------------------------------------------------------------
+   Shape rule: radius 0 everywhere, no exceptions. The corner is a hard right
+   angle on buttons, tags, controls, inputs and cards alike, which is what the
+   old-style serif and the hairline rules are already doing. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  border-radius: 0;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--step--1);
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform var(--dur-hover) var(--ease),
+    background var(--dur-hover) var(--ease),
+    opacity var(--dur-hover) var(--ease);
+}
+
+.btn-sm {
+  padding: 0.7rem 1.3rem;
+}
+
+.btn-lg {
+  padding: 0.9rem 1.7rem;
+}
+
+.btn:hover {
+  background: var(--accent-hover);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--fg);
+  border-color: var(--line-strong);
+}
+
+.btn-ghost:hover {
+  background: var(--surface-2);
+  border-color: var(--accent);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  color: var(--fg);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-strong);
+  padding-bottom: 2px;
+  transition:
+    color var(--dur-hover) var(--ease),
+    border-color var(--dur-hover) var(--ease);
+}
+
+.link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* --- Tags --------------------------------------------------------------- */
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tags li {
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--fg-muted);
+}
+
+/* --- Nav ---------------------------------------------------------------- */
+
+/* Three tracks, not a flex row. The outer two are equal fractions, so the
+   links sit optically centred in the bar whatever the brand and the controls
+   measure. The previous row pushed everything but the wordmark into the right
+   third and left a 689px hole across the middle at 1440. */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-nav);
+  height: 76px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 2rem;
+  padding-inline: var(--gutter);
+  transition:
+    background var(--dur-hover) var(--ease),
+    border-color var(--dur-hover) var(--ease);
+  border-bottom: 1px solid transparent;
+}
+
+.nav.is-lifted {
+  background: color-mix(in oklab, var(--bg) 80%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom-color: var(--line);
+}
+
+.nav-brand,
+.footer-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-  z-index: 2;
-}
-
-.hero-navlinks {
-  position: absolute;
-  top: 2.15rem;
-  left: 50%;
-  right: 3rem;
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  letter-spacing: 1px;
-  z-index: 2;
-}
-
-.hero-navlinks a {
+  gap: 0.6rem;
+  /* Without these the wordmark is the first thing the flex row crushes, and
+     it wraps letter by letter behind the controls. */
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--step-3);
+  letter-spacing: 0.01em;
   text-decoration: none;
 }
 
-@media (max-width: 720px) {
-  .hero-brand {
-    top: 1.5rem;
-    left: 1.25rem;
-  }
-
-  .hero-navlinks {
-    top: 4.5rem;
-    left: 1.25rem;
-    right: 1.25rem;
-    font-size: 10px;
-    letter-spacing: 0.5px;
-  }
+.nav-mark {
+  display: flex;
+  color: var(--accent);
 }
 
-/* ---- Motion ------------------------------------------------------------ */
-
-html {
-  scroll-behavior: smooth;
+.nav-links {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1.75rem, 3.5vw, 3.25rem);
+  font-size: var(--step-0);
+  letter-spacing: 0.01em;
 }
 
-/* Scroll reveal, driven by Reveal.jsx toggling .reveal-in. */
-.reveal {
-  opacity: 0;
-  transform: translateY(18px);
-  transition:
-    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.reveal-in {
-  opacity: 1;
-  transform: none;
-}
-
-/* Hero copy rises in on load; each element sets its own animation-delay. */
-@keyframes hero-rise {
-  from {
-    opacity: 0;
-    transform: translateY(22px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-.hero-enter {
-  animation: hero-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* Cards lift toward the reader on hover. */
-.card {
+.nav-links a {
   position: relative;
-  height: 100%;
-  border: 1px solid var(--line);
-  transition:
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.35s ease,
-    box-shadow 0.35s ease;
+  color: var(--fg-muted);
+  text-decoration: none;
+  transition: color var(--dur-hover) var(--ease);
 }
 
-.card:hover {
-  transform: translateY(-4px);
-}
-
-/* Where the glow runs, the shader draws the border, so drop the CSS one.
-   This query mirrors wantsGlow() in CardGlow.jsx exactly — anywhere the
-   effect is not mounted (touch, reduced motion) the real border stays. */
-@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .card {
-    border-color: transparent;
-  }
-}
-
-/* Nav links grow an underline from the left. */
-.hero-navlinks a {
-  position: relative;
-}
-
-.hero-navlinks a:after {
+.nav-links a::after {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -6px;
+  bottom: -5px;
   height: 1px;
-  background: var(--teal);
+  background: var(--accent);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform var(--dur-hover) var(--ease);
 }
 
-.hero-navlinks a:hover:after {
+.nav-links a:hover,
+.nav-links a.is-current {
+  color: var(--fg);
+}
+
+.nav-links a:hover::after,
+.nav-links a.is-current::after {
   transform: scaleX(1);
 }
 
-/* Hero CTA arrow nudges right on hover. */
-.cta-arrow {
-  display: inline-block;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+/* While the bar is still over the hero photograph it takes the media colours;
+   once it lifts past the hero it returns to the theme. */
+.nav:not(.is-lifted) .nav-brand {
+  color: var(--on-media);
 }
 
-.cta:hover .cta-arrow {
-  transform: translateX(5px);
+.nav:not(.is-lifted) .nav-mark {
+  color: var(--accent-on-media);
+}
+
+.nav:not(.is-lifted) .nav-links a {
+  color: var(--on-media-muted);
+}
+
+.nav:not(.is-lifted) .nav-links a:hover,
+.nav:not(.is-lifted) .nav-links a.is-current {
+  color: var(--on-media);
+}
+
+.nav:not(.is-lifted) .switch,
+.nav:not(.is-lifted) .iconbtn {
+  border-color: rgba(244, 248, 247, 0.3);
+}
+
+.nav:not(.is-lifted) .switch button,
+.nav:not(.is-lifted) .iconbtn {
+  color: var(--on-media-muted);
+}
+
+.nav:not(.is-lifted) .switch button:hover,
+.nav:not(.is-lifted) .iconbtn:hover {
+  color: var(--on-media);
+}
+
+.nav:not(.is-lifted) .switch button.is-on {
+  background: var(--accent-on-media);
+  color: var(--on-accent-media);
+}
+
+.nav:not(.is-lifted) .nav-cta {
+  background: var(--accent-on-media);
+  color: var(--on-accent-media);
+}
+
+/* --- Nav preferences ----------------------------------------------------
+   Language and theme. Both are real buttons with accessible names, sized to
+   the 24px minimum for pointer targets. */
+
+.nav-prefs {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.switch {
+  display: flex;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.switch button {
+  min-height: 34px;
+  padding: 0.2rem 0.7rem;
+  border: 0;
+  background: transparent;
+  color: var(--fg-dim);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition:
+    background var(--dur-hover) var(--ease),
+    color var(--dur-hover) var(--ease);
+}
+
+.switch button:hover {
+  color: var(--fg);
+}
+
+.switch button.is-on {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.iconbtn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  background: transparent;
+  color: var(--fg-muted);
+  cursor: pointer;
+  transition:
+    color var(--dur-hover) var(--ease),
+    border-color var(--dur-hover) var(--ease);
+}
+
+.iconbtn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.iconbtn:active {
+  transform: translateY(1px);
+}
+
+/* Under 900px the links fold away and the CTA carries the bar. Every section
+   stays reachable from the footer, so nothing is orphaned. */
+@media (max-width: 900px) {
+  .nav {
+    grid-template-columns: auto 1fr;
+  }
+
+  .nav-links {
+    display: none;
+  }
+}
+
+/* The CTA is the first thing to go: every section stays reachable from the
+   footer, and the contact anchor is still in the footer nav. Keeping the bar
+   on one line matters more than keeping the button.
+
+   The breakpoint is set by the Spanish label ("Empezar un proyecto"), which is
+   half again as wide as the English one. Sizing this to English alone left the
+   bar overflowing in Spanish. */
+@media (max-width: 620px) {
+  .nav-cta {
+    display: none;
+  }
+}
+
+/* --- Hero: scroll-expand ------------------------------------------------
+
+   Baseline (no scroll-driven animation, or reduced motion): the finished
+   composition, full bleed, one viewport tall. Everything below is layered on
+   top of that as an enhancement, so nothing depends on the effect running. */
+
+.expand {
+  position: relative;
+  /* The sticky nav overlaps the opening, so pull it back under the bar. */
+  margin-top: -76px;
+}
+
+/* The stage keeps its own dark ground in both themes. It is a photographic
+   section: inverting it in light mode would put white headline type onto a
+   pale page, and a scrim heavy enough to rescue dark type would wash the
+   photo out. The scrim's bottom gradient fades it into the page colour, so
+   the handoff reads as cinematography rather than a theme break. */
+.expand-stage {
+  background: var(--scrim);
+  position: relative;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  padding: 76px var(--gutter) clamp(3rem, 8vh, 5rem);
+}
+
+.expand-media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+/* --- Media treatment ----------------------------------------------------
+   What separates a hero that looks commissioned from one that looks like
+   stock is almost never the clip; it is the grade. Footage is pulled toward
+   monochrome, contrast is lifted so the darks crush, and the whole thing is
+   tinted to the brand. A literal, fully saturated clip reads as a template no
+   matter how good the photography is.
+
+   All four knobs are tokens: dial them per clip rather than re-cutting one. */
+.expand-media {
+  --media-saturate: 0.5;
+  --media-contrast: 1.14;
+  --media-brightness: 0.92;
+  --media-tint: 0.2;
+}
+
+.expand-media img,
+.expand-media video,
+.expand-media canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(var(--media-saturate)) contrast(var(--media-contrast))
+    brightness(var(--media-brightness));
+}
+
+/* The tint. `color` blending keeps the footage's luminosity and takes only the
+   hue, so this reads as a graded image rather than a coloured sheet laid on
+   top of one. Clipped with the media, so the closed window is graded too. */
+/* The shaders render into a canvas that the library sizes itself. */
+.hero-shader,
+.hero-shader canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.expand-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent-on-media);
+  mix-blend-mode: color;
+  opacity: var(--media-tint);
+  pointer-events: none;
+}
+
+.expand-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  /* The copy sits dead centre over the brightest part of the wave, so the
+     middle of this vignette cannot be fully clear: muted text on lit water
+     lands well under 4.5:1. It carries enough tint to hold contrast and still
+     reads as light falling off toward the edges. */
+  background:
+    radial-gradient(
+      115% 85% at 50% 44%,
+      color-mix(in oklab, var(--scrim) 38%, transparent) 0%,
+      color-mix(in oklab, var(--scrim) 62%, transparent) 58%,
+      color-mix(in oklab, var(--scrim) 92%, transparent) 100%
+    ),
+    linear-gradient(to top, var(--bg) 1%, transparent 42%);
+}
+
+/* Fixed light regardless of theme: this copy is over a dark photograph in
+   both modes, and near-black text on it would be unreadable. */
+.expand-copy {
+  color: var(--on-media);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2.25rem;
+  max-width: 54rem;
+  /* Every child centres on the same axis; none sets its own width. */
+  width: 100%;
+}
+
+/* The closed window carries the brand; the proposition replaces it once you
+   are through. Hidden at baseline, so reduced motion and browsers without
+   scroll-driven animation simply get the finished headline. */
+.expand-brand {
+  display: none;
+  position: absolute;
+  inset: 0;
+  place-items: center;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 1rem + 3.4vw, 2.75rem);
+  letter-spacing: 0.18em;
+  /* Tracking adds the gap after the last letter too, which throws the word
+     off-centre inside the plate. */
+  text-indent: 0.18em;
+  text-transform: uppercase;
+  color: var(--on-media);
+}
+
+.expand-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em;
+  font-size: var(--step-6);
+  margin: 0;
+}
+
+.expand-line {
+  display: block;
+}
+
+/* Emphasis by colour. Neither serif in the stack has a bold, and swapping in
+   a second family for one word is an amateur move. */
+.hero-em {
+  color: var(--accent-on-media);
+}
+
+/* The CTA is on the photograph too, so it takes the media accent rather than
+   the theme accent. In light mode the theme accent is a deep teal that goes
+   muddy against a dark image. */
+.expand-copy .btn {
+  background: var(--accent-on-media);
+  color: var(--on-accent-media);
+}
+
+.expand-copy .btn:hover {
+  background: color-mix(in oklab, var(--accent-on-media) 86%, #fff);
+}
+
+.expand-reveal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+/* Full foreground, not the muted token: this paragraph sits on a photograph
+   rather than on a flat surface, and muted grey has nothing to hold on to. */
+.expand-sub {
+  max-width: 46ch;
+  font-size: var(--step-1);
+  line-height: 1.55;
+  color: var(--on-media);
+  text-shadow: 0 1px 24px color-mix(in oklab, var(--scrim) 70%, transparent);
+}
+
+#nav-sentinel {
+  position: absolute;
+  bottom: 12%;
+  height: 1px;
+  width: 100%;
+}
+
+/* --- Hero motion --------------------------------------------------------
+
+   Driven from JS, not from a CSS scroll timeline.
+
+   `animation-timeline` / `view()` is Chromium only. Firefox keeps scroll-driven
+   animations behind a flag, so the whole effect silently did not exist there and
+   the hero rendered finished. Rather than ship one hero to Chrome and another to
+   everyone else, every browser now takes the same path: these animations are
+   declared paused, and useScrollScrub writes currentTime on them from the
+   track's own scroll progress. One set of keyframes, one behaviour.
+
+   The `scrub` class comes from that hook. With no JS, no hook, or reduced
+   motion, none of this applies and the composition renders finished and
+   ungated, which is the same baseline as before. */
+@media (prefers-reduced-motion: no-preference) {
+  :root.scrub .expand-track {
+    height: 280vh;
+  }
+
+  :root.scrub .expand-stage {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    min-height: 0;
+  }
+
+  :root.scrub .expand-brand {
+    display: grid;
+  }
+
+  /* The duration is nominal. currentTime is the only thing that ever moves,
+     and the compositor handles these the same as any other CSS animation. */
+  :root.scrub .nav,
+  :root.scrub .expand-media,
+  :root.scrub .expand-scrim,
+  :root.scrub .expand-brand,
+  :root.scrub .expand-title,
+  :root.scrub .expand-line,
+  :root.scrub .expand-reveal {
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-play-state: paused;
+  }
+
+  /* The bar arrives with the copy. Opacity only, no transform: it is
+     position: sticky and that is not worth risking. */
+  :root.scrub .nav {
+    animation-name: nav-arrive;
+  }
+
+  /* The plate opens by clip-path, not by width and height. Animating the box
+     would relayout the stage on every frame; clipping does not. */
+  :root.scrub .expand-media {
+    animation-name: expand-open;
+  }
+
+  /* The scrim protects the subheading, and the subheading is not there yet.
+     Holding it back lets the closed window read as a lit photograph. */
+  :root.scrub .expand-scrim {
+    animation-name: expand-scrim-in;
+  }
+
+  :root.scrub .expand-brand {
+    animation-name: expand-brand-out;
+  }
+
+  :root.scrub .expand-title {
+    animation-name: expand-title-in;
+  }
+
+  :root.scrub .expand-line-a {
+    animation-name: expand-part-left;
+  }
+
+  :root.scrub .expand-line-b {
+    animation-name: expand-part-right;
+  }
+
+  :root.scrub .expand-reveal {
+    animation-name: expand-settle;
+  }
+
+  /* Neither a hidden bar nor a hidden CTA may swallow Tab. Focus anywhere
+     inside either one cancels its gate outright. The skip link sits outside
+     the nav, so it is reachable on the first Tab regardless. */
+  :root.scrub .nav:focus-within {
+    animation: none;
+    opacity: 1;
+  }
+
+  :root.scrub .expand-copy:focus-within .expand-reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  @keyframes expand-open {
+    0% {
+      clip-path: inset(calc(50dvh - 13.75rem) calc(50vw - 10.625rem));
+      transform: scale(1.14);
+    }
+    72%,
+    100% {
+      clip-path: inset(0);
+      transform: scale(1);
+    }
+  }
+
+  @keyframes expand-scrim-in {
+    0%,
+    22% {
+      opacity: 0.35;
+    }
+    70%,
+    100% {
+      opacity: 1;
+    }
+  }
+
+  /* The brand recedes as you pass through it. */
+  @keyframes expand-brand-out {
+    0%,
+    26% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    48%,
+    100% {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+  }
+
+  /* The proposition arrives on the other side, settling out of a slight
+     over-scale so it reads as coming toward the reader. */
+  @keyframes expand-title-in {
+    0%,
+    40% {
+      opacity: 0;
+      transform: scale(1.05);
+    }
+    64%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes nav-arrive {
+    0%,
+    58% {
+      opacity: 0;
+    }
+    88%,
+    100% {
+      opacity: 1;
+    }
+  }
+
+  /* The arrival. Copy stays out of the room until the window has opened
+     far enough that you are through it. */
+  @keyframes expand-settle {
+    0%,
+    58% {
+      opacity: 0;
+      transform: translate3d(0, 18px, 0);
+    }
+    88%,
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* The lines part as the window opens and then settle back onto the centre
+     line. Holding them apart left the headline on two centres while the
+     subheading and the CTA sat on a third, which reads as broken alignment
+     rather than as a composition. The parting is a gesture during the
+     transition; the resting state is aligned. */
+  @keyframes expand-part-left {
+    0%,
+    44% {
+      transform: translate3d(0, 0, 0);
+    }
+    66% {
+      transform: translate3d(-6vw, 0, 0);
+    }
+    92%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes expand-part-right {
+    0%,
+    44% {
+      transform: translate3d(0, 0, 0);
+    }
+    66% {
+      transform: translate3d(6vw, 0, 0);
+    }
+    92%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  /* A phone has no horizontal room to part the lines into, and the opening
+     plate has to start smaller than the screen it opens on. */
+  @media (max-width: 760px) {
+    .expand-track {
+      height: 240vh;
+    }
+
+    @keyframes expand-open {
+      0% {
+        clip-path: inset(calc(50dvh - 11rem) calc(50vw - 7rem));
+        transform: scale(1.14);
+      }
+      72%,
+      100% {
+        clip-path: inset(0);
+        transform: scale(1);
+      }
+    }
+
+    @keyframes expand-part-left {
+      0%,
+      100% {
+        transform: none;
+      }
+    }
+
+    @keyframes expand-part-right {
+      0%,
+      100% {
+        transform: none;
+      }
+    }
+  }
+}
+
+
+/* --- Story thread -------------------------------------------------------
+   A rail down the left of the content column, one segment per narrative
+   section, each drawing as its section arrives. It is the tide line: the
+   device that carries the eye from one beat to the next instead of leaving
+   every section to announce itself independently.
+
+   Decorative and inert. It lives in the gutter, so it never displaces
+   content, and it is withdrawn entirely below the width where that gutter
+   stops being wide enough to hold it. */
+
+.container {
+  position: relative;
+}
+
+.thread {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--gutter) - 1.4rem);
+  width: 1px;
+  pointer-events: none;
+}
+
+.thread-line {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--accent) 0%,
+    var(--line-strong) 22%,
+    var(--line-strong) 100%
+  );
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 1100ms var(--ease);
+}
+
+.thread.is-drawn .thread-line {
+  transform: scaleY(1);
+}
+
+/* The node marks where a beat begins. It arrives before its segment draws,
+   so the line reads as running out of it. */
+.thread-node {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  margin-left: -3px;
+  background: var(--accent);
+  transform: scale(0);
+  transition: transform 420ms var(--ease);
+}
+
+.thread.is-drawn .thread-node {
+  transform: scale(1);
+}
+
+@media (max-width: 1100px) {
+  .thread {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thread-line,
+  .thread-node {
+    transform: none;
+    transition: none;
+  }
+
+  .thread-line {
+    transform: scaleY(1);
+  }
+}
+
+/* --- Manifesto ----------------------------------------------------------
+   A claim answered by a rebuttal. The setup runs left across most of the
+   measure; the answer hangs right, alone, in the accent. Nothing else on the
+   page is composed this way, which is the whole reason it exists. */
+
+.manifesto {
+  border-block: 1px solid var(--line);
+}
+
+.manifesto-lead {
+  max-width: 20ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 1rem + 3.6vw, 3.25rem);
+  line-height: 1.16;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+
+.manifesto-resolve {
+  margin: clamp(1.5rem, 3vw, 2.5rem) 0 0 auto;
+  max-width: 20ch;
+  text-align: right;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 1rem + 3.6vw, 3.25rem);
+  line-height: 1.16;
+  letter-spacing: -0.005em;
+  color: var(--accent);
+}
+
+/* Set against the resolve rather than under the lead: the small text belongs
+   to the answer, not to the question. */
+.manifesto-support {
+  margin: clamp(2rem, 4vw, 3rem) 0 0 auto;
+  max-width: 46ch;
+  text-align: right;
+  font-size: var(--step-0);
+  line-height: 1.65;
+  color: var(--fg-muted);
+  border-top: 1px solid var(--line);
+  padding-top: 1.5rem;
+}
+
+@media (max-width: 760px) {
+  .manifesto-lead,
+  .manifesto-resolve,
+  .manifesto-support {
+    max-width: none;
+    text-align: left;
+    margin-left: 0;
+  }
+}
+
+/* --- Capabilities ------------------------------------------------------- */
+
+.cap-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.cap-lead h2 {
+  font-size: var(--step-5);
+  margin-bottom: 1.25rem;
+}
+
+/* Two columns with the right one dropped half a step, so the four read as a
+   staggered column pair rather than a flat 2x2 block. Each item carries a
+   hairline instead of a card. */
+.cap-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2.5rem, 4vw, 3.5rem) clamp(2rem, 3vw, 3rem);
+  padding-top: 0.75rem;
+}
+
+.cap-item {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+/* Margin, not transform: these are Reveal elements, and `.reveal.is-in` sets
+   `transform: none` at the same specificity later in the file, which silently
+   cancelled the offset. */
+.cap-item:nth-child(even) {
+  margin-top: clamp(1.5rem, 3vw, 3rem);
+}
+
+.cap-item svg {
+  color: var(--accent);
+  margin-bottom: 0.85rem;
+}
+
+.cap-item h3 {
+  font-size: var(--step-2);
+  margin-bottom: 0.5rem;
+}
+
+.cap-item p {
+  font-size: var(--step-0);
+  color: var(--fg-muted);
+  max-width: 34ch;
+}
+
+@media (max-width: 900px) {
+  .cap-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cap-list {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding-top: 0;
+  }
+
+  .cap-item:nth-child(even) {
+    margin-top: 0;
+  }
+}
+
+/* --- Work --------------------------------------------------------------- */
+
+.work-head,
+.approach-head,
+.studio-head,
+.contact-head {
+  font-size: var(--step-5);
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+}
+
+/* 4+2, 3+3, 2+4. Six projects, six cells, no row repeating the one above. */
+.is-wide {
+  grid-column: span 4;
+}
+
+.is-half {
+  grid-column: span 3;
+}
+
+.is-narrow {
+  grid-column: span 2;
+}
+
+.project {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  transition:
+    transform var(--dur-hover) var(--ease),
+    border-color var(--dur-hover) var(--ease),
+    box-shadow var(--dur-hover) var(--ease);
+}
+
+.project:hover {
+  transform: translateY(-3px);
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow);
+}
+
+/* The ratio lives on the container so the slot is reserved before the image
+   arrives. Sizing the image itself lets the card collapse and then jump,
+   which shifts every anchor below it. */
+/* --- Project shots ------------------------------------------------------
+   Screened to match the hero: pulled to two tones and printed through a dot
+   grid, so the work reads as part of the same system rather than a row of
+   stock photographs.
+
+   It lifts to full colour on hover. These are screenshots of real work and a
+   client needs to be able to actually see them; the screen is the resting
+   state, not a permanent veil. */
+.project-shot {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-2);
+  aspect-ratio: 16 / 10;
+}
+
+.project-shot img {
+  filter: grayscale(0.85) contrast(1.12);
+  transition:
+    filter 420ms var(--ease),
+    transform 700ms var(--ease);
+}
+
+/* A dot texture, not a halftone. The hero's dither varies its dots by
+   luminance; a CSS grid cannot, so pushed hard it just darkens the picture
+   evenly and flattens it. Kept light, it ties the cards to the page texture
+   and lets the duotone carry the coherence. */
+.project-shot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: radial-gradient(circle at center, var(--scrim) 30%, transparent 34%);
+  background-size: 4px 4px;
+  mix-blend-mode: multiply;
+  opacity: 0.22;
+  transition: opacity 420ms var(--ease);
+}
+
+/* The duotone, tinted to the accent the same way the hero is. */
+.project-shot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: var(--accent);
+  mix-blend-mode: color;
+  opacity: 0.26;
+  transition: opacity 420ms var(--ease);
+}
+
+.project:hover .project-shot img,
+.project:focus-within .project-shot img {
+  filter: none;
+}
+
+.project:hover .project-shot::after,
+.project:hover .project-shot::before,
+.project:focus-within .project-shot::after,
+.project:focus-within .project-shot::before {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-shot img,
+  .project-shot::after,
+  .project-shot::before {
+    transition: none;
+  }
+}
+
+.project-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.is-narrow .project-shot {
+  aspect-ratio: 4 / 5;
+}
+
+.project:hover .project-shot img {
+  transform: scale(1.035);
+}
+
+.project-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.85rem;
+  padding: clamp(1.25rem, 2.2vw, 1.85rem);
+}
+
+.project-kind {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.project-body h3 {
+  font-size: var(--step-3);
+}
+
+.project-text {
+  font-size: var(--step-0);
+  line-height: 1.6;
+  color: var(--fg-muted);
+  max-width: 52ch;
+}
+
+/* Footers pin to the bottom so they line up across a row whatever the copy
+   length above them. */
+.project-foot {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.project-by {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--fg-dim);
+}
+
+@media (max-width: 1024px) {
+  .work-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .is-wide,
+  .is-half,
+  .is-narrow {
+    grid-column: span 1;
+  }
+
+  .is-narrow .project-shot {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (max-width: 680px) {
+  .work-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Approach ----------------------------------------------------------- */
+
+.approach-list {
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+
+/* One hairline above the group and one between rows. No row carries both a
+   top and a bottom border. */
+.approach-row {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: clamp(1rem, 4vw, 4rem);
+  padding-block: clamp(1.75rem, 3.5vw, 2.75rem);
+  border-bottom: 1px solid var(--line);
+}
+
+.approach-row dt {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  line-height: 1.2;
+}
+
+.approach-row dd {
+  margin: 0;
+  font-size: var(--step-1);
+  line-height: 1.6;
+  /* Baseline is the fully-read state. The reveal below is an enhancement on
+     top of legible text, never a gate in front of it. */
+  color: var(--fg);
+  max-width: 58ch;
+}
+
+/* --- Word reveal --------------------------------------------------------
+   Each word brightens in sequence as the line arrives. Both ends of the ramp
+   pass AA, so nothing is ever hard to read mid-animation.
+
+   A transition stagger rather than a scroll timeline: the scrubbed version was
+   Chromium only, and sequencing on entry reads almost identically without
+   needing a per-word scroll mapping in every browser. */
+@media (prefers-reduced-motion: no-preference) {
+  .wordreveal-w {
+    color: var(--fg-dim);
+    transition: color 420ms var(--ease);
+    transition-delay: calc(var(--i) * 26ms);
+  }
+
+  .wordreveal.is-lit .wordreveal-w {
+    color: var(--fg);
+  }
+}
+
+@media (max-width: 760px) {
+  .approach-row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+/* --- Studio ------------------------------------------------------------- */
+
+.studio {
+  background: var(--surface);
+  border-block: 1px solid var(--line);
+}
+
+/* Same size, asymmetric placement.
+   
+   Both cards span five of twelve columns, so they measure identically and
+   neither founder is given more weight than the other. The asymmetry comes
+   from where they sit: the first is flush with the left gutter under the
+   heading, the second starts a column later than a symmetric split would put
+   it and stops a column short of the right edge, leaving a deliberate band of
+   air there. The vertical drop does the rest. */
+.studio-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+.person:nth-child(1) {
+  grid-column: 1 / span 5;
+}
+
+.person:nth-child(2) {
+  grid-column: 7 / span 5;
+  margin-top: clamp(2.5rem, 6vw, 5.5rem);
+}
+
+.person {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+
+.person-mark {
+  font-family: var(--font-display);
+  font-size: clamp(3.75rem, 8vw, 5.75rem);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.5rem;
+
+  /* Set in the same dot field as the hero, clipped to the letterforms. The
+     flat colour is the fallback where background-clip: text is unsupported,
+     so the initials never vanish. */
+  color: var(--accent-soft);
+  background-image: radial-gradient(circle at center, var(--accent) 36%, transparent 40%);
+  background-size: 4px 4px;
+}
+
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .person-mark {
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    opacity: 0.55;
+  }
+}
+
+.person-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.person-top h3 {
+  font-size: var(--step-3);
+}
+
+.person-role {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.person-text {
+  font-size: var(--step-0);
+  line-height: 1.6;
+  color: var(--fg-muted);
+  max-width: 46ch;
+}
+
+.person-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: auto;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.person-links li {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.person-key {
+  flex: 0 0 5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.person-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+  font-size: var(--step--1);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+  transition:
+    color var(--dur-hover) var(--ease),
+    border-color var(--dur-hover) var(--ease);
+}
+
+.person-links a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+@media (max-width: 820px) {
+  .studio-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .person:nth-child(1),
+  .person:nth-child(2) {
+    grid-column: auto;
+    margin-top: 0;
+  }
+}
+
+/* --- Contact ------------------------------------------------------------ */
+
+.contact-inner {
+  max-width: 820px;
+  text-align: center;
+}
+
+.contact-lead {
+  max-width: 48ch;
+  margin-inline: auto;
+}
+
+.contact-form-wrap {
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  text-align: left;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Label above the input, always visible. Placeholders are never labels. */
+.field label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.field label span {
+  color: var(--accent);
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  transition: border-color var(--dur-hover) var(--ease);
+}
+
+.field textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.field input:hover,
+.field textarea:hover {
+  border-color: var(--fg-dim);
+}
+
+.field input[aria-invalid='true'],
+.field textarea[aria-invalid='true'] {
+  border-color: var(--accent);
+}
+
+.field-help {
+  font-size: var(--step--1);
+  color: var(--fg-muted);
+}
+
+/* Errors are text, never colour alone: the accent is the page's only hue, so
+   the message itself carries the meaning. */
+.field-error {
+  display: flex;
+  gap: 0.4rem;
+  font-size: var(--step--1);
+  color: var(--accent);
+}
+
+.field-error::before {
+  content: '!';
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.form-summary {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: var(--accent-soft);
+  border-left: 2px solid var(--accent);
+  font-size: var(--step--1);
+}
+
+.form-summary svg {
+  flex-shrink: 0;
+  color: var(--accent);
+  margin-top: 2px;
+}
+
+.form-summary ul {
+  margin-top: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.form-summary a {
+  color: var(--fg-muted);
+}
+
+.form-summary a:hover {
+  color: var(--fg);
+}
+
+.form .btn {
+  align-self: flex-start;
+}
+
+.form-done {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+}
+
+.form-done h3 {
+  font-size: var(--step-3);
+}
+
+.form-done p {
+  font-size: var(--step-0);
+  color: var(--fg-muted);
+  max-width: 52ch;
+}
+
+@media (max-width: 640px) {
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Footer ------------------------------------------------------------- */
+
+.footer {
+  padding-block: clamp(3rem, 6vw, 4.5rem) 2rem;
+  border-top: 1px solid var(--line);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr));
+  gap: 2.5rem;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: var(--step--1);
+}
+
+.footer-col h2 {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  margin-bottom: 0.25rem;
+}
+
+.footer-col a {
+  color: var(--fg-muted);
+  text-decoration: none;
+  width: fit-content;
+  transition: color var(--dur-hover) var(--ease);
+}
+
+.footer-col a:hover {
+  color: var(--accent);
+}
+
+/* --- Footer wordmark ----------------------------------------------------
+   Oversized, cropped at the foot of the page. Decorative weight, but it is
+   the brand name, so it stays real text inside an aria-labelled <svg>. */
+
+.footer-wordmark {
+  max-width: var(--container);
+  margin: clamp(2rem, 5vw, 3.5rem) auto 0;
+  padding-inline: var(--gutter);
+  /* Clipped at the baseline: the lower third of the letterforms sits below
+     the fold of the section, which is what gives it the poster feel. */
+  overflow: hidden;
+  line-height: 0;
+}
+
+.wordmark {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.wordmark text {
+  font-family: var(--font-display);
+  font-size: 58px;
+  letter-spacing: 0.06em;
+  fill: none;
+  stroke-width: 0.55;
+  paint-order: stroke;
+}
+
+.wordmark-base {
+  stroke: color-mix(in oklab, var(--fg) 26%, transparent);
+  /* Drawn on once when the footer arrives. The dash length is generous
+     enough to cover the full outline of a seven-letter word at this size. */
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+}
+
+.wordmark.is-drawn .wordmark-base {
+  animation: wordmark-draw 2.4s var(--ease) forwards;
+}
+
+@keyframes wordmark-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.wordmark .ramp-0 {
+  stop-color: var(--accent);
+  stop-opacity: 0.3;
+}
+
+.wordmark .ramp-1 {
+  stop-color: var(--accent);
+}
+
+.wordmark .ramp-2 {
+  stop-color: var(--fg);
+}
+
+.wordmark-lit {
+  stroke: url(#wordmark-ramp);
+  stroke-width: 1.05;
+  opacity: 0;
+  transition: opacity var(--dur-hover) var(--ease);
+}
+
+.wordmark.is-lit .wordmark-lit {
+  opacity: 1;
+}
+
+/* Stroke width is in user units, so it shrinks with the rendered size. At
+   phone width the outline lands near 0.5px and disappears; these keep it
+   above a pixel. */
+@media (max-width: 760px) {
+  .wordmark text {
+    stroke-width: 1.15;
+    font-size: 54px;
+  }
+
+  .wordmark-lit {
+    stroke-width: 1.8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wordmark-base {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+
+  .wordmark-lit {
+    display: none;
+  }
+}
+
+.footer-base {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  max-width: var(--container);
+  margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+  padding: 1.5rem var(--gutter) 0;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--fg-dim);
+}
+
+@media (max-width: 760px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* --- Motion -------------------------------------------------------------
+   Reveals are driven by IntersectionObserver in Reveal.jsx. There is no
+   scroll listener anywhere on the page. */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity var(--dur-enter) var(--ease),
+    transform var(--dur-enter) var(--ease);
+}
+
+/* Entrances that agree with the composition they belong to: a block set
+   against the right edge arrives from the right. Uniform upward motion on
+   an asymmetric page reads as a template running over the layout. */
+.reveal-from-right {
+  transform: translate3d(28px, 12px, 0);
+}
+
+.reveal-from-left {
+  transform: translate3d(-28px, 12px, 0);
+}
+
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 900ms linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -180,97 +1779,21 @@ html {
     scroll-behavior: auto;
   }
 
-  .reveal,
-  .reveal-in {
+  .reveal {
     opacity: 1;
     transform: none;
     transition: none;
   }
 
-  .hero-enter,
-  .hero-bg {
+  .spin {
     animation: none;
   }
 
-  .card,
-  .cta-arrow,
-  .hero-navlinks a:after {
-    transition: none;
-  }
-
-  .card:hover {
-    transform: none;
-  }
-
-  .cta:hover .cta-arrow {
-    transform: none;
-  }
-}
-
-/* ShapeBlur edge glow, layered over the card and inert to the pointer. */
-.card-glow {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* ---- Scroll phrases ---------------------------------------------------- */
-
-.phrase {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 62vh;
-  padding: 4rem clamp(1.25rem, 5vw, 3rem);
-  overflow: hidden;
-}
-
-.phrase-inner {
-  max-width: 880px;
-  text-align: center;
-  will-change: transform, opacity;
-}
-
-.phrase-eyebrow {
-  font-size: 12px;
-  letter-spacing: 2px;
-  color: var(--teal);
-  margin-bottom: 1.25rem;
-}
-
-.phrase-text {
-  margin: 0;
-  font-family: 'Fraunces', serif;
-  font-weight: 500;
-  font-size: clamp(28px, 5vw, 50px);
-  line-height: 1.15;
-  letter-spacing: -0.5px;
-  color: var(--navy);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  /* Nothing drives these without the scroll handler, so pin them visible. */
-  .phrase-inner {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-}
-
-/* Card buttons. The card itself is hollow, so these and the edge carry it. */
-.cardbtn {
-  transition:
-    background 0.25s ease,
-    color 0.25s ease;
-}
-
-.cardbtn:hover {
-  background: var(--navy);
-  color: var(--foam) !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cardbtn {
-    transition: none;
+  *,
+  *::before,
+  *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

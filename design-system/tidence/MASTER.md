@@ -1,0 +1,386 @@
+# Tidence — Design System (Master)
+
+Global source of truth. Page overrides live in `pages/<page>.md` and win over this file.
+
+## Design Read
+
+Creative studio portfolio for prospective clients and technical recruiters, with a dark
+editorial / tidal language, leaning toward native CSS + scroll-driven animation +
+a variable grotesque display face.
+
+**Mode:** Redesign — overhaul. Content and IA preserved, visual language rebuilt.
+
+## Dials
+
+| Dial | Value | Reasoning |
+|---|---|---|
+| `DESIGN_VARIANCE` | 7 | Studio portfolio, overhaul (+2 over the existing site's ~5). Asymmetric grids, offset type. Not Awwwards-chaotic — the work has to stay readable. |
+| `MOTION_INTENSITY` | 7 | The brand is a tide. Motion is the brand. Scroll-driven, never decorative. |
+| `VISUAL_DENSITY` | 4 | Matches the existing site. Marketing page, not a dashboard. |
+
+## Theme
+
+**Light and dark, both supported.** An earlier revision locked the page to dark
+only; that was overridden on request, and light was then designed as its own
+palette rather than produced by inverting the dark one.
+
+Default follows `prefers-color-scheme`. A manual choice persists in
+`localStorage` under `tidence-theme` and, once made, stops following the system.
+A synchronous boot script in `index.html` writes `data-theme` before first paint,
+so the page never renders in the wrong theme and flips. There is no
+`prefers-color-scheme` CSS fallback because this is a React app that renders
+nothing without JS.
+
+**Media surfaces do not follow the theme.** The hero is a photograph of a dark
+wave in both modes, so its stage, scrim, copy and CTA use a separate token group
+(`--on-media`, `--on-media-muted`, `--accent-on-media`, `--on-accent-media`,
+`--scrim`) that is fixed across themes. Inverting it in light mode would put
+white headline type onto a pale page, and a scrim heavy enough to rescue dark
+type would wash the photograph out. The nav takes those same media colours while
+it floats over the hero and returns to the theme once it lifts past it.
+
+## Color
+
+One accent per theme. Teal is inherited brand equity, retuned per mode so it
+clears AA on its own ground.
+
+| Role | Dark | Light |
+|---|---|---|
+| Background | `#122229` | `#F2F6F5` |
+| Surface | `#1B3038` | `#FFFFFF` |
+| Surface raised | `#24404A` | `#E7EFEE` |
+| Foreground | `#EAF1F0` | `#0E1C21` |
+| Muted foreground | `#A2B8BD` | `#4A6068` |
+| Dim foreground | `#93ACB3` | `#5A7078` |
+| Accent | `#5CC9BE` | `#12727A` |
+| Accent hover | `#7AD7CE` | `#0E5F66` |
+| On accent | `#07191C` | `#FFFFFF` |
+| Media scrim | `#0E1B21` | `#0E1B21` |
+
+**The dark theme was lifted about 2.3x in luminance** from an original near-black
+(`#0B1417`), which read as heavy rather than deep. Surfaces were separated
+further so cards sit off the page instead of dissolving into it, and the muted
+text and hairlines were raised to keep their weight against the lighter ground.
+
+Lifting the background costs contrast, so the text tokens were raised further
+than the ground was: the dark floor **improved** from 4.63:1 to 5.76:1 while the
+page got lighter. The media scrim lifted with it, only by a step, because left at
+the old near-black it opened a visible seam between the hero and the page below.
+
+The original brand teal `#2E8B93` reaches only 3.69:1 on a light ground and fails
+AA, which is why light deepens to `#12727A` (5.19:1). The generator's `#EC4899`
+pink and `#0891B2` cyan were rejected outright: no relationship to the wave mark
+or the name.
+
+**Verified in-page, not on paper.** A canvas-based audit resolves every computed
+colour (including the `oklab()` values `color-mix` produces, which no regex
+parses) and composites the real background stack. 25 text selectors, both themes,
+zero failures. Floors: **5.76:1 dark, 4.79:1 light**.
+
+**Locked:** one accent per theme, no second hue anywhere, including states.
+
+## Typography
+
+An old-style literary stack. Serif is used here because the client named the
+faces directly; neither is one of the banned LLM-default display serifs.
+
+| Role | Face | Notes |
+|---|---|---|
+| Display | **Goudy Bookletter 1911** | Wide set width, long extenders. Single weight (400). |
+| Body | **Fanwood Text** | Roman + true italic. Single weight (400). |
+| Mono | **JetBrains Mono** | Labels, tags, buttons, tabular figures. 400/500. |
+
+**Neither serif ships a bold.** Hierarchy therefore comes from size, colour,
+spacing and italic, never from `font-weight`. `font-synthesis-weight: none` is
+set globally so the browser cannot smear on a fake bold and so any stray weight
+shows up immediately in review. Buttons and labels use JetBrains Mono, which is
+the one face in the stack that actually has a 500.
+
+**Fraunces is removed** (named default-serif ban, and it was the old site's face).
+Emphasis inside a headline is carried by the accent colour, never by swapping in a
+second family and never by a weight the face does not have.
+
+Scale: `14 · 17 · 19 · 23 · 30 · 46 · 62`, lifted one step over a sans-equivalent
+because old-style faces run small. Display uses near-zero tracking (`-0.005em`) and
+`line-height: 1.12`: Goudy's extenders need the leading, and negative tracking that
+suits a grotesque closes it up badly.
+
+Body measure capped at `65ch`. Headlines use `text-wrap: balance`, body `pretty`.
+
+## Hero backdrop
+
+The wave photograph rendered as a two-colour dither, via `ImageDithering` from
+`@paper-design/shaders-react` (Apache-2.0, pinned to exactly `0.0.81` because it
+is pre-1.0 and the API can move).
+
+Chosen over ocean footage on measurement: **+8 KB gzipped against 3-15 MB** for an
+equivalent video, with a perfect loop, no file to source or licence, and the
+existing brand asset reused rather than replaced. The wave still reads as a wave;
+it simply stops being a photograph.
+
+Falls back to the graded still for reduced motion, Save-Data, 2G, and any browser
+without a WebGL context. `navigator.connection` does not exist in Firefox, so the
+data checks are inert there and Firefox always gets the full effect; the optional
+chaining means nothing breaks.
+
+Dev-only knobs read from the query string and are not needed in production:
+`?effect=photodither|dither|photo`, plus `shape`, `type`, `size`, `steps`,
+`scale`, `speed`, `rotation`, `inverted`, `original`.
+
+## Texture
+
+A fixed dot lattice (26px pitch) plus a grain layer, both fixed and
+`pointer-events: none`, never on a scrolling container.
+
+The dot language now runs through the whole page rather than sitting only in the
+background: the hero is a true luminance dither, project shots are duotoned and
+screened through a 4px dot grid, and the person monograms are filled with the
+same dot field via `background-clip: text`.
+
+**Project shots are a duotone, not a halftone.** The hero's shader varies its dots
+by luminance; a CSS grid cannot, so pushed hard it darkens the picture evenly and
+flattens it to a solid block, which is exactly what the first attempt did. Kept
+light, the dots tie the cards to the page and the duotone carries the coherence.
+They lift to full colour on hover and on focus, because these are screenshots of
+real work and a client has to be able to see them.
+
+## Shape
+
+**Radius 0 everywhere. No exceptions.** Buttons, tag pills, the language switch,
+the theme control, inputs, cards, media plates and the focus ring are all hard
+right angles.
+
+An earlier revision allowed full-pill buttons and tags as a single documented
+exception; that was removed on request, which leaves one rule with nothing to
+remember. The right angle is already what the hairline rules, the flush grid and
+the old-style serif are doing, so the pills were the only element arguing with
+the rest of the page.
+
+The only curves left on the site are drawn, not styled: the wave mark's round
+stroke caps (brand IP, unchanged) and the loading spinner.
+
+## Spacing
+
+4px base. Section rhythm `--space-section: clamp(6rem, 12vw, 10rem)`. Gutters
+`clamp(1.25rem, 5vw, 3rem)`. Container `1280px`.
+
+## Motion
+
+Scroll progress is driven by `useScrollScrub`, which writes `currentTime` on
+paused CSS animations. The keyframes stay the single description of the motion;
+JS only decides how far through them the page is.
+
+**Why not CSS scroll-driven animations.** `animation-timeline` and `view()` are
+Chromium only. Firefox keeps them behind a flag, so the hero silently did not
+animate there at all and rendered its static fallback; Safari support cannot be
+assumed either. The earlier build was verified only in a Chromium pane, which is
+how that went unnoticed. Shipping one hero to Chrome and a different one to
+everybody else is not acceptable for a studio's own site, so there is now one
+path for every browser.
+
+The loop runs only while the hero track is on screen, gated by
+`IntersectionObserver`, and does one layout read per frame with no writes before
+it, so nothing thrashes. Interpolation stays with the compositor rather than
+being recomputed in JS.
+
+Reveals elsewhere on the page use `IntersectionObserver` plus CSS transitions,
+including the Approach word stagger, which was also on a view timeline and had
+the same Chromium-only problem. There is no `window.addEventListener('scroll')`
+anywhere.
+
+Easing token: `cubic-bezier(.16,1,.3,1)`. Enter 600ms, exit ~380ms, hover/press 200ms.
+
+Every animation must answer "what does this communicate?" in one sentence:
+- Hero expand (window opens, wordmark gives way to the proposition, bar and copy arrive) -> storytelling, one cinematic beat.
+- Scroll reveals -> pacing down the page.
+- Card hover lift, nav underline, wordmark reveal -> feedback.
+
+With no JS, or under `prefers-reduced-motion: reduce`, the `scrub` class is never
+added and the whole composition renders finished and ungated.
+
+### Ported components
+
+Both were supplied as Next.js + Tailwind + framer-motion + lucide. This project is
+React 19 + Vite + vanilla CSS + Phosphor, so both were rewritten rather than dropped
+in. No animation library was added: `motion` would have cost more than the two
+effects are worth, right after three.js was removed.
+
+**Scroll-expand hero: a title card you pass through.** The closed window carries
+the wordmark alone; the proposition replaces it as the window opens. Sequenced on
+one shared timeline: the wordmark recedes and fades by 48%, the headline arrives
+by 64%, the lines part from 46% to 78%, and the nav bar, subheading and CTA settle
+in between 58% and 88%.
+
+The wordmark layer is `aria-hidden`. The `<h1>` carrying the proposition is in the
+accessibility tree the whole time, so a screen reader gets the sentence rather
+than the brand name it is standing in front of.
+
+The scrim is on the same timeline, held at 0.35 while the window is closed. It
+exists to protect the subheading, and the subheading is not there yet; at full
+strength it turned the closed window into a grey rectangle instead of a lit
+photograph. Do not reach for `object-position` to solve that: shifting the crop
+fixes landscape and breaks portrait, where a 16:9 photo cover-crops to a narrow
+centre strip of dark water.
+
+**The gate is deliberate.** The nav bar, the subheading and
+the primary CTA all stay hidden until the plate has opened, so the opening reads as moving through
+a window into the page rather than as a headline with an image behind it. This is
+a requested, reaffirmed design decision and it knowingly trades against the usual
+rule that a hero CTA is visible without scrolling: a visitor who never scrolls
+never sees the value proposition or the button.
+
+The nav is not a descendant of the track, so `timeline-scope: --expand` on the
+root publishes the timeline to it; the bar then reads the same progress as the
+plate and arrives with it. It animates opacity only, never transform, because it
+is `position: sticky` and that is not worth risking.
+
+Three things keep the gate from becoming an accessibility problem. Everything
+stays in the DOM and the accessibility tree, so screen readers reach it whatever
+the scroll position. `.expand-copy:focus-within` and `.nav:focus-within` each
+cancel the gate outright, so a keyboard user never lands a focus ring on an
+invisible control. And the skip link sits outside the nav, so it is reachable on
+the very first Tab regardless.
+
+Under reduced motion, or in a browser without scroll-driven animation, the whole
+composition renders finished and ungated.
+
+**Scroll-expand hero.** The source hijacked scroll: `preventDefault()` on wheel and
+touchmove plus `window.scrollTo(0, 0)` on every scroll event. That disables Page Down,
+space, arrow keys, scrollbar dragging and find-on-page, and cannot be opted out of. It
+also held scroll progress in `useState`, re-rendering the tree every wheel tick.
+
+Reimplemented as a 280vh track carrying a named `view-timeline`, with a sticky stage.
+Native scroll is untouched; the timeline runs in CSS with no listener and no state. The
+plate opens by `clip-path`, not by width and height, so the stage never relayouts.
+Browsers without scroll-driven animation get the finished full-bleed composition.
+
+**Word reveal (Approach).** Idea taken from the registry's text-reveal family.
+The common build fades words up from near-zero opacity, which leaves the sentence
+unreadable for most of its time on screen. Here it ramps between two colours that both
+clear AA (`--fg-dim` 5.07:1 to `--fg` 15.99:1), so the motion does emphasis instead of
+gatekeeping the content. Pure CSS view timeline, no dependency; the stagger is
+`animation-range` arithmetic on a per-word `--i`, not a delay per element.
+
+**Footer wordmark.** The source kept cursor position in `useState` (a re-render per
+mousemove) and used a five-colour rainbow gradient, which would have been the only
+second accent on the site. The gradient centre is now written straight to the SVG node
+inside one `requestAnimationFrame`, and the ramp is a single teal-to-foam hue. Stop
+colours live in CSS because `stopColor="var(--accent)"` as a presentation attribute
+never resolves. Stroke-only glyphs have no hit area, so a transparent rect provides one.
+
+## Narrative
+
+The page argues rather than lists. The order is claim, objection answered,
+capability, proof, method, people, ask.
+
+The differentiator (nobody stands between the client and the person writing the
+code) used to sit as a hero subhead and a row in Approach. It now has its own
+section, because it is the single strongest thing this studio can say and a
+brochure order buried it.
+
+## Connective motion
+
+**The story thread.** A rail down the left of the content column, one segment per
+narrative section, each drawing as its section arrives with a node marking the
+beat. It is the tide line: the device that carries the eye from one beat to the
+next instead of leaving every section to announce itself independently.
+
+Segment-by-segment rather than scrubbed against page scroll. It reads almost
+identically, costs one `IntersectionObserver` per section instead of a permanent
+rAF loop over the whole document, and needs no scroll-driven animation support.
+Decorative and `aria-hidden`; it carries nothing the headings do not. Withdrawn
+below 1100px, where the gutter stops being wide enough to hold it.
+
+**Directional entrances.** `reveal-from-left` and `reveal-from-right` let a block
+arrive from the side its composition sits on: the Manifesto's rebuttal and the
+second founder card both enter from the right. Uniform upward motion on an
+asymmetric page reads as a template running over the layout.
+
+## Provider files export exactly one component
+
+`prefs/context.js` holds the contexts and `prefs/hooks.js` the hooks, so
+`theme.jsx` and `locale.jsx` each export only their provider.
+
+This is not tidiness. A module that exports both a component and something else
+cannot be handled by React Fast Refresh, so Vite invalidates the whole module on
+edit, hands out a second Context identity while the mounted provider still holds
+the first, and every consumer throws `useLocale must be used inside
+LocaleProvider` until a hard reload. It presented as a total white-screen crash
+mid-session. The `react(only-export-components)` warning that had been dismissed
+as cosmetic was pointing straight at it.
+
+## Section Layout Families
+
+No family repeats. Nine sections, nine shapes.
+
+1. Nav - three-track grid, links optically centred, 76px
+2. Hero - dithered window, sticky-pinned, centred
+3. Manifesto - claim left, rebuttal hung right, support set against the rebuttal
+4. Capabilities - staggered two-column pair, hairlines instead of cards
+5. Work - asymmetric portfolio grid (1 feature + 5, exact cell count)
+6. Approach - full-width stacked statements, word reveal
+7. Studio - equal cards, asymmetric placement on a 12-column track
+8. Contact - full-width centred form
+9. Footer - four-column minimal, oversized outlined wordmark
+
+**Studio: same size, asymmetric placement.** Both founder cards span five of
+twelve columns, so they measure identically and neither person is given more
+visual weight than the other. The asymmetry is positional: the first sits flush
+to the left gutter under the heading, the second starts a column later than a
+symmetric split would place it and stops a column short of the right edge,
+leaving a deliberate band of air there, with a vertical drop on top. At 1440 that
+is 470px each, a 142px gap, 102px of trailing air and an 86px drop.
+
+An earlier revision made them unequal (7fr / 5fr). Equal measure is the better
+answer here: this is a two-person studio whose argument is that you get both of
+them, and sizing one founder larger than the other quietly contradicts the copy.
+
+**Offsets use margin, never transform.** Several of these elements are `Reveal`
+wrappers, and `.reveal.is-in { transform: none }` sits later in the file at equal
+specificity, so a `transform` offset is silently cancelled and the layout looks
+flat for no visible reason. Both the Capabilities stagger and the Studio drop hit
+this before it was caught.
+
+Every offset collapses to zero on a single column; a stagger without columns is
+just uneven gaps.
+
+## Eyebrow Budget
+
+8 sections → `ceil(8/3) = 2` maximum. **Actual: 0.** Headlines carry their own sections.
+
+## CTA Intents
+
+One label per intent, page-wide.
+- Portfolio intent → **"See the work"** (hero only)
+- Contact intent → **"Start a project"** (nav + contact section, identical label)
+
+## Language
+
+English and Spanish. Spanish is the studio's own language and its clients'; the
+copy addresses the reader as "tú" rather than "usted", because the whole pitch is
+that you talk to the two of them directly and "usted" reinstates the distance the
+copy argues against.
+
+Strings live in `src/prefs/en.js` and `src/prefs/es.js` with an identical shape.
+A missing Spanish string falls back to English before it falls back to printing
+the key; a visible key is a bug signal, not a UI state. Proper nouns (project
+names, tech tags, URLs) stay untranslated.
+
+Default follows `navigator.language`; a manual choice persists under
+`tidence-lang` and sets `<html lang>`. Adding a third language is one dictionary
+file plus one entry in `LOCALES`.
+
+No i18n library: two languages and roughly 90 strings do not justify the weight,
+particularly right after three.js was removed from the bundle.
+
+## Icons
+
+`@phosphor-icons/react`, `weight="regular"` everywhere, one family, no exceptions.
+The wave mark is existing brand IP and stays hand-authored SVG (redesign rule 11.F).
+
+## Bans In Force
+
+Zero em-dashes and en-dashes anywhere visible. No scroll cues. No locale/time/weather
+strips. No section-number eyebrows. No decorative status dots. No version labels. No
+div-based fake screenshots. No three-equal-card feature row. No `100vh` (use `100dvh`).
+No pure `#000`/`#fff`. No AI-purple. No hand-rolled decorative SVG.
