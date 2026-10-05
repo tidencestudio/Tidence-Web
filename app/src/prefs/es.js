@@ -1,89 +1,124 @@
-// Neutral Latin American Spanish, addressing the reader as "tú": this is a
-// two-person studio whose whole pitch is that you talk to them directly, and
-// "usted" would put back the distance the copy is arguing against.
+// Neutral Latin American Spanish, addressing the reader as "tú": the studio's
+// pitch is direct work with the people building the product, and "usted" would
+// put back the distance the copy is arguing against.
 export default {
   meta: {
+    title: 'Tidence — Sitios web, CRMs y automatización para negocios',
+    description:
+      'Tidence es un estudio digital que construye sitios web, CRMs, automatización de oficina y las herramientas del día a día con las que trabaja un negocio.',
     skip: 'Saltar al contenido',
     openOutside: '(se abre en una pestaña nueva)',
   },
 
   nav: {
     label: 'Principal',
-    work: 'Trabajo',
-    studio: 'Estudio',
+    build: 'Qué construimos',
+    journey: 'Proceso',
+    story: 'Journal',
     contact: 'Contacto',
     cta: 'Empezar un proyecto',
     language: 'Idioma',
-    themeToLight: 'Cambiar al tema claro',
-    themeToDark: 'Cambiar al tema oscuro',
   },
 
   hero: {
-    lead: 'Diseñamos y construimos la web,',
-    em: 'de principio a fin',
-    sub: 'Un estudio de dos personas. Hablas con quienes escriben el código, no con alguien que traslada mensajes.',
-    cta: 'Ver el trabajo',
+    lead: 'Construimos las herramientas',
+    em: 'con las que trabaja tu negocio',
+    sub: 'Sitios web, CRMs y las automatizaciones que mueven tu oficina sin que nadie lo note. Diseñado, construido y cuidado por un mismo equipo, de principio a fin.',
+    cta: 'Hacer el recorrido',
+    scroll: 'Desliza para explorar',
   },
 
   manifesto: {
-    lead: 'La mayoría de los estudios pone tres personas entre tú y quien escribe tu código.',
-    resolve: 'Nosotros no ponemos ninguna.',
+    lead: 'La mayoría de los negocios compra software genérico y pasa años trabajando a su alrededor.',
+    resolve: 'Nosotros construimos a tu medida.',
     support:
-      'Sin gerente de proyecto trasladando requisitos. Sin un junior heredando el desarrollo a mitad de camino. Las dos personas que conoces son las dos que lo entregan.',
+      'Partimos de cómo ya funciona tu negocio y diseñamos el sitio, el sistema y la automatización para que encajen. Un mismo equipo lleva el trabajo desde la primera conversación hasta mucho después del lanzamiento.',
   },
 
-  capabilities: {
-    title: 'Cuatro cosas,\nbien hechas.',
-    lead: 'Preferimos ser buenos en una lista corta que estar disponibles para una larga.',
+  marquee: {
+    words: ['Sitios web', 'CRMs', 'Automatización', 'Dashboards', 'Bots', 'Herramientas internas', 'Integraciones'],
+  },
+
+  services: {
+    eyebrow: 'Qué construimos',
+    title: 'Un sitio web\nes donde empieza.',
+    lead: 'La mayoría llega por un sitio y se queda por lo que hay detrás: la lista de clientes repartida en cinco hojas de cálculo, el reporte que alguien rehace cada lunes, el copiar y pegar entre dos sistemas que nunca se hablan.',
     items: {
-      front: {
-        title: 'Front end',
-        text: 'React y Vite, construido según el diseño y no según una plantilla. Responsivo, operable con teclado y rápido en los teléfonos que la gente realmente tiene.',
+      web: {
+        kind: 'Sitios y aplicaciones web',
+        title: 'Sitios que trabajan',
+        text: 'No un folleto. Un sitio que reserva, vende, recibe consultas y te cuenta qué pasó, diseñado para tu negocio y no vaciado en una plantilla.',
+        examples: ['Sitios de empresa y landing pages', 'Tiendas en línea y reservas', 'Portales para clientes', 'Plataformas web y SaaS'],
       },
-      back: {
-        title: 'Back end',
-        text: 'Servicios en Node y Python, APIs REST y la fontanería entre ambos. Escrito para que la próxima persona pueda leerlo.',
+      crm: {
+        kind: 'CRMs y sistemas de clientes',
+        title: 'Tus clientes, en un solo lugar',
+        text: 'Un CRM hecho a la forma en que realmente vendes, en vez de uno genérico al que te tienes que adaptar. Cada prospecto, cotización y seguimiento donde todo el equipo lo ve.',
+        examples: ['Embudos de prospectos y ventas', 'Fichas e historial de clientes', 'Cotizaciones, facturas y pagos', 'Recordatorios de seguimiento'],
       },
-      data: {
-        title: 'Datos',
-        text: 'Esquemas de PostgreSQL y Redis diseñados antes de la primera consulta, para que los reportes no se conviertan en una reescritura seis meses después.',
+      automation: {
+        kind: 'Automatización de oficina',
+        title: 'El trabajo que se hace solo',
+        text: 'Encontramos las tareas que alguien repite todos los días y se las damos al software. Los reportes se arman de noche, las facturas salen a tiempo y los datos pasan entre tus herramientas por su cuenta.',
+        examples: ['Reportes que se arman solos', 'Documentos y facturas desde plantillas', 'Avisos por correo y WhatsApp', 'Sincronizar datos entre sistemas'],
       },
-      security: {
-        title: 'Seguridad',
-        text: 'Pentesting sobre nuestro propio trabajo. Autenticación, manejo de sesiones y validación de entradas se revisan antes de publicar nada.',
+      everyday: {
+        kind: 'Herramientas del día a día',
+        title: 'Herramientas pequeñas, horas de vuelta',
+        text: 'No todo problema necesita una plataforma. A veces es un dashboard, un bot o un script de cincuenta líneas, y le ahorra a alguien una hora todos los días.',
+        examples: ['Dashboards internos', 'Inventario y agendas', 'Bots de chat para equipos y clientes', 'Scripts para la parte aburrida'],
       },
     },
   },
 
-  work: {
-    title: 'Lo que hemos entregado',
-    live: 'En vivo',
-    source: 'Código',
-    shotAlt: 'Captura de pantalla de {name}',
-    projects: {
-      birdie: {
-        kind: 'Juego arcade 2D',
-        text: 'Maneja el taxi de un pajarito azul. Recoge pasajeros, esquiva baches y vigila el tanque. 22 sombreros desbloqueables, ciclo de día y noche, tablas de líderes globales.',
+  journey: {
+    eyebrow: 'El recorrido',
+    title: 'De una idea\na algo que funciona\ntodos los días.',
+    lead: 'Cada proyecto pasa por las mismas siete etapas. Esto es lo que ocurre en cada una, y lo que tienes en las manos cuando termina.',
+    hint: 'Sigue bajando',
+    stageLabel: 'Etapa {n} de {total}',
+    stages: {
+      listen: {
+        kicker: 'Primera conversación',
+        title: 'Escuchar',
+        text: 'Empezamos por cómo funciona hoy tu negocio, no por la tecnología. A dónde se va el tiempo, qué se rompe, qué te gustaría que simplemente pasara.',
+        out: ['Una llamada de diagnóstico', 'El problema real, con nombre'],
       },
-      textnode: {
-        kind: 'App de notas',
-        text: 'Notas para quienes piensan más rápido de lo que archivan. CRUD completo, sin ceremonia.',
+      map: {
+        kicker: 'Alcance',
+        title: 'Trazar',
+        text: 'Escribimos qué se construye y qué no, cuánto cuesta y cuándo llega. Acordado por escrito antes de comprometer nada.',
+        out: ['Alcance por escrito', 'Calendario y precio'],
       },
-      automator: {
-        kind: 'Plataforma de automatización con IA',
-        text: 'Una plataforma conversacional conectada a Automator, con una interfaz 3D construida con Three.js.',
+      design: {
+        kicker: 'Interfaz',
+        title: 'Diseñar',
+        text: 'Pantallas, flujos y la forma de los datos. Lo ves y lo recorres temprano, mientras cambiarlo todavía es barato.',
+        out: ['Prototipo navegable', 'Modelo de datos'],
       },
-      attendance: {
-        kind: 'Plataforma fullstack',
-        text: 'Asistencia de principio a fin. Un backend en Express, un frontend en React y APIs REST que alimentan reportes en tiempo real.',
+      build: {
+        kicker: 'Código',
+        title: 'Construir',
+        text: 'El equipo que lo diseñó lo escribe. Ciclos cortos, una vista previa en vivo que puedes abrir cualquier día y ningún traspaso a mitad de camino.',
+        out: ['Avances en vivo cada semana', 'Código legible y tuyo'],
       },
-      ecobot: {
-        kind: 'Bot de Discord',
-        text: 'Bot de conciencia ambiental. Cuestionarios, puntos verdes y recordatorios personalizados.',
+      connect: {
+        kicker: 'Automatización',
+        title: 'Conectar',
+        text: 'Lo integramos con el resto de tu día: correo, WhatsApp, pagos, hojas de cálculo y las herramientas que ya pagas. Aquí es donde vuelven las horas.',
+        out: ['Integraciones', 'Tareas automatizadas'],
       },
-      currency: {
-        kind: 'Aplicación de escritorio',
-        text: 'Tasas de cambio en vivo tomadas de una API externa, con la lógica de negocio resuelta en C#.',
+      launch: {
+        kicker: 'Lanzamiento',
+        title: 'Lanzar',
+        text: 'Revisado en seguridad, probado en teléfonos reales y publicado. Capacitamos a tu equipo y nos quedamos cerca las primeras semanas de uso real.',
+        out: ['Sistema en vivo', 'Recorrido con tu equipo'],
+      },
+      tend: {
+        kicker: 'Después',
+        title: 'Cuidar',
+        text: 'El software es una marea, no un monumento. Lo mantenemos sano, lo mejoramos a medida que creces y estamos a un mensaje cuando necesitas algo nuevo.',
+        out: ['Mantenimiento', 'Un estudio disponible'],
       },
     },
   },
@@ -91,9 +126,9 @@ export default {
   approach: {
     title: 'Cómo trabajamos',
     items: {
-      both: {
-        k: 'Nos tienes a los dos',
-        v: 'No hay una capa de cuentas. Quien responde tu correo es quien edita el archivo.',
+      team: {
+        k: 'Un mismo equipo, de principio a fin',
+        v: 'Quienes definen el alcance de tu proyecto son quienes lo construyen. Sin traspasos entre proveedores y sin contexto perdido en el camino.',
       },
       scope: {
         k: 'Alcance antes que código',
@@ -101,53 +136,63 @@ export default {
       },
       ships: {
         k: 'Si no se publica, no cuenta',
-        v: 'Cada proyecto de abajo está en vivo, o su código es público. Aquí no hay maquetas.',
+        v: 'Entregamos algo funcionando, documentado y tuyo. No una maqueta ni una presentación.',
       },
     },
   },
 
-  studio: {
-    title: 'Dos personas construyen todo.\nHablas con ambas.',
-    roles: {
-      founder: 'Fundador',
-      cofounder: 'Cofundador',
+  journal: {
+    eyebrow: 'Journal',
+    title: 'Notas desde\nel estudio.',
+    lead: 'Quiénes somos, cómo trabajamos y cómo un par de proyectos personales se convirtieron en una agencia.',
+    by: 'Por Tidence',
+    read: 'Leer la historia completa',
+    close: 'Mostrar menos',
+    feature: {
+      tag: 'Nuestra historia',
+      minutes: '4 min de lectura',
+      title: 'Cómo empezó Tidence',
+      dek: 'Antes de los clientes hubo proyectos personales: un juego, una app de notas, un sistema de asistencia y un bot de Discord. Así se convirtieron en un estudio.',
+      intro:
+        'Tidence empezó como empiezan casi todas las buenas herramientas: con gente construyendo cosas para sí misma. Alexander Ross diseñaba interfaces y esquemas de bases de datos, y desarmaba su propio trabajo para ver dónde fallaba. Bryan De Jesus escribía los sistemas de backend que mantienen los datos en movimiento entre servicios. Cada uno por su lado, seguían entregando.',
+      body: [
+        'Los proyectos eran pequeños pero reales. Un juego arcade con tablas de líderes globales. Una app de notas sin ceremonia. Una plataforma de asistencia con reportes en tiempo real. Un bot de Discord que repartía puntos verdes. Una app de escritorio con tasas de cambio en vivo. Cada uno fue una lección sobre terminar las cosas, no solo empezarlas.',
+        'En algún momento las preguntas cambiaron. En vez de preguntar cómo estaba hecho algo, la gente empezó a preguntar si se lo podían hacer a ellos: un sitio que tomara reservas, una lista de clientes que viviera en otro lugar que no fuera una hoja de cálculo, un reporte que simplemente apareciera cada lunes.',
+        'Ese fue el momento en que Tidence dejó de ser dos portafolios y se convirtió en un estudio. El nombre viene de la marea: trabajo constante y recurrente que sigue moviéndose aunque nadie lo esté mirando. Así pensamos también el software. Debe funcionar en silencio, todos los días, y seguir funcionando.',
+        'Hoy diseñamos y construimos sitios web, CRMs y la automatización detrás de ellos, para negocios que prefieren dedicar sus horas al trabajo que solo ellos pueden hacer.',
+      ],
+      quote: 'El software debe funcionar en silencio, todos los días, y seguir funcionando.',
+      caption: 'Donde empezó: un escritorio, una laptop y una lista de cosas por construir.',
     },
-    keys: {
-      site: 'Sitio',
-      email: 'Correo',
-      github: 'GitHub',
-      contact: 'Contacto',
-    },
-    people: {
-      alexander: {
-        text: 'Front end, arquitectura de bases de datos y pentesting. Construye la interfaz y mantiene honesta la seguridad.',
+    posts: {
+      who: {
+        tag: 'Sobre nosotros',
+        title: 'Quiénes somos',
+        text: 'Tidence es un estudio digital de sitios web, CRMs y automatización para negocios, fundado por Alexander Ross (front end, datos y seguridad) y Bryan De Jesus (sistemas de backend y APIs).',
       },
-      bryan: {
-        text: 'Sistemas de backend. APIs y arquitecturas que mueven datos entre servicios y los siguen moviendo bajo carga.',
+      stack: {
+        tag: 'Notas del estudio',
+        title: 'Con qué construimos',
+        text: 'React y Vite al frente, Node y Python detrás, PostgreSQL y Redis para los datos. Elegidos para construir rápido y para que la próxima persona los lea con facilidad.',
+      },
+      principles: {
+        tag: 'Principios',
+        title: 'Lo que no haremos',
+        text: 'Venderte una plantilla como si fuera un desarrollo a medida. Dejarte sin acceso a tu propio código. Publicar algo que no hayamos probado en un teléfono real y revisado en seguridad.',
       },
     },
   },
 
   contact: {
-    title: 'Empezar un proyecto',
-    lead: 'Cuéntanos qué estás construyendo. Uno de los dos te responde en menos de un día.',
-    name: 'Nombre',
-    email: 'Correo',
-    brief: 'Qué estás construyendo',
-    briefHelp: 'Con un borrador basta. Alcance, tiempos y presupuesto si los tienes.',
-    submit: 'Empezar un proyecto',
-    sending: 'Abriendo el correo',
-    summary: 'Hay {count} campos por corregir.',
-    doneTitle: 'Tu cliente de correo está abierto',
-    doneText: 'Ya escribimos el mensaje por ti. Envíalo y te respondemos en menos de un día. Si no se abrió nada, escríbenos a',
-    again: 'Escribir otro',
-    subject: 'Nueva consulta de proyecto de {name}',
-    errors: {
-      name: 'Dinos cómo llamarte.',
-      emailMissing: 'Necesitamos una dirección para responderte.',
-      emailInvalid: 'A esa dirección le falta una @ o un dominio.',
-      briefMissing: 'Con una o dos frases basta para empezar.',
-      briefShort: 'Un poco más de detalle nos ayuda a responderte bien.',
+    eyebrow: 'Última etapa, primer paso',
+    sloganA: 'Imagínalo.',
+    sloganB: 'Lo construimos.',
+    lead: 'Cuéntanos lo que tienes en mente: un sitio, un CRM, la tarea que te encantaría no volver a hacer. El estudio te responde en menos de un día hábil.',
+    soon: 'Muy pronto',
+    channels: {
+      whatsapp: 'WhatsApp',
+      instagram: 'Instagram',
+      email: 'Correo',
     },
   },
 
@@ -159,6 +204,5 @@ export default {
     email: 'Correo',
     privacy: 'Privacidad',
     terms: 'Términos',
-    built: 'Construido por las dos personas de arriba',
   },
 };

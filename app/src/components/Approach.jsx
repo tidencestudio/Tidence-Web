@@ -3,7 +3,7 @@ import StoryThread from './StoryThread';
 import WordReveal from './WordReveal';
 import { useT } from '../prefs/hooks';
 
-const keys = ['both', 'scope', 'ships'];
+const keys = ['team', 'scope', 'ships'];
 
 /**
  * Full-width stacked statements. One hairline above the group and one between

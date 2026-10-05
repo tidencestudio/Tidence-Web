@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 // Every element whose animation is driven by the hero's scroll progress. The
 // nav is included even though it lives outside the hero: it has to arrive in
@@ -12,7 +12,14 @@ const TARGETS = [
   '.expand-line-a',
   '.expand-line-b',
   '.expand-reveal',
+  '.expand-cue',
+  '.hero-veil',
 ];
+
+// Phones get a static opening instead of the scroll sequence: the expanding
+// window costs most of the first screen's scroll on a small display, and the
+// reader has to work through it before reaching anything.
+const SEQUENCE = '(min-width: 761px)';
 
 const DURATION = 1000; // Nominal; currentTime is the only thing that moves.
 
@@ -31,7 +38,17 @@ const DURATION = 1000; // Nominal; currentTime is the only thing that moves.
  * page and nowhere else.
  */
 export default function useScrollScrub() {
+  const [wide, setWide] = useState(() => window.matchMedia(SEQUENCE).matches);
+
   useEffect(() => {
+    const mq = window.matchMedia(SEQUENCE);
+    const sync = () => setWide(mq.matches);
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+
+  useEffect(() => {
+    if (!wide) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const track = document.querySelector('.expand-track');
@@ -57,7 +74,10 @@ export default function useScrollScrub() {
 
       for (const selector of TARGETS) {
         const el = document.querySelector(selector);
-        const own = el ? el.getAnimations() : [];
+        // Optional targets (the dither veil only exists in one media mode)
+        // are skipped when absent rather than counted as missing forever.
+        if (!el) continue;
+        const own = el.getAnimations();
         if (own.length === 0) missing = true;
         found.push(...own);
       }
@@ -116,5 +136,5 @@ export default function useScrollScrub() {
       stop();
       root.classList.remove('scrub');
     };
-  }, []);
+  }, [wide]);
 }

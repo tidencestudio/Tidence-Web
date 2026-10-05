@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import useMachineTranslated from './useMachineTranslated';
 
 /**
  * Brightens a line of prose word by word as it arrives.
@@ -18,6 +19,7 @@ export default function WordReveal({ text, as: Tag = 'p', className = '' }) {
   const ref = useRef(null);
   const [lit, setLit] = useState(false);
   const words = text.split(' ');
+  const translated = useMachineTranslated();
 
   useEffect(() => {
     const el = ref.current;
@@ -35,6 +37,16 @@ export default function WordReveal({ text, as: Tag = 'p', className = '' }) {
     observer.observe(el);
     return () => observer.disconnect();
   }, [lit]);
+
+  // Under machine translation the sentence has to stay one text run, or it is
+  // translated word by word. It renders already lit: no effect, full legibility.
+  if (translated) {
+    return (
+      <Tag ref={ref} className={`wordreveal is-lit ${className}`.trim()}>
+        {text}
+      </Tag>
+    );
+  }
 
   return (
     <Tag ref={ref} className={`wordreveal ${lit ? 'is-lit' : ''} ${className}`.trim()}>

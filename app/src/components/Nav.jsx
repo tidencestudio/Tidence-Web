@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
-import { ArrowUpRight, MoonStars, Sun } from '@phosphor-icons/react';
+import { ArrowUpRight } from '@phosphor-icons/react';
 import WaveLogo from './WaveLogo';
-import { useTheme } from '../prefs/hooks';
 import { useLocale, LOCALES } from '../prefs/hooks';
 
+// Matches the .nav height in App.css; the observer needs it as a number.
+const NAV_H = 76;
+
 const sections = [
-  ['work', 'nav.work'],
-  ['studio', 'nav.studio'],
+  ['build', 'nav.build'],
+  ['journey', 'nav.journey'],
+  ['story', 'nav.story'],
   ['contact', 'nav.contact'],
 ];
 
@@ -19,8 +22,8 @@ const sections = [
  */
 export default function Nav() {
   const [lifted, setLifted] = useState(false);
+  const [atEnd, setAtEnd] = useState(false);
   const [current, setCurrent] = useState('');
-  const { theme, toggle } = useTheme();
   const { locale, setLocale, t } = useLocale();
 
   useEffect(() => {
@@ -29,6 +32,26 @@ export default function Nav() {
     const observer = new IntersectionObserver(
       ([entry]) => setLifted(!entry.isIntersecting),
       { threshold: 0 }
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, []);
+
+  // The footer is taller than a laptop viewport, so once the page bottoms out
+  // its first row -- brand, all three headings, their first links -- is parked
+  // under the bar with no scroll left to clear it. Padding cannot help: growing
+  // the footer moves that row up by exactly as much. So the bar gets out of the
+  // way instead. Same sentinel-and-observer shape as above, still no scroll
+  // listener. The links are not lost: the footer carries the same three.
+  useEffect(() => {
+    const sentinel = document.getElementById('footer-sentinel');
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      // Not-intersecting alone would also fire with the footer still below the
+      // fold, which is most of the page; the top check keeps it to the case
+      // where the sentinel has actually travelled up behind the bar.
+      ([entry]) => setAtEnd(!entry.isIntersecting && entry.boundingClientRect.top < NAV_H),
+      { rootMargin: `-${NAV_H}px 0px 0px 0px`, threshold: 0 }
     );
     observer.observe(sentinel);
     return () => observer.disconnect();
@@ -55,15 +78,13 @@ export default function Nav() {
     return () => observer.disconnect();
   }, []);
 
-  const next = theme === 'light' ? 'dark' : 'light';
-
   return (
-    <header className={`nav ${lifted ? 'is-lifted' : ''}`}>
+    <header className={`nav ${lifted ? 'is-lifted' : ''} ${atEnd ? 'is-retracted' : ''}`}>
       <a className="nav-brand" href="#top">
         <span className="nav-mark">
           <WaveLogo />
         </span>
-        Tidence
+        <span translate="no">Tidence</span>
       </a>
 
       <nav className="nav-links" aria-label={t('nav.label')}>
@@ -99,19 +120,6 @@ export default function Nav() {
             </button>
           ))}
         </div>
-
-        <button
-          type="button"
-          className="iconbtn"
-          onClick={toggle}
-          aria-label={next === 'light' ? t('nav.themeToLight') : t('nav.themeToDark')}
-        >
-          {theme === 'light' ? (
-            <MoonStars size={19} weight="regular" aria-hidden="true" />
-          ) : (
-            <Sun size={19} weight="regular" aria-hidden="true" />
-          )}
-        </button>
 
         <a className="btn btn-sm nav-cta" href="#contact">
           {t('nav.cta')}

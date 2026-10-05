@@ -1,83 +1,50 @@
 /* ==========================================================================
    Tidence - design tokens
    Single source: design-system/tidence/MASTER.md
-   Dark theme is locked. There is no light variant by design: the tidal
-   identity does not survive a light ground, and a half-built second mode
-   reads as two different sites.
+   One theme: "Deep water", dark ground and light text, tuned so contrast is
+   high enough everywhere that no alternate palette is needed.
    ========================================================================== */
 
-/* Dark is the design default. The boot script in index.html always writes
-   data-theme before first paint, and this is a React app that renders nothing
-   without JS, so there is no need for a prefers-color-scheme fallback here. */
+/* Every text pair clears 6.25:1 and most clear AAA (7:1). Against the page:
+   fg 15.9, muted 10.8, dim 8.9, accent 10.1. The floor is dim text on
+   surface-2 at 6.25. The ground is a step deeper than the previous dark
+   (#122229) and the text tokens a step brighter, so the gain comes from both
+   ends; the old floor was 4.61. Verified pairs are in MASTER.md. */
 :root {
   color-scheme: dark;
 
-  /* --- Color: dark ------------------------------------------------------
-     Lifted roughly 2.3x in luminance from the original near-black (#0B1417),
-     which read as heavy rather than deep. Surfaces are separated further than
-     before so cards sit off the page instead of dissolving into it, and the
-     hairlines and muted text were raised to keep their weight against the
-     lighter ground. Every pair is verified in MASTER.md; the floor is 4.72:1. */
-  --bg: #122229;
-  --surface: #1b3038;
-  --surface-2: #24404a;
+  --bg: #0f1e24;
+  --surface: #172b33;
+  --surface-2: #203a44;
 
-  --fg: #eaf1f0;
-  --fg-muted: #a2b8bd;
-  --fg-dim: #93acb3;
+  --fg: #f3f8f7;
+  --fg-muted: #c0d1d4;
+  --fg-dim: #a9bfc4;
 
-  --accent: #5cc9be;
-  --accent-hover: #7ad7ce;
-  --accent-soft: rgba(92, 201, 190, 0.16);
-  --on-accent: #07191c;
+  --accent: #6fd8cd;
+  --accent-hover: #95e6dd;
+  --accent-soft: rgba(111, 216, 205, 0.16);
+  --on-accent: #06171b;
 
-  --line: rgba(234, 241, 240, 0.13);
-  --line-strong: rgba(234, 241, 240, 0.22);
+  --line: rgba(243, 248, 247, 0.14);
+  --line-strong: rgba(243, 248, 247, 0.26);
 
-  --dot: rgba(234, 241, 240, 0.06);
+  --dot: rgba(243, 248, 247, 0.06);
   --grain-opacity: 0.03;
-  --shadow: 0 24px 60px -24px rgba(6, 16, 20, 0.85);
-}
-
-/* Light is a designed palette, not an inversion. The original brand teal
-   (#2E8B93) only reaches 3.69:1 on a light ground and fails AA, so the accent
-   deepens to #12727A: same hue, 5.19:1. Verified pairs are in MASTER.md. */
-:root[data-theme='light'] {
-  color-scheme: light;
-
-  --bg: #f2f6f5;
-  --surface: #ffffff;
-  --surface-2: #e7efee;
-
-  --fg: #0e1c21;
-  --fg-muted: #4a6068;
-  --fg-dim: #5a7078;
-
-  --accent: #12727a;
-  --accent-hover: #0e5f66;
-  --accent-soft: rgba(18, 114, 122, 0.1);
-  --on-accent: #ffffff;
-
-  --line: rgba(14, 28, 33, 0.12);
-  --line-strong: rgba(14, 28, 33, 0.22);
-
-  --dot: rgba(14, 28, 33, 0.055);
-  --grain-opacity: 0.022;
-  --shadow: 0 24px 60px -28px rgba(14, 28, 33, 0.22);
+  --shadow: 0 24px 60px -24px rgba(4, 12, 15, 0.9);
 }
 
 :root {
   /* --- Color: on media -------------------------------------------------
-     These do NOT follow the theme. They sit on the hero photograph, which is
-     a dark wave in both modes: flipping them to near-black in light mode
-     would make the headline unreadable over the image. */
+     Kept separate from the page tokens: they sit on the hero photograph, and
+     have to hold against the image rather than against the page ground. */
   --on-media: #f4f8f7;
   --on-media-muted: #c8d8d6;
-  --accent-on-media: #5cc9be;
-  --on-accent-media: #07191c;
+  --accent-on-media: #6fd8cd;
+  --on-accent-media: #06171b;
   /* Deeper than the page, but only by a step. Left at the old near-black it
      opened a visible seam between the hero and the lifted background below. */
-  --scrim: #0e1b21;
+  --scrim: #0c191e;
 
   /* --- Type ------------------------------------------------------------- */
   --font-display: 'Goudy Bookletter 1911', 'Fanwood Text', Georgia, serif;
@@ -113,16 +80,6 @@
   --z-skip: 50;
 }
 
-/* Theme changes should feel like a light switch, not a crossfade of every
-   element on the page. One short tint on the surfaces only. */
-@media (prefers-reduced-motion: no-preference) {
-  body {
-    transition:
-      background-color var(--dur-hover) var(--ease),
-      color var(--dur-hover) var(--ease);
-  }
-}
-
 *,
 *::before,
 *::after {
@@ -131,13 +88,24 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  /* No native scrollbar. The grey OS bar cut a strip off the right edge of
+     every section on Windows; ScrollProgress.jsx draws a slim accent line in
+     its place. Scrolling by wheel, touch, keys and trackpad is unaffected. */
+  scrollbar-width: none;
   scroll-behavior: smooth;
   /* Anchor targets clear the sticky nav instead of hiding under it. */
   scroll-padding-top: 6rem;
 }
 
+html::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   margin: 0;
+  /* Belt and braces against any sideways scroll on narrow screens. `clip`
+     rather than `hidden`, so sticky positioning keeps working. */
+  overflow-x: clip;
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-body);

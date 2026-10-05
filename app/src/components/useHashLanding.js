@@ -9,7 +9,7 @@ const CORRECTIONS = [0, 120, 320, 600];
  * Scrolls to the element named by the URL hash once React has rendered it.
  *
  * The browser resolves a hash at parse time, when the root element is still
- * empty, so a shared deep link such as /#work otherwise lands at the top of
+ * empty, so a shared deep link such as /#journey otherwise lands at the top of
  * the page.
  */
 export default function useHashLanding() {

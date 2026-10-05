@@ -3,20 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="dark light" />
-    <meta name="theme-color" content="#122229" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0F1E24" />
 
     <title>Tidence — Web design and development studio</title>
     <meta
       name="description"
-      content="Tidence is a two-person studio building websites, platforms and internal tools. You work directly with the people writing the code."
+      content="Tidence is a digital studio building websites, CRMs, office automation and the everyday tools a business runs on."
     />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Tidence — Web design and development studio" />
     <meta
       property="og:description"
-      content="A two-person studio building websites, platforms and internal tools. You work directly with the people writing the code."
+      content="A digital studio building websites, CRMs, office automation and the everyday tools a business runs on."
     />
     <meta property="og:image" content="/og.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -35,29 +35,26 @@
     <link rel="preload" as="image" href="/wave-sunset.jpg" fetchpriority="high" />
   </head>
   <body>
-    <!-- Runs before first paint so the page never renders in the wrong theme
-         and flips. This is the only inline script on the page; everything
-         else it touches is read back by React on mount. -->
+    <!-- Runs before first paint so the page never renders in the wrong
+         language and flips. This is the only inline script on the page. -->
     <script>
       (function () {
         var root = document.documentElement;
         try {
-          var theme = localStorage.getItem('tidence-theme');
-          if (theme !== 'light' && theme !== 'dark') {
-            theme = window.matchMedia('(prefers-color-scheme: light)').matches
-              ? 'light'
-              : 'dark';
-          }
-          root.dataset.theme = theme;
-
           var lang = localStorage.getItem('tidence-lang');
           if (lang !== 'en' && lang !== 'es') {
-            lang = (navigator.language || 'en').toLowerCase().indexOf('es') === 0 ? 'es' : 'en';
+            var wanted = navigator.languages && navigator.languages.length
+              ? navigator.languages
+              : [navigator.language || 'en'];
+            lang = 'en';
+            for (var i = 0; i < wanted.length; i++) {
+              var base = String(wanted[i]).toLowerCase().split('-')[0];
+              if (base === 'en' || base === 'es') { lang = base; break; }
+            }
           }
           root.lang = lang;
         } catch (e) {
-          // Private mode can throw on localStorage. Dark is the design default.
-          root.dataset.theme = 'dark';
+          // Private mode can throw on localStorage.
           root.lang = 'en';
         }
       })();

@@ -39,6 +39,38 @@ white headline type onto a pale page, and a scrim heavy enough to rescue dark
 type would wash the photograph out. The nav takes those same media colours while
 it floats over the hero and returns to the theme once it lifts past it.
 
+## Revision: Deep water (single dark theme), sonar background
+
+**One theme only: dark ground, light text, high contrast.** The light theme and
+the toggle were removed. Rather than offering a second palette for legibility,
+the dark one was retuned so every text pair clears 6.25:1 and most clear AAA:
+the ground went a step deeper and the text tokens a step brighter. The
+previous dark floor was 4.61:1. The native scrollbar is hidden; a 3px accent
+progress line on the right edge stands in for it.
+
+| Role | Value | On bg | On surface | On surface raised |
+|---|---|---|---|---|
+| Background | `#0F1E24` | | | |
+| Surface | `#172B33` | | | |
+| Surface raised | `#203A44` | | | |
+| Foreground | `#F3F8F7` | 15.90 | 13.70 | 11.19 |
+| Muted foreground | `#C0D1D4` | 10.81 | 9.31 | 7.61 |
+| Dim foreground | `#A9BFC4` | 8.88 | 7.65 | 6.25 |
+| Accent | `#6FD8CD` | 10.05 | 8.66 | 7.07 |
+| Accent hover | `#95E6DD` | 11.89 | 10.24 | 8.37 |
+| On accent | `#06171B` | 10.8 on accent | | |
+| Media scrim | `#0C191E` | | | |
+
+The colour tables further down describe earlier revisions and are superseded
+by this one.
+
+**Page background: SonarGrid** (ported from 21st.dev to plain JSX). A fixed
+canvas dot field behind all content, drawn in `--accent`, sending rings out on
+a timer and wherever the reader clicks. It replaced the static CSS dot lattice.
+Text on the open page carries a halo in `--bg` so a passing ring never sits
+inside the glyphs; transparent-fill type (slogan, outlined numerals, marquee)
+opts out. Reduced motion renders the still grid only.
+
 ## Color
 
 One accent per theme. Teal is inherited brand equity, retuned per mode so it
@@ -117,6 +149,14 @@ Chosen over ocean footage on measurement: **+8 KB gzipped against 3-15 MB** for 
 equivalent video, with a perfect loop, no file to source or licence, and the
 existing brand asset reused rather than replaced. The wave still reads as a wave;
 it simply stops being a photograph.
+
+**Revised: the dither is now a veil, not a replacement.** Full dither read as an
+effect for its own sake. The default (`?effect=veil`) shows the graded photograph
+with the dithered copy screen-blended over it: about 0.7 opacity on the closed
+plate, thinning to 0.16 once the window is open. Phones skip the shader and the
+scroll sequence entirely and get a static, full-height opening with the graded
+photo. A "Scroll to explore" cue sits at the foot of the stage and fades as soon
+as the sequence starts.
 
 Falls back to the graded still for reduced motion, Save-Data, 2G, and any browser
 without a WebGL context. `navigator.connection` does not exist in Firefox, so the
