@@ -62,16 +62,6 @@
 }
 
 :root {
-  /* --- Color: on media -------------------------------------------------
-     Kept separate from the page tokens: they sit on the hero photograph, and
-     have to hold against the image rather than against the page ground. */
-  --on-media: #f2fffa;
-  --on-media-muted: #b8d4ce;
-  --accent-on-media: #13c2b0;
-  --highlight-on-media: #edc27a; /* the sun in the photograph */
-  --on-accent-media: #070f12;
-  --scrim: #070f12;
-
   /* --- Type -------------------------------------------------------------
      Bricolage Grotesque for the wordmark, headlines and body; DM Mono for
      data and labels. Newsreader is the one sanctioned exception: the journal's

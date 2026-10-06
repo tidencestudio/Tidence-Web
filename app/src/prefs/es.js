@@ -23,11 +23,22 @@ export default {
   },
 
   hero: {
+    eyebrow: 'Sitios web · CRMs · Automatización',
     lead: 'Construimos las herramientas',
     em: 'con las que trabaja tu negocio',
     sub: 'Sitios web, CRMs y las automatizaciones que mueven tu oficina sin que nadie lo note. Diseñado, construido y cuidado por un mismo equipo, de principio a fin.',
-    cta: 'Hacer el recorrido',
-    scroll: 'Desliza para explorar',
+    ctaEmail: 'Escríbenos sobre tu proyecto',
+    ctaWhatsapp: 'Escríbenos por WhatsApp',
+    ctaMore: 'Mira cómo trabajamos',
+    note: 'Respondemos en un día hábil. Hablas con quienes escriben el código.',
+    caption: 'El nombre viene de la marea: trabajo constante que no se detiene.',
+  },
+
+  // Mensajes prellenados. Quien escribe los revisa y los envía.
+  enquiry: {
+    subject: 'Consulta sobre un proyecto desde la web',
+    body: 'Hola Tidence,\n\nLos encontré por su sitio web y me interesan sus servicios.\n\nLo que quiero construir:\nMi negocio:\nLa mejor forma de contactarme:\n\nGracias,',
+    whatsapp: 'Hola Tidence, los encontré por su sitio web y me interesan sus servicios. ¿Podemos hablar de un proyecto?',
   },
 
   manifesto: {

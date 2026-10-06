@@ -42,30 +42,6 @@ main {
 
 /* --- Grain -------------------------------------------------------------- */
 
-/* Text set straight on the page ground gets a halo in the ground colour. It
-   is invisible except where a sonar ring passes behind the letters, where it
-   clears the dots out of the glyphs; the page-wide version of the soft wash
-   the original component put behind its copy. Cards and the hero sit on their
-   own opaque grounds and opt out. */
-:is(main, footer) :is(h2, h3, p, dt, dd, li, blockquote),
-footer a {
-  text-shadow:
-    0 0 3px var(--bg),
-    0 0 10px var(--bg);
-}
-
-/* Also out: anything drawn with a transparent fill (the image-filled slogan,
-   outlined numerals and marquee). A shadow shows straight through those. */
-.service-card *,
-.expand-stage *,
-.slogan,
-.slogan *,
-.footer-wordmark *,
-.marquee *,
-.stage-num {
-  text-shadow: none;
-}
-
 /* Reading progress, in place of the hidden native scrollbar. */
 .progress {
   position: fixed;
@@ -86,17 +62,87 @@ footer a {
   transform-origin: top;
 }
 
-/* The sonar dot field (SonarGrid.jsx). Fixed behind all content; it draws in
-   whatever `color` resolves to, which is the accent. It
-   replaced a static CSS dot lattice that sat in the same place. */
-.sonar {
+/* The page background (Backdrop.jsx): pools of light drifting over Abyss,
+   like sun through deep water. Each pool is a radial gradient that already
+   fades to nothing, so there is no filter: blur() to pay for, and the drift
+   is a transform the compositor runs alone. Alphas are capped so that even
+   with every pool drifted onto one spot, dim text keeps 5.1:1 and the accent
+   4.6:1 (see MASTER.md); anywhere else the ground is darker still. */
+.backdrop {
   position: fixed;
   inset: 0;
   z-index: -1;
-  width: 100%;
-  height: 100%;
-  color: var(--fg-dim);
+  overflow: hidden;
   pointer-events: none;
+}
+
+.pool {
+  position: absolute;
+  width: 72vmax;
+  height: 72vmax;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.pool-a {
+  top: -30vmax;
+  left: -18vmax;
+  background: radial-gradient(closest-side, rgb(19 194 176 / 0.13), transparent);
+  animation: drift-a 52s ease-in-out infinite alternate;
+}
+
+.pool-b {
+  top: 18vh;
+  right: -28vmax;
+  background: radial-gradient(closest-side, rgb(0 115 122 / 0.2), transparent);
+  animation: drift-b 64s ease-in-out infinite alternate;
+}
+
+.pool-c {
+  bottom: -34vmax;
+  left: 12vw;
+  background: radial-gradient(closest-side, rgb(127 245 216 / 0.05), transparent);
+  animation: drift-c 58s ease-in-out infinite alternate;
+}
+
+/* A trace of the sun, so the field is not one temperature. */
+.pool-d {
+  right: 4vw;
+  bottom: -40vmax;
+  width: 56vmax;
+  height: 56vmax;
+  background: radial-gradient(closest-side, rgb(237 194 122 / 0.05), transparent);
+  animation: drift-d 70s ease-in-out infinite alternate;
+}
+
+@keyframes drift-a {
+  to {
+    transform: translate3d(14vmax, 10vmax, 0) scale(1.12);
+  }
+}
+
+@keyframes drift-b {
+  to {
+    transform: translate3d(-16vmax, 12vmax, 0) scale(0.92);
+  }
+}
+
+@keyframes drift-c {
+  to {
+    transform: translate3d(10vmax, -14vmax, 0) scale(1.08);
+  }
+}
+
+@keyframes drift-d {
+  to {
+    transform: translate3d(-12vmax, -8vmax, 0) scale(1.15);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pool {
+    animation: none;
+  }
 }
 
 .grain {
@@ -156,7 +202,7 @@ footer a {
 }
 
 .btn-ghost {
-  /* Solid, not transparent: the sonar field would show through the label. */
+  /* Solid, not transparent: the drifting light would show through the label. */
   background: var(--bg);
   color: var(--fg);
   border-color: var(--line-strong);
@@ -345,43 +391,6 @@ footer a {
   transform: scaleX(1);
 }
 
-/* While the bar is still over the hero photograph it takes the media colours;
-   once it lifts past the hero it returns to the theme. */
-.nav:not(.is-lifted) .nav-brand {
-  color: var(--on-media);
-}
-
-.nav:not(.is-lifted) .nav-links a {
-  color: var(--on-media-muted);
-}
-
-.nav:not(.is-lifted) .nav-links a:hover,
-.nav:not(.is-lifted) .nav-links a.is-current {
-  color: var(--on-media);
-}
-
-.nav:not(.is-lifted) .switch {
-  border-color: color-mix(in oklab, var(--on-media) 30%, transparent);
-}
-
-.nav:not(.is-lifted) .switch button {
-  color: var(--on-media-muted);
-}
-
-.nav:not(.is-lifted) .switch button:hover {
-  color: var(--on-media);
-}
-
-.nav:not(.is-lifted) .switch button.is-on {
-  background: var(--accent-on-media);
-  color: var(--on-accent-media);
-}
-
-.nav:not(.is-lifted) .nav-cta {
-  background: var(--accent-on-media);
-  color: var(--on-accent-media);
-}
-
 /* --- Nav preferences ----------------------------------------------------
    The language switch: real buttons with accessible names, sized to the 24px
    minimum for pointer targets. */
@@ -460,466 +469,171 @@ footer a {
   }
 }
 
-/* --- Hero: scroll-expand ------------------------------------------------
+/* --- Hero ----------------------------------------------------------------
+   A split opening: the proposition and its actions on the left, the sunset
+   wave framed on the right. Everything is visible on the first screen; the
+   only motion is a short staggered arrival on load, which is CSS alone and
+   so runs on the prerendered page before any script.
 
-   Baseline (no scroll-driven animation, or reduced motion): the finished
-   composition, full bleed, one viewport tall. Everything below is layered on
-   top of that as an enhancement, so nothing depends on the effect running. */
+   It replaced a 280vh scroll-expand sequence that held the headline and the
+   CTA back until the reader had scrolled through it. */
 
-.expand {
-  position: relative;
-  /* The sticky nav overlaps the opening, so pull it back under the bar. */
-  margin-top: -76px;
-}
-
-/* The stage keeps its own dark ground in both themes. It is a photographic
-   section: inverting it in light mode would put white headline type onto a
-   pale page, and a scrim heavy enough to rescue dark type would wash the
-   photo out. The scrim's bottom gradient fades it into the page colour, so
-   the handoff reads as cinematography rather than a theme break. */
-.expand-stage {
-  background: var(--scrim);
-  position: relative;
-  min-height: 100dvh;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  isolation: isolate;
-  padding: 76px var(--gutter) clamp(3rem, 8vh, 5rem);
-}
-
-.expand-media {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-}
-
-/* --- Media treatment ----------------------------------------------------
-   The photograph runs clean: its own colour, no brand tint and no dither.
-   Only a touch of contrast, and the scrim below for legibility. Dial the
-   knobs per image rather than re-cutting one. */
-.expand-media {
-  --media-saturate: 1;
-  --media-contrast: 1.04;
-  --media-brightness: 0.96;
-}
-
-.expand-media picture {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.expand-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: saturate(var(--media-saturate)) contrast(var(--media-contrast))
-    brightness(var(--media-brightness));
-}
-
-.expand-scrim {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  /* The copy sits dead centre over the brightest part of the wave, so the
-     middle of this vignette cannot be fully clear: muted text on lit water
-     lands well under 4.5:1. It carries enough tint to hold contrast and still
-     reads as light falling off toward the edges. */
-  background:
-    radial-gradient(
-      115% 85% at 50% 44%,
-      color-mix(in oklab, var(--scrim) 38%, transparent) 0%,
-      color-mix(in oklab, var(--scrim) 62%, transparent) 58%,
-      color-mix(in oklab, var(--scrim) 92%, transparent) 100%
-    ),
-    linear-gradient(to top, var(--bg) 1%, transparent 42%);
-}
-
-/* Fixed light regardless of theme: this copy is over a dark photograph in
-   both modes, and near-black text on it would be unreadable. */
-.expand-copy {
-  color: var(--on-media);
+.hero {
   position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-  gap: 2.25rem;
-  max-width: 54rem;
-  /* Every child centres on the same axis; none sets its own width. */
-  width: 100%;
+  /* The bar is 76px and sticky; the opening fills the rest of the screen. */
+  min-height: calc(100dvh - 76px);
+  padding-block: clamp(2.5rem, 7vh, 5rem) clamp(3.5rem, 9vh, 6rem);
 }
 
-/* The closed window carries the brand; the proposition replaces it once you
-   are through. Hidden at baseline, so reduced motion and browsers without
-   scroll-driven animation simply get the finished headline. */
-.expand-brand {
-  display: none;
-  position: absolute;
-  inset: 0;
-  place-content: center;
-  justify-items: center;
-  gap: 1.5rem;
-  margin: 0;
-  color: var(--on-media);
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
 }
 
-/* On the plate the name is set open and lighter than the lockup: capital T,
-   medium weight, wide tracking, so it reads as a title card rather than a
-   logo. */
-.expand-brand .logo-word {
-  font-size: clamp(2.75rem, 1.6rem + 3.6vw, 4.25rem);
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  /* Tracking also adds space after the last letter, which would push the
-     word off-centre in the plate. */
-  text-indent: 0.12em;
-  transform: none;
-}
-
-.expand-title {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1em;
-  font-size: var(--step-6);
-  margin: 0;
-}
-
-.expand-line {
-  display: block;
+.hero-title {
+  max-width: 14ch;
+  font-size: clamp(2.75rem, 1rem + 5.2vw, 5.5rem);
+  line-height: 0.98;
+  letter-spacing: var(--track-display);
 }
 
 /* Emphasis by colour: the warm counter-accent, picking up the sun in the
-   photograph behind it. */
+   photograph beside it. */
 .hero-em {
-  color: var(--highlight-on-media);
+  color: var(--sun);
 }
 
-/* The CTA is on the photograph too, so it takes the media accent rather than
-   the theme accent. In light mode the theme accent is a deep teal that goes
-   muddy against a dark image. */
-.expand-copy .btn {
-  background: var(--accent-on-media);
-  color: var(--on-accent-media);
-}
-
-.expand-copy .btn:hover {
-  background: var(--accent-hover);
-}
-
-.expand-reveal {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.75rem;
-}
-
-/* Full foreground, not the muted token: this paragraph sits on a photograph
-   rather than on a flat surface, and muted grey has nothing to hold on to. */
-.expand-sub {
+.hero-sub {
+  margin-top: 1.75rem;
   max-width: 46ch;
   font-size: var(--step-1);
   line-height: 1.55;
-  color: var(--on-media);
-  text-shadow: 0 1px 24px color-mix(in oklab, var(--scrim) 70%, transparent);
+  color: var(--fg-muted);
 }
 
-/* --- Scroll cue ----------------------------------------------------------
-   A label and a line with a bead running down it, centred at the foot of the
-   stage. It is a real link to the next section, so it also works as a
-   shortcut for anyone who would rather not scroll through the opening. */
-.expand-cue {
-  position: absolute;
-  left: 50%;
-  bottom: clamp(1.25rem, 4vh, 2.5rem);
-  z-index: 1;
+.hero-actions {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.75rem;
-  translate: -50% 0;
-  color: var(--on-media-muted);
+  gap: 1rem 1.75rem;
+  margin-top: 2.5rem;
+}
+
+.hero-note {
+  margin-top: 1.75rem;
+  max-width: 52ch;
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  transition: color var(--dur-hover) var(--ease);
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+  color: var(--fg-dim);
 }
 
-.expand-cue:hover {
-  color: var(--on-media);
+.hero-figure {
+  margin: 0;
 }
 
-.expand-cue-line {
-  position: relative;
-  width: 1px;
-  height: 3rem;
+.hero-frame {
+  aspect-ratio: 4 / 5;
   overflow: hidden;
-  background: color-mix(in oklab, var(--on-media) 28%, transparent);
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
 }
 
-.expand-cue-line::after {
+.hero-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.92) contrast(1.04);
+}
+
+.hero-figure figcaption {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--fg-dim);
+}
+
+.hero-figure figcaption::before {
   content: '';
-  position: absolute;
-  inset: 0 0 auto;
-  height: 40%;
-  background: var(--accent-on-media);
-  transform: translateY(-100%);
+  flex: none;
+  width: 1.5rem;
+  height: 1px;
+  background: var(--sun);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .expand-cue-line::after {
-    animation: cue-drop 1800ms var(--ease) infinite;
-  }
-}
-
-@keyframes cue-drop {
-  to {
-    transform: translateY(260%);
-  }
-}
-
+/* The bar takes its backdrop as soon as the page starts to move. */
 #nav-sentinel {
   position: absolute;
-  bottom: 12%;
+  top: 24px;
   height: 1px;
   width: 100%;
 }
 
-/* --- Hero motion --------------------------------------------------------
-
-   Driven from JS, not from a CSS scroll timeline.
-
-   `animation-timeline` / `view()` is Chromium only. Firefox keeps scroll-driven
-   animations behind a flag, so the whole effect silently did not exist there and
-   the hero rendered finished. Rather than ship one hero to Chrome and another to
-   everyone else, every browser now takes the same path: these animations are
-   declared paused, and useScrollScrub writes currentTime on them from the
-   track's own scroll progress. One set of keyframes, one behaviour.
-
-   The `scrub` class comes from that hook. With no JS, no hook, or reduced
-   motion, none of this applies and the composition renders finished and
-   ungated, which is the same baseline as before. */
+/* Arrival: copy rises in sequence, the photograph opens upward. */
 @media (prefers-reduced-motion: no-preference) {
-  :root.scrub .expand-track {
-    height: 280vh;
+  .hero-copy > * {
+    animation: hero-rise var(--dur-enter) var(--ease) both;
   }
 
-  :root.scrub .expand-stage {
-    position: sticky;
-    top: 0;
-    height: 100dvh;
-    min-height: 0;
+  .hero-copy > :nth-child(2) {
+    animation-delay: 80ms;
   }
 
-  :root.scrub .expand-brand {
-    display: grid;
+  .hero-copy > :nth-child(3) {
+    animation-delay: 160ms;
   }
 
-  /* The duration is nominal. currentTime is the only thing that ever moves,
-     and the compositor handles these the same as any other CSS animation. */
-  :root.scrub .nav,
-  :root.scrub .expand-media,
-  :root.scrub .expand-scrim,
-  :root.scrub .expand-brand,
-  :root.scrub .expand-title,
-  :root.scrub .expand-line,
-  :root.scrub .expand-reveal,
-  :root.scrub .expand-cue {
-    animation-duration: 1s;
-    animation-timing-function: linear;
-    animation-fill-mode: both;
-    animation-play-state: paused;
+  .hero-copy > :nth-child(4) {
+    animation-delay: 240ms;
   }
 
-  /* The bar arrives with the copy. Opacity only, no transform: it is
-     position: sticky and that is not worth risking. */
-  :root.scrub .nav {
-    animation-name: nav-arrive;
+  .hero-copy > :nth-child(5) {
+    animation-delay: 320ms;
   }
 
-  /* The plate opens by clip-path, not by width and height. Animating the box
-     would relayout the stage on every frame; clipping does not. */
-  :root.scrub .expand-media {
-    animation-name: expand-open;
+  .hero-frame {
+    animation: hero-open 1100ms var(--ease) 120ms both;
   }
 
-  /* The scrim protects the subheading, and the subheading is not there yet.
-     Holding it back lets the closed window read as a lit photograph. */
-  :root.scrub .expand-scrim {
-    animation-name: expand-scrim-in;
-  }
-
-  :root.scrub .expand-brand {
-    animation-name: expand-brand-out;
-  }
-
-  :root.scrub .expand-title {
-    animation-name: expand-title-in;
-  }
-
-  :root.scrub .expand-line-a {
-    animation-name: expand-part-left;
-  }
-
-  :root.scrub .expand-line-b {
-    animation-name: expand-part-right;
-  }
-
-  :root.scrub .expand-reveal {
-    animation-name: expand-settle;
-  }
-
-  :root.scrub .expand-cue {
-    animation-name: cue-out;
-  }
-
-  :root.scrub .expand-cue:focus-visible {
-    animation: none;
-    opacity: 1;
-  }
-
-  /* Gone as soon as the reader has shown they know to scroll. */
-  @keyframes cue-out {
-    0%,
-    4% {
-      opacity: 1;
-    }
-    18%,
-    100% {
-      opacity: 0;
-      visibility: hidden;
-    }
-  }
-
-  /* Neither a hidden bar nor a hidden CTA may swallow Tab. Focus anywhere
-     inside either one cancels its gate outright. The skip link sits outside
-     the nav, so it is reachable on the first Tab regardless. */
-  :root.scrub .nav:focus-within {
-    animation: none;
-    opacity: 1;
-  }
-
-  :root.scrub .expand-copy:focus-within .expand-reveal {
-    animation: none;
-    opacity: 1;
-    transform: none;
-  }
-
-  @keyframes expand-open {
-    0% {
-      clip-path: inset(calc(50dvh - 13.75rem) calc(50vw - 10.625rem));
-      transform: scale(1.14);
-    }
-    72%,
-    100% {
-      clip-path: inset(0);
-      transform: scale(1);
-    }
-  }
-
-  @keyframes expand-scrim-in {
-    0%,
-    22% {
-      opacity: 0.35;
-    }
-    70%,
-    100% {
-      opacity: 1;
-    }
-  }
-
-  /* The brand recedes as you pass through it. */
-  @keyframes expand-brand-out {
-    0%,
-    26% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    48%,
-    100% {
-      opacity: 0;
-      transform: scale(0.9);
-    }
-  }
-
-  /* The proposition arrives on the other side, settling out of a slight
-     over-scale so it reads as coming toward the reader. */
-  @keyframes expand-title-in {
-    0%,
-    40% {
-      opacity: 0;
-      transform: scale(1.05);
-    }
-    64%,
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  @keyframes nav-arrive {
-    0%,
-    58% {
-      opacity: 0;
-    }
-    88%,
-    100% {
-      opacity: 1;
-    }
-  }
-
-  /* The arrival. Copy stays out of the room until the window has opened
-     far enough that you are through it. */
-  @keyframes expand-settle {
-    0%,
-    58% {
+  @keyframes hero-rise {
+    from {
       opacity: 0;
       transform: translate3d(0, 18px, 0);
     }
-    88%,
-    100% {
-      opacity: 1;
-      transform: none;
-    }
   }
 
-  /* The lines part as the window opens and then settle back onto the centre
-     line. Holding them apart left the headline on two centres while the
-     subheading and the CTA sat on a third, which reads as broken alignment
-     rather than as a composition. The parting is a gesture during the
-     transition; the resting state is aligned. */
-  @keyframes expand-part-left {
-    0%,
-    44% {
-      transform: translate3d(0, 0, 0);
+  @keyframes hero-open {
+    from {
+      clip-path: inset(100% 0 0 0);
     }
-    66% {
-      transform: translate3d(-6vw, 0, 0);
-    }
-    92%,
-    100% {
-      transform: translate3d(0, 0, 0);
+    to {
+      clip-path: inset(0);
     }
   }
-
-  @keyframes expand-part-right {
-    0%,
-    44% {
-      transform: translate3d(0, 0, 0);
-    }
-    66% {
-      transform: translate3d(6vw, 0, 0);
-    }
-    92%,
-    100% {
-      transform: translate3d(0, 0, 0);
-    }
-  }
-
 }
 
+@media (max-width: 900px) {
+  .hero {
+    min-height: 0;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-frame {
+    aspect-ratio: 16 / 10;
+  }
+}
 
 /* --- Story thread -------------------------------------------------------
    A rail down the left of the content column, one segment per narrative

@@ -8,29 +8,16 @@ import {
 import Reveal from './Reveal';
 import useScrollProgress from './useScrollProgress';
 import { useT } from '../prefs/hooks';
+import { EMAIL, INSTAGRAM, WHATSAPP, mailtoHref, whatsappHref, instagramHref } from '../contact';
 
-/* An empty `value` renders the row as "coming soon" with no link, so nothing
-   here points anywhere false.
-     whatsapp  - digits only with country code, e.g. '18095550123'
-     instagram - the handle without the @ */
+/* Handles live in contact.js. An empty value renders the row as "coming
+   soon" with no link, so nothing here points anywhere false. Email and
+   WhatsApp open with an enquiry already written. */
 const CHANNELS = [
-  { key: 'whatsapp', Icon: WhatsappLogo, value: '' },
-  { key: 'instagram', Icon: InstagramLogo, value: 'tidence.dev' },
-  { key: 'email', Icon: EnvelopeSimple, value: 'tidencestudio@gmail.com' },
+  { key: 'whatsapp', Icon: WhatsappLogo, value: WHATSAPP, href: whatsappHref },
+  { key: 'instagram', Icon: InstagramLogo, value: INSTAGRAM, href: instagramHref },
+  { key: 'email', Icon: EnvelopeSimple, value: EMAIL, href: mailtoHref },
 ];
-
-const hrefFor = (key, value) => {
-  switch (key) {
-    case 'whatsapp':
-      return `https://wa.me/${value.replace(/\D/g, '')}`;
-    case 'instagram':
-      return `https://www.instagram.com/${value.replace(/^@/, '')}/`;
-    case 'email':
-      return `mailto:${value}`;
-    default:
-      return undefined;
-  }
-};
 
 const shown = (key, value) => (key === 'instagram' ? `@${value.replace(/^@/, '')}` : value);
 
@@ -64,7 +51,7 @@ export default function Contact() {
           </Reveal>
 
           <ul className="channels">
-            {CHANNELS.map(({ key, Icon, value }, i) => {
+            {CHANNELS.map(({ key, Icon, value, href }, i) => {
               const label = t(`contact.channels.${key}`);
               const external = key !== 'email';
 
@@ -73,7 +60,7 @@ export default function Contact() {
                   {value ? (
                     <a
                       className="channel"
-                      href={hrefFor(key, value)}
+                      href={href(t)}
                       target={external ? '_blank' : undefined}
                       rel={external ? 'noreferrer noopener' : undefined}
                     >

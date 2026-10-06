@@ -39,6 +39,49 @@ white headline type onto a pale page, and a scrim heavy enough to rescue dark
 type would wash the photograph out. The nav takes those same media colours while
 it floats over the hero and returns to the theme once it lifts past it.
 
+## Revision: Split hero with direct CTAs, drifting-light background. Supersedes below.
+
+**The scroll-expand hero is gone.** The 280vh sticky track, the clip-path
+plate, `useScrollScrub` and every `:root.scrub` rule are deleted. It held the
+headline and the CTA back until the reader had scrolled through it.
+
+**New hero (`Hero.jsx`): a split opening.** 7fr copy, 5fr photograph.
+- Left column, in order:
+  - the DM Mono label
+  - the headline, with "your business runs on" in Sunlit
+  - the subline
+  - a CTA row
+  - a mono note: "We reply within one business day. You talk to the people
+    writing the code."
+- Right column: the sunset wave in a hairline frame (4:5), with a mono
+  caption. It stacks below the copy under 900px (16:10).
+- Arrival is CSS only (copy rises in an 80ms stagger, the frame opens upward),
+  so it runs on the prerendered page before any script.
+- The nav no longer floats over a photograph; the media colour tokens and the
+  not-lifted overrides are gone.
+
+**CTAs, from `src/contact.js`** (the single source for email, WhatsApp and
+Instagram; the Contact section reads it too):
+- Primary: "Email us about a project". It is a `mailto:` with a subject and a
+  short enquiry template already written, in the reader's language
+  (`enquiry.*` in en/es).
+- WhatsApp: a `wa.me` link with a message already typed. It renders only when
+  `WHATSAPP` in `contact.js` holds a number. The number is not set yet, so the
+  button is hidden and the Contact row reads "coming soon".
+- Tertiary: "See how we work", a paced glide to the manifesto.
+- Neither email nor WhatsApp sends by itself: the visitor reviews and sends.
+  Fully automatic delivery would need a form plus an email service.
+
+**Background: drifting light (`Backdrop.jsx`) replaces SonarGrid.**
+- Four radial-gradient pools on Abyss: Lagoon, Reef, Spray, and a trace of
+  Sunlit. Each drifts over 52 to 70s, alternating; under reduced motion they
+  hold still.
+- No `filter: blur()` and no canvas: each gradient already fades to nothing,
+  and the drift is a transform.
+- Alphas are capped for the worst case (every pool drifted onto one spot):
+  dim text 5.1:1, Lagoon 4.6:1, Foam 10:1.
+- The text halo that cleared sonar rings out of glyphs is gone with it.
+
 ## Revision: Clean imagery and a warm counter-accent. Supersedes below.
 
 **Hero is a clean photograph.** The dither (veil, photodither and dither

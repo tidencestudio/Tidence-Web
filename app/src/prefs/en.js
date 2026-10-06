@@ -22,11 +22,22 @@ export default {
   },
 
   hero: {
+    eyebrow: 'Websites · CRMs · Automation',
     lead: 'We build the tools',
     em: 'your business runs on',
     sub: 'Websites, CRMs and the automations that quietly run your office. Designed, built and looked after by one team, start to finish.',
-    cta: 'Take the journey',
-    scroll: 'Scroll to explore',
+    ctaEmail: 'Email us about a project',
+    ctaWhatsapp: 'Message us on WhatsApp',
+    ctaMore: 'See how we work',
+    note: 'We reply within one business day. You talk to the people writing the code.',
+    caption: 'The name comes from the tide: steady work that keeps moving.',
+  },
+
+  // Prefilled enquiries. The visitor still reviews and sends them.
+  enquiry: {
+    subject: 'Project enquiry from the website',
+    body: 'Hi Tidence,\n\nI found you through your website and I am interested in your services.\n\nWhat I would like to build:\nMy business:\nBest way to reach me:\n\nThanks,',
+    whatsapp: 'Hi Tidence, I found you through your website and I am interested in your services. Can we talk about a project?',
   },
 
   manifesto: {
