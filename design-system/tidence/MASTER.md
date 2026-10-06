@@ -39,7 +39,39 @@ white headline type onto a pale page, and a scrim heavy enough to rescue dark
 type would wash the photograph out. The nav takes those same media colours while
 it floats over the hero and returns to the theme once it lifts past it.
 
-## Revision: Simplified to five plain sections. Supersedes the section list and narrative below.
+## Revision: Sections restored, redundancy cut, quiet static background. Supersedes the "five plain sections" revision directly below.
+
+The simplification went too far: the brief was to cut redundant
+information, not the parts that give the page life. Restored:
+- **What we do:** the pinned stacking service cards with their photographs
+  and example lists. The intro was shortened, and the label now matches the
+  nav ("What we do").
+- **How we work:** the pinned horizontal journey through seven stages, with
+  the tide line and counter. It is anchored at `#process`, and its label
+  matches the nav.
+- **Who we are:** the journal, now titled as the section ("Who / we are."),
+  anchored at `#about`. Two redundant pieces were dropped: the "Who we are"
+  note, which repeated the story, and the story's closing paragraph, which
+  restated the services. The two remaining notes are "The right tools for the
+  job" and "What we will not do". Newsreader loads lazily for it again.
+
+Still removed, because they were the redundant parts: the Manifesto, the
+Approach section (both restated the differentiator the hero and journal
+already make) and the Marquee.
+
+**Background: quiet and static.** The Iridescence shader is gone (and `ogl`
+uninstalled). It redrew the full screen every frame and its saturated green
+made the page feel heavy. `.backdrop` is now pure CSS, with no animation:
+- Abyss as the ground
+- a faint desaturated Spray light from above (7.5%)
+- a soft Reef glow in the far corner (12%)
+- a trace of Lagoon on the left (4%)
+- a 72px hairline grid at 3.5% that fades out from the top
+
+It is painted once and costs nothing while scrolling. Every text pair keeps
+the base Abyss contrast figures.
+
+## Revision: Simplified to five plain sections. Partly reverted by the revision above.
 
 The page was cut to the essentials for accessibility: about 180 visible
 words, down from about 1,300.

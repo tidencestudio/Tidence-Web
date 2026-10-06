@@ -63,28 +63,123 @@ export default {
   },
 
   services: {
-    title: 'Qué hacemos',
+    eyebrow: 'Qué hacemos',
+    title: 'Un sitio web\nes donde empieza.',
+    lead: 'La mayoría llega por un sitio y se queda por lo que hay detrás: las hojas de cálculo, el reporte de cada lunes, el copiar y pegar entre sistemas.',
     items: {
-      web: { title: 'Sitios web', text: 'Páginas que traen clientes y reciben reservas.' },
-      crm: { title: 'CRM', text: 'Todos tus clientes y ventas en un solo lugar.' },
-      automation: { title: 'Automatización', text: 'El software hace las tareas repetitivas por ti.' },
-      tools: { title: 'Herramientas a medida', text: 'Paneles y bots que te ahorran horas.' },
+      web: {
+        kind: 'Sitios y aplicaciones web',
+        title: 'Sitios que trabajan',
+        text: 'No un folleto. Un sitio que reserva, vende, recibe consultas y te cuenta qué pasó, diseñado para tu negocio y no vaciado en una plantilla.',
+        examples: ['Sitios de empresa y landing pages', 'Tiendas en línea y reservas', 'Portales para clientes', 'Plataformas web y SaaS'],
+      },
+      crm: {
+        kind: 'CRMs y sistemas de clientes',
+        title: 'Tus clientes, en un solo lugar',
+        text: 'Un CRM hecho a la forma en que realmente vendes, en vez de uno genérico al que te tienes que adaptar. Cada prospecto, cotización y seguimiento donde todo el equipo lo ve.',
+        examples: ['Embudos de prospectos y ventas', 'Fichas e historial de clientes', 'Cotizaciones, facturas y pagos', 'Recordatorios de seguimiento'],
+      },
+      automation: {
+        kind: 'Automatización de oficina',
+        title: 'El trabajo que se hace solo',
+        text: 'Encontramos las tareas que alguien repite todos los días y se las damos al software. Los reportes se arman de noche, las facturas salen a tiempo y los datos pasan entre tus herramientas por su cuenta.',
+        examples: ['Reportes que se arman solos', 'Documentos y facturas desde plantillas', 'Avisos por correo y WhatsApp', 'Sincronizar datos entre sistemas'],
+      },
+      everyday: {
+        kind: 'Herramientas del día a día',
+        title: 'Herramientas pequeñas, horas de vuelta',
+        text: 'No todo problema necesita una plataforma. A veces es un dashboard, un bot o un script de cincuenta líneas, y le ahorra a alguien una hora todos los días.',
+        examples: ['Dashboards internos', 'Inventario y agendas', 'Bots de chat para equipos y clientes', 'Scripts para la parte aburrida'],
+      },
     },
   },
 
-  process: {
-    title: 'Cómo trabajamos',
-    steps: {
-      talk: { title: 'Hablamos', text: 'Nos cuentas qué necesitas.' },
-      plan: { title: 'Planeamos', text: 'Acordamos precio y fechas por escrito.' },
-      build: { title: 'Construimos', text: 'Ves el avance cada semana.' },
-      launch: { title: 'Lanzamos y te acompañamos', text: 'Lo publicamos y seguimos ayudándote.' },
+  journey: {
+    eyebrow: 'Cómo trabajamos',
+    title: 'De una idea\na algo que funciona\ntodos los días.',
+    lead: 'Cada proyecto pasa por las mismas siete etapas. Esto es lo que ocurre en cada una, y lo que tienes en las manos cuando termina.',
+    hint: 'Sigue bajando',
+    stageLabel: 'Etapa {n} de {total}',
+    stages: {
+      listen: {
+        kicker: 'Primera conversación',
+        title: 'Escuchar',
+        text: 'Empezamos por cómo funciona hoy tu negocio, no por la tecnología. A dónde se va el tiempo, qué se rompe, qué te gustaría que simplemente pasara.',
+        out: ['Una llamada de diagnóstico', 'El problema real, con nombre'],
+      },
+      map: {
+        kicker: 'Alcance',
+        title: 'Trazar',
+        text: 'Escribimos qué se construye y qué no, cuánto cuesta y cuándo llega. Acordado por escrito antes de comprometer nada.',
+        out: ['Alcance por escrito', 'Calendario y precio'],
+      },
+      design: {
+        kicker: 'Interfaz',
+        title: 'Diseñar',
+        text: 'Pantallas, flujos y la forma de los datos. Lo ves y lo recorres temprano, mientras cambiarlo todavía es barato.',
+        out: ['Prototipo navegable', 'Modelo de datos'],
+      },
+      build: {
+        kicker: 'Código',
+        title: 'Construir',
+        text: 'El equipo que lo diseñó lo escribe. Ciclos cortos, una vista previa en vivo que puedes abrir cualquier día y ningún traspaso a mitad de camino.',
+        out: ['Avances en vivo cada semana', 'Código legible y tuyo'],
+      },
+      connect: {
+        kicker: 'Automatización',
+        title: 'Conectar',
+        text: 'Lo integramos con el resto de tu día: correo, WhatsApp, pagos, hojas de cálculo y las herramientas que ya pagas. Aquí es donde vuelven las horas.',
+        out: ['Integraciones', 'Tareas automatizadas'],
+      },
+      launch: {
+        kicker: 'Lanzamiento',
+        title: 'Lanzar',
+        text: 'Revisado en seguridad, probado en teléfonos reales y publicado. Capacitamos a tu equipo y nos quedamos cerca las primeras semanas de uso real.',
+        out: ['Sistema en vivo', 'Recorrido con tu equipo'],
+      },
+      support: {
+        kicker: 'Tras el lanzamiento',
+        title: 'Soporte',
+        text: 'El software sigue en movimiento después del lanzamiento. Lo mantenemos, arreglamos lo que falle, hacemos los cambios que pidas y añadimos lo que necesites a medida que creces.',
+        out: ['Mantenimiento y arreglos', 'Cambios a pedido'],
+      },
     },
   },
 
-  about: {
-    title: 'Quiénes somos',
-    text: 'Somos Alexander Ross y Bryan De Jesus, un estudio de dos personas. Hablas directo con quienes escriben tu código.',
+  journal: {
+    eyebrow: 'Journal',
+    title: 'Quiénes\nsomos.',
+    lead: 'La historia del estudio y lo que nos importa.',
+    by: 'Por Tidence',
+    read: 'Leer la historia completa',
+    close: 'Mostrar menos',
+    feature: {
+      tag: 'Nuestra historia',
+      minutes: '4 min de lectura',
+      title: 'Cómo empezó Tidence',
+      dek: 'Antes de los clientes hubo proyectos personales: un juego, una app de notas, un sistema de asistencia y un bot de Discord. Así se convirtieron en un estudio.',
+      intro:
+        'Tidence empezó como empiezan casi todas las buenas herramientas: con gente construyendo cosas para sí misma. Alexander Ross diseñaba interfaces y esquemas de bases de datos, y desarmaba su propio trabajo para ver dónde fallaba. Bryan De Jesus escribía los sistemas de backend que mantienen los datos en movimiento entre servicios. Cada uno por su lado, seguían entregando.',
+      body: [
+        'Los proyectos eran pequeños pero reales. Un juego arcade con tablas de líderes globales. Una app de notas sin ceremonia. Una plataforma de asistencia con reportes en tiempo real. Un bot de Discord que repartía puntos verdes. Una app de escritorio con tasas de cambio en vivo. Cada uno fue una lección sobre terminar las cosas, no solo empezarlas.',
+        'En algún momento las preguntas cambiaron. En vez de preguntar cómo estaba hecho algo, la gente empezó a preguntar si se lo podían hacer a ellos: un sitio que tomara reservas, una lista de clientes que viviera en otro lugar que no fuera una hoja de cálculo, un reporte que simplemente apareciera cada lunes.',
+        'Ese fue el momento en que Tidence dejó de ser dos portafolios y se convirtió en un estudio. El nombre viene de la marea: trabajo constante y recurrente que sigue moviéndose aunque nadie lo esté mirando. Así pensamos también el software. Debe funcionar en silencio, todos los días, y seguir funcionando.',
+      ],
+      quote: 'Hecho para usarse, no para mostrarse.',
+      caption: 'Donde empezó: un escritorio, una laptop y una lista de cosas por construir.',
+    },
+    posts: {
+      stack: {
+        tag: 'Notas del estudio',
+        title: 'La herramienta adecuada para cada trabajo',
+        text: 'No estamos atados a un solo stack. Web y móvil, nube y servidores propios, SQL y NoSQL, IA y las herramientas que ya pagas: elegimos lo que encaja con tu problema y tu equipo, y aprendemos lo que el trabajo necesite.',
+      },
+      principles: {
+        tag: 'Principios',
+        title: 'Lo que no haremos',
+        text: 'Venderte una plantilla como si fuera un desarrollo a medida. Dejarte sin acceso a tu propio código. Publicar algo que no hayamos probado en un teléfono real y revisado en seguridad.',
+      },
+    },
   },
 
   contact: {

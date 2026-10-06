@@ -1,8 +1,8 @@
 import Nav from './components/Nav';
 import Hero from './components/Hero';
 import Services from './components/Services';
-import Process from './components/Process';
-import About from './components/About';
+import Journey from './components/Journey';
+import Journal from './components/Journal';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import Backdrop from './components/Backdrop';
@@ -30,8 +30,8 @@ function Site() {
       <main id="main">
         <Hero />
         <Services />
-        <Process />
-        <About />
+        <Journey />
+        <Journal />
         <Contact />
       </main>
 
