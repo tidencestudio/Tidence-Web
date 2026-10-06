@@ -46,7 +46,7 @@ export default function ScrollExpandHero() {
             <div className="expand-reveal">
               <p className="expand-sub">{t('hero.sub')}</p>
 
-              <a className="btn btn-lg" href="#build">
+              <a className="btn btn-lg" href="#start">
                 {t('hero.cta')}
                 <ArrowDown size={16} weight="regular" aria-hidden="true" />
               </a>
@@ -55,7 +55,7 @@ export default function ScrollExpandHero() {
 
           {/* Tells first-time readers the page continues below. It fades as
               the sequence starts, so it is only there while it is needed. */}
-          <a className="expand-cue" href="#build">
+          <a className="expand-cue" href="#start">
             <span className="expand-cue-text">{t('hero.scroll')}</span>
             <span className="expand-cue-line" aria-hidden="true" />
           </a>

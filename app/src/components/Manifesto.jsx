@@ -14,7 +14,7 @@ export default function Manifesto() {
   const { locale, t } = useLocale();
 
   return (
-    <section className="section manifesto">
+    <section className="section manifesto" id="start">
       <div className="container">
         <StoryThread />
         <p className="manifesto-lead">
