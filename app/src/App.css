@@ -470,104 +470,377 @@ main {
 }
 
 /* --- Hero ----------------------------------------------------------------
-   A split opening: the proposition and its actions on the left, the sunset
-   wave framed on the right. Everything is visible on the first screen; the
-   only motion is a short staggered arrival on load, which is CSS alone and
-   so runs on the prerendered page before any script.
+   Laid out like a product launch: a badge, one centred proposition and its
+   action, then a wide panel tilted back in perspective that straightens as
+   it scrolls up. Behind it all, the Iridescence shader, dimmed by an Abyss
+   veil so type keeps its contrast (measured pairs in MASTER.md), and faded
+   into the page ground at the foot.
 
-   It replaced a 280vh scroll-expand sequence that held the headline and the
-   CTA back until the reader had scrolled through it. */
+   The section pulls up under the sticky bar so the light runs behind it. */
 
 .hero {
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin-top: -76px;
+  padding: calc(76px + clamp(3.5rem, 10vh, 7rem)) 0 clamp(4rem, 9vh, 6rem);
+}
+
+.hero-sky {
+  position: absolute;
+  inset: 0 0 auto;
+  height: min(78rem, 130vh);
+  z-index: -1;
+  /* What shows if WebGL is unavailable, and before the shader's first frame. */
+  background:
+    radial-gradient(60% 50% at 30% 30%, rgb(16 185 129 / 0.35), transparent 70%),
+    radial-gradient(55% 45% at 75% 45%, rgb(0 115 122 / 0.45), transparent 70%),
+    var(--bg);
+}
+
+.iridescence {
+  position: absolute;
+  inset: 0;
+}
+
+.iridescence canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0;
+  transition: opacity 1200ms var(--ease);
+}
+
+.iridescence canvas.is-ready {
+  opacity: 1;
+}
+
+/* The veil. The shader never goes darker than about half its tint, so on its
+   own it is a wall of green; this brings it down to deep water with bright
+   currents and hands off to the page ground with no seam. Even on the
+   brightest light, Foam keeps 8:1 and the Sunlit emphasis 5:1. */
+.hero-sky::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(75% 60% at 50% 30%, rgb(7 15 18 / 0.58), rgb(7 15 18 / 0.74) 100%),
+    linear-gradient(to bottom, transparent 55%, var(--bg) 96%);
+}
+
+.hero-head {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  /* The bar is 76px and sticky; the opening fills the rest of the screen. */
-  min-height: calc(100dvh - 76px);
-  padding-block: clamp(2.5rem, 7vh, 5rem) clamp(3.5rem, 9vh, 6rem);
+  text-align: center;
 }
 
-.hero-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: clamp(2.5rem, 6vw, 6rem);
+.hero-badge {
+  display: inline-flex;
   align-items: center;
+  gap: 0.75rem;
+  padding: 0.35rem 0.9rem 0.35rem 0.35rem;
+  border: 1px solid color-mix(in oklab, var(--fg) 18%, transparent);
+  background: rgb(7 15 18 / 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--fg);
 }
 
+.hero-badge-chip {
+  padding: 0.2rem 0.5rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+/* The headline is lit from above: Foam fading into Spray, as the light in
+   the shader falls on it. The emphasis keeps its own warm colour. */
 .hero-title {
-  max-width: 14ch;
-  font-size: clamp(2.75rem, 1rem + 5.2vw, 5.5rem);
-  line-height: 0.98;
+  max-width: 13ch;
+  margin-top: 1.75rem;
+  font-size: clamp(3rem, 1rem + 6.6vw, 6.75rem);
+  line-height: 0.96;
   letter-spacing: var(--track-display);
+  color: var(--fg);
 }
 
-/* Emphasis by colour: the warm counter-accent, picking up the sun in the
-   photograph beside it. */
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .hero-title {
+    background: linear-gradient(to bottom, var(--fg) 35%, var(--accent-hover) 120%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
 .hero-em {
   color: var(--sun);
+  -webkit-text-fill-color: var(--sun);
 }
 
 .hero-sub {
-  margin-top: 1.75rem;
   max-width: 46ch;
+  margin-top: 1.5rem;
   font-size: var(--step-1);
   line-height: 1.55;
-  color: var(--fg-muted);
+  color: var(--fg);
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
   gap: 1rem 1.75rem;
-  margin-top: 2.5rem;
+  margin-top: 2.25rem;
 }
 
-.hero-note {
-  margin-top: 1.75rem;
-  max-width: 52ch;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  line-height: 1.6;
-  letter-spacing: 0.04em;
-  color: var(--fg-dim);
+/* --- The panel --------------------------------------------------------- */
+
+.hero-stage {
+  margin-top: clamp(3.5rem, 9vh, 6rem);
+  perspective: 1800px;
 }
 
-.hero-figure {
+/* Tilted back 18 degrees, levelling out between 15% and 45% of the panel's
+   pass across the screen. Reduced motion sets --p to 1: flat from the start. */
+.hero-panel {
+  --tilt: calc(18deg * (1 - clamp(0, (var(--p, 0) - 0.15) / 0.3, 1)));
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  grid-template-areas:
+    'shot form'
+    'tiles form';
+  gap: 1rem;
+  padding: clamp(0.85rem, 2vw, 1.5rem);
+  border: 1px solid color-mix(in oklab, var(--fg) 14%, transparent);
+  background: linear-gradient(to bottom, rgb(0 25 28 / 0.94), rgb(7 15 18 / 0.98));
+  box-shadow:
+    inset 0 1px 0 rgb(127 245 216 / 0.22),
+    0 50px 120px -40px rgb(0 0 0 / 0.85);
+  transform: rotateX(var(--tilt));
+  transform-origin: 50% 0;
+  will-change: transform;
+}
+
+.hero-shot {
+  grid-area: shot;
+  position: relative;
   margin: 0;
-}
-
-.hero-frame {
-  aspect-ratio: 4 / 5;
   overflow: hidden;
-  border: 1px solid var(--line-strong);
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--line);
   background: var(--surface);
 }
 
-.hero-frame img {
+.hero-shot img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   filter: saturate(0.92) contrast(1.04);
 }
 
-.hero-figure figcaption {
+/* A data readout, in the deck's own style: TIDE 04.10.26 · 1.284 m. */
+.hero-readout {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  display: flex;
+  gap: 1rem;
+  padding: 0.4rem 0.7rem;
+  background: rgb(7 15 18 / 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+.hero-readout span:first-child {
+  color: var(--accent-hover);
+}
+
+.hero-tiles {
+  grid-area: tiles;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.hero-tile {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-top: 0.9rem;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--line-strong);
+  background: rgb(7 15 18 / 0.6);
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: var(--track-h2);
+  color: var(--fg);
+  text-decoration: none;
+  transition:
+    border-color var(--dur-hover) var(--ease),
+    background var(--dur-hover) var(--ease);
+}
+
+.hero-tile svg {
+  color: var(--sun);
+  transition: transform var(--dur-hover) var(--ease);
+}
+
+.hero-tile:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.hero-tile:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* --- The enquiry form -------------------------------------------------- */
+
+.hero-form {
+  grid-area: form;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: clamp(1.25rem, 2.4vw, 1.75rem);
+  border: 1px solid var(--line-strong);
+  background: rgb(7 15 18 / 0.6);
+  text-align: left;
+}
+
+.hero-form-title {
+  font-size: var(--step-2);
+  letter-spacing: var(--track-h2);
+}
+
+.hero-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.hero-form label,
+.hero-form legend {
+  padding: 0;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
+  font-size: 0.6875rem;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.hero-form input[type='text'],
+.hero-form textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  background: var(--surface);
+  color: var(--fg);
+  font: inherit;
+  font-size: var(--step-0);
+  transition: border-color var(--dur-hover) var(--ease);
+}
+
+.hero-form textarea {
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.hero-form input::placeholder,
+.hero-form textarea::placeholder {
   color: var(--fg-dim);
 }
 
-.hero-figure figcaption::before {
-  content: '';
-  flex: none;
-  width: 1.5rem;
-  height: 1px;
-  background: var(--sun);
+.hero-form input[type='text']:hover,
+.hero-form textarea:hover {
+  border-color: var(--fg-dim);
+}
+
+.hero-form input[type='text']:focus-visible,
+.hero-form textarea:focus-visible {
+  border-color: var(--accent);
+  outline-offset: 0;
+}
+
+/* The need: radio buttons drawn as square chips. The input stays in the
+   tree (visually hidden), so arrow keys and screen readers work as normal. */
+.hero-needs-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.hero-needs-row label {
+  position: relative;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--line-strong);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--fg-muted);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-hover) var(--ease),
+    background var(--dur-hover) var(--ease),
+    color var(--dur-hover) var(--ease);
+}
+
+.hero-needs-row input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero-needs-row label:hover {
+  color: var(--fg);
+  border-color: var(--fg-dim);
+}
+
+.hero-needs-row label.is-on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--fg);
+}
+
+.hero-needs-row label:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.hero-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.hero-form-actions .btn {
+  padding: 0.8rem 1.3rem;
+}
+
+.hero-form-note {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--fg-dim);
 }
 
 /* The bar takes its backdrop as soon as the page starts to move. */
@@ -578,60 +851,51 @@ main {
   width: 100%;
 }
 
-/* Arrival: copy rises in sequence, the photograph opens upward. */
+/* Arrival: the head rises in sequence on load. CSS only, so it runs on the
+   prerendered page before any script. */
 @media (prefers-reduced-motion: no-preference) {
-  .hero-copy > * {
+  .hero-head > * {
     animation: hero-rise var(--dur-enter) var(--ease) both;
   }
 
-  .hero-copy > :nth-child(2) {
-    animation-delay: 80ms;
+  .hero-head > :nth-child(2) {
+    animation-delay: 90ms;
   }
 
-  .hero-copy > :nth-child(3) {
-    animation-delay: 160ms;
+  .hero-head > :nth-child(3) {
+    animation-delay: 180ms;
   }
 
-  .hero-copy > :nth-child(4) {
-    animation-delay: 240ms;
+  .hero-head > :nth-child(4) {
+    animation-delay: 270ms;
   }
 
-  .hero-copy > :nth-child(5) {
-    animation-delay: 320ms;
-  }
-
-  .hero-frame {
-    animation: hero-open 1100ms var(--ease) 120ms both;
+  .hero-stage {
+    animation: hero-rise 900ms var(--ease) 320ms both;
   }
 
   @keyframes hero-rise {
     from {
       opacity: 0;
-      transform: translate3d(0, 18px, 0);
-    }
-  }
-
-  @keyframes hero-open {
-    from {
-      clip-path: inset(100% 0 0 0);
-    }
-    to {
-      clip-path: inset(0);
+      transform: translate3d(0, 20px, 0);
     }
   }
 }
 
 @media (max-width: 900px) {
-  .hero {
-    min-height: 0;
-  }
-
-  .hero-grid {
+  .hero-panel {
+    --tilt: calc(8deg * (1 - clamp(0, (var(--p, 0) - 0.1) / 0.3, 1)));
     grid-template-columns: 1fr;
+    grid-template-areas:
+      'shot'
+      'form'
+      'tiles';
   }
+}
 
-  .hero-frame {
-    aspect-ratio: 16 / 10;
+@media (max-width: 520px) {
+  .hero-tiles {
+    grid-template-columns: 1fr;
   }
 }
 

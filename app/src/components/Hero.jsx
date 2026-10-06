@@ -1,25 +1,33 @@
-import { ArrowDown, EnvelopeSimple, WhatsappLogo } from '@phosphor-icons/react';
+import { useRef, useState } from 'react';
+import { ArrowDown, ArrowUpRight, EnvelopeSimple, PaperPlaneTilt, WhatsappLogo } from '@phosphor-icons/react';
 import { useT } from '../prefs/hooks';
-import { mailtoHref, whatsappHref } from '../contact';
+import { EMAIL, WHATSAPP, mailtoHref, whatsappHref } from '../contact';
 import HeroMedia from './HeroMedia';
+import Iridescence from './Iridescence';
 import smoothScrollTo from './smoothScroll';
+import useScrollProgress from './useScrollProgress';
+
+const NEEDS = ['website', 'crm', 'automation', 'other'];
+
+// The shader's tint, as supplied: a sea-green just greener than Lagoon.
+const SHADER_COLOR = [0.06274509803921569, 0.7254901960784313, 0.5058823529411764];
 
 /**
- * The opening. A split layout: the proposition and every way to act on it on
- * the left, the sunset wave framed on the right.
+ * The opening, laid out like a product launch: a badge, one centred
+ * proposition, one action, then a wide panel tilted back in perspective that
+ * straightens as it scrolls into view. The panel holds the sunset wave and a
+ * real enquiry form, so the "product" on show is the first step of working
+ * with the studio.
  *
- * It replaced a scroll-expand sequence that held the headline and the CTA
- * back until the reader had scrolled through a 280vh track. Now the first
- * screen says what the studio does and offers a direct line to it: an email
- * already written, and a WhatsApp chat already typed once a number is set in
- * contact.js.
+ * The form never posts anywhere. Sending composes an email (or a WhatsApp
+ * message, once a number is set in contact.js) with what the visitor typed,
+ * and their own app opens with it ready to send.
  */
 export default function Hero() {
   const t = useT();
-  const whatsapp = whatsappHref(t);
+  const panelRef = useRef(null);
+  useScrollProgress(panelRef, { mode: 'pass' });
 
-  // A real anchor (works without JS, opens in a new tab), upgraded to a paced
-  // glide to the next section.
   const toStart = (event) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
     event.preventDefault();
@@ -28,49 +36,155 @@ export default function Hero() {
 
   return (
     <section className="hero" id="top">
-      <div className="container hero-grid">
-        <div className="hero-copy">
-          <p className="eyebrow">{t('hero.eyebrow')}</p>
+      <div className="hero-sky" aria-hidden="true">
+        <Iridescence color={SHADER_COLOR} mouseReact={false} amplitude={0.1} speed={2} />
+      </div>
 
-          <h1 className="hero-title">
-            {t('hero.lead')} <span className="hero-em">{t('hero.em')}</span>.
-          </h1>
+      <div className="container hero-head">
+        <p className="hero-badge">
+          <span className="hero-badge-chip">{t('hero.badgeChip')}</span>
+          {t('hero.badge')}
+        </p>
 
-          <p className="hero-sub">{t('hero.sub')}</p>
+        <h1 className="hero-title">
+          {t('hero.lead')} <span className="hero-em">{t('hero.em')}</span>.
+        </h1>
 
-          <div className="hero-actions">
-            <a className="btn btn-lg" href={mailtoHref(t)}>
-              <EnvelopeSimple size={18} weight="regular" aria-hidden="true" />
-              {t('hero.ctaEmail')}
-            </a>
+        <p className="hero-sub">{t('hero.sub')}</p>
 
-            {whatsapp && (
-              <a className="btn btn-lg btn-ghost" href={whatsapp} target="_blank" rel="noreferrer noopener">
-                <WhatsappLogo size={18} weight="regular" aria-hidden="true" />
-                {t('hero.ctaWhatsapp')}
-                <span className="sr-only">{t('meta.openOutside')}</span>
-              </a>
-            )}
-
-            <a className="link hero-more" href="#start" onClick={toStart}>
-              {t('hero.ctaMore')}
-              <ArrowDown size={14} weight="regular" aria-hidden="true" />
-            </a>
-          </div>
-
-          <p className="hero-note">{t('hero.note')}</p>
+        <div className="hero-actions">
+          <a className="btn btn-lg" href={mailtoHref(t)}>
+            <EnvelopeSimple size={18} weight="regular" aria-hidden="true" />
+            {t('hero.ctaEmail')}
+          </a>
+          <a className="link hero-more" href="#start" onClick={toStart}>
+            {t('hero.ctaMore')}
+            <ArrowDown size={14} weight="regular" aria-hidden="true" />
+          </a>
         </div>
+      </div>
 
-        <figure className="hero-figure">
-          <div className="hero-frame">
+      <div className="container hero-stage">
+        <div className="hero-panel" ref={panelRef}>
+          <figure className="hero-shot">
             <HeroMedia />
-          </div>
-          <figcaption>{t('hero.caption')}</figcaption>
-        </figure>
+            <figcaption className="hero-readout">
+              <span>{t('hero.readout')}</span>
+              <span className="tnum">04.10.26 · 1.284 m</span>
+            </figcaption>
+          </figure>
+
+          <EnquiryForm />
+
+          <nav className="hero-tiles" aria-label={t('hero.tilesLabel')}>
+            <a className="hero-tile" href={mailtoHref(t)}>
+              <span>{t('hero.tileEmail')}</span>
+              <ArrowUpRight size={18} weight="regular" aria-hidden="true" />
+            </a>
+            <a className="hero-tile" href="#build">
+              <span>{t('hero.tileWork')}</span>
+              <ArrowUpRight size={18} weight="regular" aria-hidden="true" />
+            </a>
+          </nav>
+        </div>
       </div>
 
       {/* Nav watches this to decide when the bar needs its backdrop. */}
       <div id="nav-sentinel" aria-hidden="true" />
     </section>
+  );
+}
+
+function EnquiryForm() {
+  const t = useT();
+  const [need, setNeed] = useState('website');
+
+  const compose = (form) => {
+    const data = new FormData(form);
+    const name = String(data.get('name') || '').trim();
+    const details = String(data.get('details') || '').trim();
+    const needLabel = t(`form.needs.${need}`);
+    return { name, details, needLabel };
+  };
+
+  const sendEmail = (event) => {
+    event.preventDefault();
+    const { name, details, needLabel } = compose(event.currentTarget);
+    const subject = `${t('form.subject')}: ${needLabel}${name ? ` (${name})` : ''}`;
+    const body = [
+      t('form.greeting'),
+      '',
+      `${t('form.needLine')}: ${needLabel}`,
+      details ? `\n${details}` : '',
+      '',
+      name || '',
+    ].join('\n');
+    window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  const sendWhatsapp = (event) => {
+    const form = event.currentTarget.form;
+    if (!form) return;
+    const { name, details, needLabel } = compose(form);
+    const text = [
+      `${t('form.greeting')} ${t('form.needLine')}: ${needLabel}.`,
+      details,
+      name ? `${name}` : '',
+    ]
+      .filter(Boolean)
+      .join('\n');
+    window.open(
+      `https://wa.me/${WHATSAPP.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`,
+      '_blank',
+      'noopener'
+    );
+  };
+
+  return (
+    <form className="hero-form" onSubmit={sendEmail} action={mailtoHref(t)}>
+      <h2 className="hero-form-title">{t('form.title')}</h2>
+
+      <div className="field">
+        <label htmlFor="enq-name">{t('form.name')}</label>
+        <input id="enq-name" name="name" type="text" autoComplete="name" placeholder={t('form.namePh')} />
+      </div>
+
+      <fieldset className="field hero-needs">
+        <legend>{t('form.need')}</legend>
+        <div className="hero-needs-row">
+          {NEEDS.map((key) => (
+            <label key={key} className={need === key ? 'is-on' : undefined}>
+              <input
+                type="radio"
+                name="need"
+                value={key}
+                checked={need === key}
+                onChange={() => setNeed(key)}
+              />
+              {t(`form.needs.${key}`)}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <div className="field">
+        <label htmlFor="enq-details">{t('form.details')}</label>
+        <textarea id="enq-details" name="details" rows={3} placeholder={t('form.detailsPh')} />
+      </div>
+
+      <div className="hero-form-actions">
+        <button type="submit" className="btn">
+          <PaperPlaneTilt size={16} weight="regular" aria-hidden="true" />
+          {t('form.sendEmail')}
+        </button>
+        {whatsappHref(t) && (
+          <button type="button" className="btn btn-ghost" onClick={sendWhatsapp}>
+            <WhatsappLogo size={16} weight="regular" aria-hidden="true" />
+            {t('form.sendWhatsapp')}
+          </button>
+        )}
+      </div>
+      <p className="hero-form-note">{t('form.note')}</p>
+    </form>
   );
 }

@@ -39,6 +39,46 @@ white headline type onto a pale page, and a scrim heavy enough to rescue dark
 type would wash the photograph out. The nav takes those same media colours while
 it floats over the hero and returns to the theme once it lifts past it.
 
+## Revision: Launch-style hero over an Iridescence shader. Supersedes the split hero below.
+
+Modelled on the Framer landing page's structure, in Tidence's own type,
+colour and square corners.
+
+**Structure (`Hero.jsx`), centred:**
+1. A badge: Lagoon "OPEN" chip and "Taking on new projects". Square, not a
+   pill.
+2. The headline. It is gradient text, Foam fading into Spray, as if lit from
+   above; "your business runs on" stays Sunlit.
+3. One line of description.
+4. The CTA row: "Email us about a project" (prefilled mailto) and "See how we
+   work".
+5. A wide panel tilted back 18° in perspective (8° on phones). It levels out
+   between 15% and 45% of its pass across the screen, using
+   `useScrollProgress`; reduced motion gets it flat. The panel holds:
+   - the sunset wave, with a DM Mono data readout in the deck's style
+     ("TIDE 04.10.26 · 1.284 m")
+   - a real enquiry form: name, what you need (square radio chips), details.
+     Send composes an email with what was typed, or a WhatsApp message once a
+     number is set in `contact.js`. Nothing is posted anywhere.
+   - two tiles: "Email the studio ↗" and "What we build ↗".
+
+**Background: `Iridescence.jsx`**, the React Bits shader on `ogl`.
+- Settings as supplied: colour `[0.063, 0.725, 0.506]` (a sea-green slightly
+  greener than Lagoon), amplitude 0.1, speed 2, no mouse reaction.
+- Hardened for production:
+  - `ogl` is loaded inside the effect, so it is a separate chunk and never
+    runs during prerender.
+  - The loop runs only while the hero is on screen and the tab is visible;
+    time accumulates, so it resumes without jumping.
+  - Device pixel ratio is capped at 1.5.
+  - Reduced motion draws one still frame.
+  - Without WebGL, a CSS gradient in the same colours shows instead.
+- The shader never drops below about half its tint, so an Abyss veil
+  (58% at the centre, 74% at the edges) turns it into deep water with bright
+  currents, and fades to the page ground at the foot. On the brightest light,
+  Foam keeps 8.8:1 and Sunlit 5.4:1.
+- The rest of the page keeps the drifting-light `Backdrop`.
+
 ## Revision: Split hero with direct CTAs, drifting-light background. Supersedes below.
 
 **The scroll-expand hero is gone.** The 280vh sticky track, the clip-path

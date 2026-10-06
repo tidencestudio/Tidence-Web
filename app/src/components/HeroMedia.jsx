@@ -2,9 +2,9 @@ const SIZES = [640, 960, 1600];
 const srcSet = (ext) => SIZES.map((w) => `/wave-sunset-${w}.${ext} ${w}w`).join(', ');
 
 /**
- * The hero's photograph, clean: the sunset wave in its own colour, framed in
- * the right-hand column of the hero. Laid out at about 42vw on desktop and
- * full width on phones; keep `sizes` in step with the hero grid.
+ * The hero's photograph, clean: the sunset wave in its own colour, on the
+ * left of the tilted panel. About 640px wide on desktop and full width on
+ * phones; keep `sizes` in step with the panel grid.
  *
  * AVIF and WebP at three widths: a phone fetches about 12 KB instead of the
  * 245 KB original. Keep the srcsets in sync with the preload in index.html.
@@ -12,8 +12,8 @@ const srcSet = (ext) => SIZES.map((w) => `/wave-sunset-${w}.${ext} ${w}w`).join(
 export default function HeroMedia() {
   return (
     <picture>
-      <source type="image/avif" srcSet={srcSet('avif')} sizes="(min-width: 900px) 42vw, 100vw" />
-      <source type="image/webp" srcSet={srcSet('webp')} sizes="(min-width: 900px) 42vw, 100vw" />
+      <source type="image/avif" srcSet={srcSet('avif')} sizes="(min-width: 1200px) 640px, (min-width: 900px) 55vw, 100vw" />
+      <source type="image/webp" srcSet={srcSet('webp')} sizes="(min-width: 1200px) 640px, (min-width: 900px) 55vw, 100vw" />
       <img
         src="/wave-sunset-960.webp"
         alt=""
