@@ -12,6 +12,13 @@
   padding-inline: var(--gutter);
 }
 
+/* Entrances that slide in from the right start past the edge and would
+   otherwise widen the page on phones. `clip`, not `hidden`: hidden makes main
+   a scroll container, and every sticky scene on the page would stop pinning. */
+main {
+  overflow-x: clip;
+}
+
 .section {
   padding-block: var(--space-section);
 }
@@ -35,21 +42,61 @@
 
 /* --- Grain -------------------------------------------------------------- */
 
-/* A dot lattice over the whole page. It sits above the section backgrounds
-   rather than behind them, so the band sections keep the same texture as the
-   transparent ones instead of punching a smooth hole in it. At this alpha it
-   never competes with text.
+/* Text set straight on the page ground gets a halo in the ground colour. It
+   is invisible except where a sonar ring passes behind the letters, where it
+   clears the dots out of the glyphs; the page-wide version of the soft wash
+   the original component put behind its copy. Cards and the hero sit on their
+   own opaque grounds and opt out. */
+:is(main, footer) :is(h2, h3, p, dt, dd, li, blockquote),
+footer a {
+  text-shadow:
+    0 0 3px var(--bg),
+    0 0 10px var(--bg);
+}
 
-   For a ruled grid instead of dots, swap background-image for:
-     repeating-linear-gradient(to right, var(--dot) 0 1px, transparent 1px 100%),
-     repeating-linear-gradient(to bottom, var(--dot) 0 1px, transparent 1px 100%) */
-.texture {
+/* Also out: anything drawn with a transparent fill (the image-filled slogan,
+   outlined numerals and marquee). A shadow shows straight through those. */
+.service-card *,
+.expand-stage *,
+.slogan,
+.slogan *,
+.footer-wordmark *,
+.marquee *,
+.stage-num {
+  text-shadow: none;
+}
+
+/* Reading progress, in place of the hidden native scrollbar. */
+.progress {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-overlay);
+  width: 3px;
+  background: var(--line);
+  pointer-events: none;
+}
+
+.progress-fill {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+/* The sonar dot field (SonarGrid.jsx). Fixed behind all content; it draws in
+   whatever `color` resolves to, which is the accent. It
+   replaced a static CSS dot lattice that sat in the same place. */
+.sonar {
   position: fixed;
   inset: 0;
-  z-index: var(--z-grain);
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  color: var(--accent);
   pointer-events: none;
-  background-image: radial-gradient(circle at 1px 1px, var(--dot) 1px, transparent 0);
-  background-size: 26px 26px;
 }
 
 .grain {
@@ -109,7 +156,8 @@
 }
 
 .btn-ghost {
-  background: transparent;
+  /* Solid, not transparent: the sonar field would show through the label. */
+  background: var(--bg);
   color: var(--fg);
   border-color: var(--line-strong);
 }
@@ -175,8 +223,28 @@
   padding-inline: var(--gutter);
   transition:
     background var(--dur-hover) var(--ease),
-    border-color var(--dur-hover) var(--ease);
+    border-color var(--dur-hover) var(--ease),
+    transform var(--dur-enter) var(--ease);
   border-bottom: 1px solid transparent;
+}
+
+/* Retracted at the foot of the page so the footer's first row is not parked
+   behind the bar. Keyboard users get it back the moment focus enters it, so
+   the links never become unreachable while focused. */
+.nav.is-retracted {
+  transform: translateY(-100%);
+}
+
+.nav.is-retracted:focus-within {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav {
+    transition:
+      background var(--dur-hover) var(--ease),
+      border-color var(--dur-hover) var(--ease);
+  }
 }
 
 .nav.is-lifted {
@@ -210,6 +278,8 @@
 .nav-links {
   display: flex;
   justify-content: center;
+  /* A label never breaks mid-word; the bar sheds the CTA first (below). */
+  white-space: nowrap;
   gap: clamp(1.75rem, 3.5vw, 3.25rem);
   font-size: var(--step-0);
   letter-spacing: 0.01em;
@@ -264,18 +334,15 @@
   color: var(--on-media);
 }
 
-.nav:not(.is-lifted) .switch,
-.nav:not(.is-lifted) .iconbtn {
+.nav:not(.is-lifted) .switch {
   border-color: rgba(244, 248, 247, 0.3);
 }
 
-.nav:not(.is-lifted) .switch button,
-.nav:not(.is-lifted) .iconbtn {
+.nav:not(.is-lifted) .switch button {
   color: var(--on-media-muted);
 }
 
-.nav:not(.is-lifted) .switch button:hover,
-.nav:not(.is-lifted) .iconbtn:hover {
+.nav:not(.is-lifted) .switch button:hover {
   color: var(--on-media);
 }
 
@@ -290,8 +357,8 @@
 }
 
 /* --- Nav preferences ----------------------------------------------------
-   Language and theme. Both are real buttons with accessible names, sized to
-   the 24px minimum for pointer targets. */
+   The language switch: real buttons with accessible names, sized to the 24px
+   minimum for pointer targets. */
 
 .nav-prefs {
   display: flex;
@@ -332,32 +399,18 @@
   color: var(--on-accent);
 }
 
-.iconbtn {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--line-strong);
-  border-radius: 0;
-  background: transparent;
-  color: var(--fg-muted);
-  cursor: pointer;
-  transition:
-    color var(--dur-hover) var(--ease),
-    border-color var(--dur-hover) var(--ease);
-}
-
-.iconbtn:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-.iconbtn:active {
-  transform: translateY(1px);
-}
-
 /* Under 900px the links fold away and the CTA carries the bar. Every section
    stays reachable from the footer, so nothing is orphaned. */
+/* The bar's side columns are equal, so the language switch plus the CTA
+   (about 320px in Spanish) set the width of both and the whole bar needs
+   roughly 1180px. Between the fold and that width the CTA goes, since it
+   duplicates the Contact link, and the section links keep their room. */
+@media (min-width: 901px) and (max-width: 1200px) {
+  .nav-cta {
+    display: none;
+  }
+}
+
 @media (max-width: 900px) {
   .nav {
     grid-template-columns: auto 1fr;
@@ -560,6 +613,72 @@
   text-shadow: 0 1px 24px color-mix(in oklab, var(--scrim) 70%, transparent);
 }
 
+/* The dither, laid over the photograph as a veil instead of replacing it.
+   Screen blending means only the lit dots register; the shader's dark ground
+   adds next to nothing, so the photo stays a photo. */
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: screen;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+/* --- Scroll cue ----------------------------------------------------------
+   A label and a line with a bead running down it, centred at the foot of the
+   stage. It is a real link to the next section, so it also works as a
+   shortcut for anyone who would rather not scroll through the opening. */
+.expand-cue {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.25rem, 4vh, 2.5rem);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  translate: -50% 0;
+  color: var(--on-media-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  transition: color var(--dur-hover) var(--ease);
+}
+
+.expand-cue:hover {
+  color: var(--on-media);
+}
+
+.expand-cue-line {
+  position: relative;
+  width: 1px;
+  height: 3rem;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--on-media) 28%, transparent);
+}
+
+.expand-cue-line::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 40%;
+  background: var(--accent-on-media);
+  transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .expand-cue-line::after {
+    animation: cue-drop 1800ms var(--ease) infinite;
+  }
+}
+
+@keyframes cue-drop {
+  to {
+    transform: translateY(260%);
+  }
+}
+
 #nav-sentinel {
   position: absolute;
   bottom: 12%;
@@ -605,7 +724,9 @@
   :root.scrub .expand-brand,
   :root.scrub .expand-title,
   :root.scrub .expand-line,
-  :root.scrub .expand-reveal {
+  :root.scrub .expand-reveal,
+  :root.scrub .expand-cue,
+  :root.scrub .hero-veil {
     animation-duration: 1s;
     animation-timing-function: linear;
     animation-fill-mode: both;
@@ -648,6 +769,45 @@
 
   :root.scrub .expand-reveal {
     animation-name: expand-settle;
+  }
+
+  :root.scrub .expand-cue {
+    animation-name: cue-out;
+  }
+
+  :root.scrub .hero-veil {
+    animation-name: veil-thin;
+  }
+
+  :root.scrub .expand-cue:focus-visible {
+    animation: none;
+    opacity: 1;
+  }
+
+  /* Gone as soon as the reader has shown they know to scroll. */
+  @keyframes cue-out {
+    0%,
+    4% {
+      opacity: 1;
+    }
+    18%,
+    100% {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  /* Most present on the closed plate, where it reads as the brand's dot
+     language, and thinning to a trace once the photograph is full bleed. */
+  @keyframes veil-thin {
+    0%,
+    10% {
+      opacity: 0.7;
+    }
+    72%,
+    100% {
+      opacity: 0.16;
+    }
   }
 
   /* Neither a hidden bar nor a hidden CTA may swallow Tab. Focus anywhere
@@ -775,39 +935,6 @@
     }
   }
 
-  /* A phone has no horizontal room to part the lines into, and the opening
-     plate has to start smaller than the screen it opens on. */
-  @media (max-width: 760px) {
-    .expand-track {
-      height: 240vh;
-    }
-
-    @keyframes expand-open {
-      0% {
-        clip-path: inset(calc(50dvh - 11rem) calc(50vw - 7rem));
-        transform: scale(1.14);
-      }
-      72%,
-      100% {
-        clip-path: inset(0);
-        transform: scale(1);
-      }
-    }
-
-    @keyframes expand-part-left {
-      0%,
-      100% {
-        transform: none;
-      }
-    }
-
-    @keyframes expand-part-right {
-      0%,
-      100% {
-        transform: none;
-      }
-    }
-  }
 }
 
 
@@ -940,277 +1067,556 @@
   }
 }
 
-/* --- Capabilities ------------------------------------------------------- */
+/* --- Eyebrow ------------------------------------------------------------
+   The small mono label that names a chapter before its headline does. A
+   short rule runs into it, the same hairline the story thread is made of. */
 
-.cap-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: clamp(2.5rem, 6vw, 6rem);
-  align-items: start;
-}
-
-.cap-lead h2 {
-  font-size: var(--step-5);
-  margin-bottom: 1.25rem;
-}
-
-/* Two columns with the right one dropped half a step, so the four read as a
-   staggered column pair rather than a flat 2x2 block. Each item carries a
-   hairline instead of a card. */
-.cap-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(2.5rem, 4vw, 3.5rem) clamp(2rem, 3vw, 3rem);
-  padding-top: 0.75rem;
-}
-
-.cap-item {
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--line);
-}
-
-/* Margin, not transform: these are Reveal elements, and `.reveal.is-in` sets
-   `transform: none` at the same specificity later in the file, which silently
-   cancelled the offset. */
-.cap-item:nth-child(even) {
-  margin-top: clamp(1.5rem, 3vw, 3rem);
-}
-
-.cap-item svg {
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  font: 500 var(--step--1) / 1 var(--font-mono);
+  letter-spacing: 0.06em;
   color: var(--accent);
-  margin-bottom: 0.85rem;
 }
 
-.cap-item h3 {
-  font-size: var(--step-2);
-  margin-bottom: 0.5rem;
+.eyebrow::before {
+  content: '';
+  width: 2rem;
+  height: 1px;
+  background: currentColor;
 }
 
-.cap-item p {
-  font-size: var(--step-0);
-  color: var(--fg-muted);
-  max-width: 34ch;
-}
+/* --- Duotone photographs ------------------------------------------------
+   Every placeholder photo is greyed, then tinted with the one accent, so
+   unrelated pictures read as a single set. Hover gives one its colour back. */
 
-@media (max-width: 900px) {
-  .cap-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .cap-list {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    padding-top: 0;
-  }
-
-  .cap-item:nth-child(even) {
-    margin-top: 0;
-  }
-}
-
-/* --- Work --------------------------------------------------------------- */
-
-.work-head,
-.approach-head,
-.studio-head,
-.contact-head {
-  font-size: var(--step-5);
-  margin-bottom: clamp(2.5rem, 5vw, 4rem);
-}
-
-.work-grid {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: clamp(1rem, 2vw, 1.75rem);
-}
-
-/* 4+2, 3+3, 2+4. Six projects, six cells, no row repeating the one above. */
-.is-wide {
-  grid-column: span 4;
-}
-
-.is-half {
-  grid-column: span 3;
-}
-
-.is-narrow {
-  grid-column: span 2;
-}
-
-.project {
-  display: flex;
-  flex-direction: column;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  transition:
-    transform var(--dur-hover) var(--ease),
-    border-color var(--dur-hover) var(--ease),
-    box-shadow var(--dur-hover) var(--ease);
-}
-
-.project:hover {
-  transform: translateY(-3px);
-  border-color: var(--line-strong);
-  box-shadow: var(--shadow);
-}
-
-/* The ratio lives on the container so the slot is reserved before the image
-   arrives. Sizing the image itself lets the card collapse and then jump,
-   which shifts every anchor below it. */
-/* --- Project shots ------------------------------------------------------
-   Screened to match the hero: pulled to two tones and printed through a dot
-   grid, so the work reads as part of the same system rather than a row of
-   stock photographs.
-
-   It lifts to full colour on hover. These are screenshots of real work and a
-   client needs to be able to actually see them; the screen is the resting
-   state, not a permanent veil. */
-.project-shot {
+.service-shot,
+.stage-shot,
+.feature-frame,
+.note-shot {
   position: relative;
-  isolation: isolate;
   overflow: hidden;
-  border-bottom: 1px solid var(--line);
+  margin: 0;
   background: var(--surface-2);
-  aspect-ratio: 16 / 10;
 }
 
-.project-shot img {
-  filter: grayscale(0.85) contrast(1.12);
-  transition:
-    filter 420ms var(--ease),
-    transform 700ms var(--ease);
-}
-
-/* A dot texture, not a halftone. The hero's dither varies its dots by
-   luminance; a CSS grid cannot, so pushed hard it just darkens the picture
-   evenly and flattens it. Kept light, it ties the cards to the page texture
-   and lets the duotone carry the coherence. */
-.project-shot::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background-image: radial-gradient(circle at center, var(--scrim) 30%, transparent 34%);
-  background-size: 4px 4px;
-  mix-blend-mode: multiply;
-  opacity: 0.22;
-  transition: opacity 420ms var(--ease);
-}
-
-/* The duotone, tinted to the accent the same way the hero is. */
-.project-shot::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: var(--accent);
-  mix-blend-mode: color;
-  opacity: 0.26;
-  transition: opacity 420ms var(--ease);
-}
-
-.project:hover .project-shot img,
-.project:focus-within .project-shot img {
-  filter: none;
-}
-
-.project:hover .project-shot::after,
-.project:hover .project-shot::before,
-.project:focus-within .project-shot::after,
-.project:focus-within .project-shot::before {
-  opacity: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .project-shot img,
-  .project-shot::after,
-  .project-shot::before {
-    transition: none;
-  }
-}
-
-.project-shot img {
+.service-shot img,
+.stage-shot img,
+.feature-frame img,
+.note-shot img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: grayscale(1) contrast(1.08) brightness(0.92);
+  transition:
+    filter var(--dur-enter) var(--ease),
+    transform 1200ms var(--ease);
 }
 
-.is-narrow .project-shot {
-  aspect-ratio: 4 / 5;
+.service-shot::after,
+.stage-shot::after,
+.feature-frame::after,
+.note-shot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  mix-blend-mode: color;
+  opacity: 0.6;
+  pointer-events: none;
+  transition: opacity var(--dur-enter) var(--ease);
 }
 
-.project:hover .project-shot img {
-  transform: scale(1.035);
+/* --- Marquee ------------------------------------------------------------
+   Two lines of oversized type pulled in opposite directions by the scroll.
+   The top line is the display face, solid; the bottom is the body italic in
+   outline. Same words, two voices. */
+
+.marquee {
+  padding-block: clamp(3rem, 7vw, 5.5rem);
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  user-select: none;
 }
 
-.project-body {
+.marquee-row {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  font-size: clamp(3.25rem, 1.5rem + 8vw, 9.5rem);
+  line-height: 1.05;
+  will-change: transform;
+}
+
+.marquee-row span {
+  display: inline-flex;
+  align-items: center;
+}
+
+.marquee-row-a {
+  font-family: var(--font-display);
+  transform: translate3d(calc(var(--p, 0.5) * -22%), 0, 0);
+}
+
+.marquee-row-b {
+  font-family: var(--font-body);
+  font-style: italic;
+  color: transparent;
+  -webkit-text-stroke: 1.2px var(--fg-dim);
+  transform: translate3d(calc(-30% + var(--p, 0.5) * 22%), 0, 0);
+}
+
+.marquee-dot {
+  display: inline-block;
+  width: 0.14em;
+  height: 0.14em;
+  margin-inline: 0.45em;
+  background: var(--accent);
+  transform: rotate(45deg);
+}
+
+/* --- Services: stacking cards -------------------------------------------
+   Each card pins a little lower than the one before and the next slides
+   over it. As a card is buried it settles back, smaller and dimmer, so the
+   pile reads as depth rather than as cards overlapping by accident. */
+
+.services-head {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.services-title {
+  font-size: var(--step-6);
+}
+
+.services-stack {
+  display: grid;
+  gap: clamp(2rem, 6vh, 4rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.service {
+  position: sticky;
+  top: calc(6.5rem + var(--i) * 1.4rem);
+  /* How far the cards after this one have covered it, 0 to 1. */
+  --buried: clamp(0, calc(var(--p, 0) * (var(--n) - 1) - var(--i)), 1);
+}
+
+.service-card {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  min-height: min(68vh, 600px);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  transform-origin: 50% 0;
+  transform: scale(calc(1 - var(--buried) * 0.05));
+  filter: brightness(calc(1 - var(--buried) * 0.3));
+  will-change: transform;
+}
+
+.service-body {
   display: flex;
   flex-direction: column;
-  flex: 1;
-  gap: 0.85rem;
-  padding: clamp(1.25rem, 2.2vw, 1.85rem);
+  padding: clamp(1.75rem, 4vw, 3.25rem);
 }
 
-.project-kind {
+.service-index {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: var(--step--1);
+  color: var(--fg-muted);
+}
+
+.service-index .tnum,
+.service-index svg {
   color: var(--accent);
 }
 
-.project-body h3 {
-  font-size: var(--step-3);
+.service-title {
+  margin-top: clamp(1.5rem, 4vw, 3rem);
+  font-size: var(--step-5);
 }
 
-.project-text {
-  font-size: var(--step-0);
-  line-height: 1.6;
+.service-text {
+  margin-top: 1rem;
+  max-width: 46ch;
   color: var(--fg-muted);
-  max-width: 52ch;
 }
 
-/* Footers pin to the bottom so they line up across a row whatever the copy
-   length above them. */
-.project-foot {
+.service-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 1.5rem;
   margin-top: auto;
-  padding-top: 0.5rem;
+  padding-top: 2rem;
+}
+
+.service-list li {
+  display: flex;
+  gap: 0.6rem;
+  padding-block: 0.7rem;
+  border-top: 1px solid var(--line);
+  font-size: var(--step--1);
+  line-height: 1.45;
+}
+
+.service-list li::before {
+  content: '';
+  flex: none;
+  width: 5px;
+  height: 5px;
+  margin-top: 0.5em;
+  background: var(--accent);
+}
+
+.service-card:hover .service-shot img {
+  filter: none;
+  transform: scale(1.04);
+}
+
+.service-card:hover .service-shot::after {
+  opacity: 0;
+}
+
+@media (max-width: 860px) {
+  .services-head {
+    grid-template-columns: 1fr;
+  }
+
+  /* A single-column card is taller than a phone screen, so pinning it would
+     bury its lower half under the next card before it could be read. */
+  .service {
+    position: relative;
+    top: auto;
+  }
+
+  .service-card {
+    transform: none;
+    filter: none;
+  }
+
+  .service-card {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .service-shot {
+    order: -1;
+    aspect-ratio: 16 / 8;
+  }
+}
+
+@media (max-width: 520px) {
+  .service-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Journey: the pinned trip -------------------------------------------
+   The section pins and vertical scroll becomes sideways travel. `--p` is the
+   trip's progress and `--shift` the rail's overflow in pixels, both written
+   by Journey.jsx. Each stage gets its own arrival value from `--at` and
+   `--span`, and every effect on the stage reads that one number. */
+
+.journey {
+  border-top: 1px solid var(--line);
+}
+
+.journey-title {
+  font-size: var(--step-6);
+  margin-bottom: 1.5rem;
+}
+
+.journey-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  color: var(--fg-muted);
+}
+
+.journey-hint-arrow {
+  position: relative;
+  width: 3.5rem;
+  height: 1px;
+  background: var(--line-strong);
+  overflow: hidden;
+}
+
+.journey-hint-arrow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: translateX(-100%);
+  animation: hint-run 1800ms var(--ease) infinite;
+}
+
+@keyframes hint-run {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.stage-num {
+  font-family: var(--font-display);
+  line-height: 0.8;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--line-strong);
+  pointer-events: none;
+}
+
+.stage-kicker {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  color: var(--accent);
+}
+
+.stage-title {
+  margin-top: 0.5rem;
+  font-size: var(--step-5);
+}
+
+.stage-text {
+  margin-top: 0.9rem;
+  max-width: 40ch;
+  color: var(--fg-muted);
+}
+
+.stage-out {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 1.5rem;
+}
+
+.stage-out li {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--line-strong);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg);
+}
+
+/* Pinned */
+
+.is-pinned .journey-track {
+  position: relative;
+  /* Height is written by Journey.jsx from the measured overflow. */
+  min-height: 100dvh;
+}
+
+.is-pinned .journey-stage {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  overflow: hidden;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
 }
 
-.project-by {
-  margin-left: auto;
+.is-pinned .journey-rail {
+  display: flex;
+  align-items: center;
+  gap: clamp(4rem, 8vw, 8rem);
+  width: max-content;
+  padding-inline: var(--gutter) 18vw;
+  padding-top: 3rem;
+  transform: translate3d(calc(var(--p, 0) * var(--shift, 0px) * -1), 0, 0);
+  will-change: transform;
+}
+
+.is-pinned .journey-intro {
+  flex: none;
+  width: min(34rem, 38vw);
+}
+
+.is-pinned .journey-list {
+  display: flex;
+  gap: clamp(4rem, 7vw, 7rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.is-pinned .stage {
+  --local: clamp(0, calc((var(--p, 0) - var(--at, 0)) / var(--span, 1)), 1);
+  position: relative;
+  flex: none;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(2rem, 3vw, 3rem);
+  align-items: end;
+  width: clamp(40rem, 58vw, 56rem);
+  height: min(64dvh, 600px);
+}
+
+.is-pinned .stage-num {
+  position: absolute;
+  top: -0.4em;
+  left: -0.12em;
+  z-index: 1;
+  font-size: clamp(8rem, 13vw, 13rem);
+  /* Outline fills in with the accent as the stage arrives. */
+  -webkit-text-stroke-color: color-mix(
+    in oklab,
+    var(--accent) calc(var(--local) * 100%),
+    var(--line-strong)
+  );
+  transform: translate3d(calc((1 - var(--local)) * 45%), 0, 0);
+}
+
+/* The photograph wipes up from the bottom and settles from a slight zoom. */
+.is-pinned .stage-shot {
+  height: 100%;
+  clip-path: inset(calc((1 - var(--local)) * 100%) 0 0 0);
+}
+
+.is-pinned .stage-shot img {
+  transform: scale(calc(1.3 - var(--local) * 0.3));
+  transition: filter var(--dur-enter) var(--ease);
+}
+
+.is-pinned .stage-copy {
+  position: relative;
+  z-index: 2;
+  padding-bottom: 0.5rem;
+  opacity: calc(0.25 + var(--local) * 0.75);
+  transform: translate3d(0, calc((1 - var(--local)) * 2.5rem), 0);
+}
+
+.stage:hover .stage-shot img {
+  filter: none;
+}
+
+.stage:hover .stage-shot::after {
+  opacity: 0;
+}
+
+/* The HUD: where you are, and the tide line drawing behind you. */
+.journey-hud {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: clamp(1.5rem, 4vh, 2.75rem);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  pointer-events: none;
+}
+
+.journey-count {
+  flex: none;
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.08em;
+  font-size: var(--step-1);
+  color: var(--fg);
+}
+
+.journey-count-total {
+  margin-left: 0.4em;
   color: var(--fg-dim);
 }
 
-@media (max-width: 1024px) {
-  .work-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+.journey-tide {
+  flex: 1;
+  height: 26px;
+  overflow: visible;
+}
+
+.journey-tide path {
+  fill: none;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.journey-tide-base {
+  stroke: var(--line-strong);
+}
+
+.journey-tide-live {
+  stroke: var(--accent);
+  stroke-dasharray: 1 2;
+  stroke-dashoffset: calc(1 - var(--p, 0));
+}
+
+/* Stacked: phones, narrow windows and reduced motion */
+
+.is-stacked {
+  padding-block: var(--space-section);
+}
+
+.is-stacked .journey-rail {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.is-stacked .journey-intro {
+  margin-bottom: clamp(3rem, 8vw, 4.5rem);
+}
+
+.is-stacked .journey-list {
+  display: grid;
+  gap: clamp(3.5rem, 9vw, 5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.is-stacked .stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  gap: 1.5rem 2rem;
+  align-items: end;
+}
+
+.is-stacked .stage {
+  padding-top: 2.5rem;
+}
+
+.is-stacked .stage-num {
+  position: absolute;
+  top: 0;
+  left: -0.06em;
+  z-index: 1;
+  font-size: clamp(4.5rem, 16vw, 8rem);
+  -webkit-text-stroke-color: var(--accent);
+}
+
+.is-stacked .stage-shot {
+  aspect-ratio: 4 / 5;
+  max-height: 70dvh;
+}
+
+@media (max-width: 620px) {
+  .is-stacked .stage {
+    grid-template-columns: 1fr;
   }
 
-  .is-wide,
-  .is-half,
-  .is-narrow {
-    grid-column: span 1;
-  }
-
-  .is-narrow .project-shot {
+  .is-stacked .stage-shot {
     aspect-ratio: 16 / 10;
   }
 }
 
-@media (max-width: 680px) {
-  .work-grid {
-    grid-template-columns: 1fr;
-  }
+/* --- Section heads ---------------------------------------------------- */
+
+.approach-head {
+  font-size: var(--step-5);
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 
 /* --- Approach ----------------------------------------------------------- */
@@ -1274,314 +1680,490 @@
   }
 }
 
-/* --- Studio ------------------------------------------------------------- */
+/* --- Journal ------------------------------------------------------------
+   An editorial spread: the photograph holds its place in the left column
+   while the story runs down the right, then a numbered index of short notes.
+   Cards are deliberately absent; hairlines and type do the structuring. */
 
-.studio {
-  background: var(--surface);
-  border-block: 1px solid var(--line);
+.journal-head {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+  margin-bottom: clamp(3rem, 6vw, 5rem);
 }
 
-/* Same size, asymmetric placement.
-   
-   Both cards span five of twelve columns, so they measure identically and
-   neither founder is given more weight than the other. The asymmetry comes
-   from where they sit: the first is flush with the left gutter under the
-   heading, the second starts a column later than a symmetric split would put
-   it and stops a column short of the right edge, leaving a deliberate band of
-   air there. The vertical drop does the rest. */
-.studio-grid {
+.journal-title {
+  font-size: var(--step-6);
+}
+
+.feature {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: clamp(1.5rem, 3vw, 2.5rem);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
   align-items: start;
 }
 
-.person:nth-child(1) {
-  grid-column: 1 / span 5;
+.feature-shot {
+  position: sticky;
+  top: 7rem;
+  margin: 0;
 }
 
-.person:nth-child(2) {
-  grid-column: 7 / span 5;
-  margin-top: clamp(2.5rem, 6vw, 5.5rem);
+.feature-frame {
+  aspect-ratio: 4 / 5;
 }
 
-.person {
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-  padding: clamp(1.5rem, 3vw, 2.25rem);
-  background: var(--bg);
-  border: 1px solid var(--line);
-}
-
-.person-mark {
-  font-family: var(--font-display);
-  font-size: clamp(3.75rem, 8vw, 5.75rem);
-  font-weight: 400;
-  line-height: 0.9;
-  letter-spacing: 0.02em;
-  margin-bottom: 0.5rem;
-
-  /* Set in the same dot field as the hero, clipped to the letterforms. The
-     flat colour is the fallback where background-clip: text is unsupported,
-     so the initials never vanish. */
-  color: var(--accent-soft);
-  background-image: radial-gradient(circle at center, var(--accent) 36%, transparent 40%);
-  background-size: 4px 4px;
-}
-
-@supports (background-clip: text) or (-webkit-background-clip: text) {
-  .person-mark {
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    opacity: 0.55;
-  }
-}
-
-.person-top {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.person-top h3 {
-  font-size: var(--step-3);
-}
-
-.person-role {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  white-space: nowrap;
-}
-
-.person-text {
-  font-size: var(--step-0);
-  line-height: 1.6;
+.feature-shot figcaption {
+  margin-top: 0.9rem;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: var(--step--1);
   color: var(--fg-muted);
-  max-width: 46ch;
 }
 
-.person-links {
+.feature-meta {
   display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  margin-top: auto;
-  padding-top: 1.25rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  color: var(--fg-muted);
+}
+
+.feature-tag {
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+
+.feature-title {
+  margin-top: 1.5rem;
+  font-size: var(--step-6);
+}
+
+.feature-dek {
+  margin-top: 1.25rem;
+  max-width: 44ch;
+  font-style: italic;
+  font-size: var(--step-2);
+  line-height: 1.45;
+  color: var(--fg);
+}
+
+.feature-body {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding-top: clamp(2rem, 4vw, 3rem);
   border-top: 1px solid var(--line);
 }
 
-.person-links li {
-  display: flex;
-  gap: 1rem;
-  align-items: baseline;
+.feature-body p {
+  max-width: 62ch;
+  font-size: var(--step-1);
+  line-height: 1.7;
 }
 
-.person-key {
-  flex: 0 0 5rem;
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--fg-dim);
-}
-
-.person-links a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  min-width: 0;
-  font-size: var(--step--1);
-  text-decoration: none;
-  border-bottom: 1px solid var(--line);
-  transition:
-    color var(--dur-hover) var(--ease),
-    border-color var(--dur-hover) var(--ease);
-}
-
-.person-links a:hover {
+/* A drop cap in the accent opens the story, the one place on the page set
+   like a magazine article rather than a pitch. */
+.feature-intro::first-letter {
+  float: left;
+  margin: 0.06em 0.12em 0 0;
+  font-family: var(--font-display);
+  font-size: 4.4em;
+  line-height: 0.82;
   color: var(--accent);
-  border-color: var(--accent);
 }
 
-@media (max-width: 820px) {
-  .studio-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .person:nth-child(1),
-  .person:nth-child(2) {
-    grid-column: auto;
-    margin-top: 0;
-  }
-}
-
-/* --- Contact ------------------------------------------------------------ */
-
-.contact-inner {
-  max-width: 820px;
-  text-align: center;
-}
-
-.contact-lead {
-  max-width: 48ch;
-  margin-inline: auto;
-}
-
-.contact-form-wrap {
-  margin-top: clamp(2.5rem, 5vw, 3.5rem);
-  text-align: left;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.field-row {
+.feature-more {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 700ms var(--ease);
 }
 
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.feature-more.is-open {
+  grid-template-rows: 1fr;
 }
 
-/* Label above the input, always visible. Placeholders are never labels. */
-.field label {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--fg-muted);
+.feature-more-inner {
+  display: grid;
+  gap: 1.4rem;
+  min-height: 0;
+  overflow: hidden;
+  padding-top: 1.4rem;
 }
 
-.field label span {
-  color: var(--accent);
+.feature-more:not(.is-open) .feature-more-inner {
+  padding-top: 0;
 }
 
-.field input,
-.field textarea {
-  width: 100%;
-  min-height: 48px;
-  padding: 0.75rem 1rem;
-  background: var(--surface);
-  border: 1px solid var(--line-strong);
-  border-radius: 0;
-  color: var(--fg);
-  font-family: var(--font-body);
-  font-size: var(--step-0);
-  transition: border-color var(--dur-hover) var(--ease);
-}
-
-.field textarea {
-  resize: vertical;
-  line-height: 1.6;
-}
-
-.field input:hover,
-.field textarea:hover {
-  border-color: var(--fg-dim);
-}
-
-.field input[aria-invalid='true'],
-.field textarea[aria-invalid='true'] {
-  border-color: var(--accent);
-}
-
-.field-help {
-  font-size: var(--step--1);
-  color: var(--fg-muted);
-}
-
-/* Errors are text, never colour alone: the accent is the page's only hue, so
-   the message itself carries the meaning. */
-.field-error {
-  display: flex;
-  gap: 0.4rem;
-  font-size: var(--step--1);
-  color: var(--accent);
-}
-
-.field-error::before {
-  content: '!';
-  font-family: var(--font-mono);
-  font-weight: 500;
-}
-
-.form-summary {
-  display: flex;
-  gap: 0.75rem;
-  padding: 1rem 1.25rem;
-  background: var(--accent-soft);
+.feature-quote {
+  margin: 1.25rem 0;
+  padding-left: clamp(1.25rem, 3vw, 2rem);
   border-left: 2px solid var(--accent);
+}
+
+.feature-body .feature-quote p {
+  font-family: var(--font-display);
+  font-size: var(--step-4);
+  line-height: 1.25;
+  max-width: 28ch;
+}
+
+.feature-toggle {
+  margin-top: 2rem;
+  padding: 0.85rem 1.4rem;
+}
+
+.feature-toggle svg {
+  transition: transform var(--dur-hover) var(--ease);
+}
+
+.feature-toggle[aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+
+/* The notes index. */
+.notes {
+  margin: clamp(5rem, 10vw, 8rem) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line-strong);
+}
+
+.note {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 10rem) minmax(0, 1fr) 9.5rem;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: center;
+  padding-block: clamp(1.5rem, 3vw, 2.25rem);
+  border-bottom: 1px solid var(--line-strong);
+  transition: background var(--dur-hover) var(--ease);
+}
+
+.note:hover {
+  background: color-mix(in oklab, var(--surface) 60%, transparent);
+}
+
+.note-index {
+  font-family: var(--font-mono);
   font-size: var(--step--1);
-}
-
-.form-summary svg {
-  flex-shrink: 0;
   color: var(--accent);
-  margin-top: 2px;
+  padding-left: 0.25rem;
 }
 
-.form-summary ul {
-  margin-top: 0.4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.form-summary a {
+.note-tag {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
   color: var(--fg-muted);
 }
 
-.form-summary a:hover {
-  color: var(--fg);
-}
-
-.form .btn {
-  align-self: flex-start;
-}
-
-.form-done {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: clamp(1.5rem, 3vw, 2.25rem);
-  background: var(--surface);
-  border: 1px solid var(--line-strong);
-}
-
-.form-done h3 {
+.note-title {
   font-size: var(--step-3);
 }
 
-.form-done p {
-  font-size: var(--step-0);
+.note-text {
+  margin-top: 0.5rem;
+  max-width: 62ch;
   color: var(--fg-muted);
-  max-width: 52ch;
 }
 
-@media (max-width: 640px) {
-  .field-row {
+.note-shot {
+  aspect-ratio: 4 / 3;
+}
+
+.note:hover .note-shot img {
+  filter: none;
+  transform: scale(1.05);
+}
+
+.note:hover .note-shot::after {
+  opacity: 0;
+}
+
+@media (max-width: 900px) {
+  .journal-head,
+  .feature {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-shot {
+    position: relative;
+    top: auto;
+  }
+
+  .feature-frame {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+@media (max-width: 680px) {
+  .note {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    gap: 0.4rem 1rem;
+    align-items: start;
+  }
+
+  .note-index {
+    grid-row: span 2;
+    padding-top: 0.2rem;
+  }
+
+  .note-shot {
+    display: none;
+  }
+}
+
+/* --- Contact: the slogan and the channels -------------------------------
+   The end of the trip. The first line of the slogan is filled with the tide
+   photograph, the second draws itself in from an outline as you arrive, and
+   the two drift apart with the scroll. A slow single-hue glow moves behind
+   it all. */
+
+.contact {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding-block: clamp(7rem, 14vw, 12rem) clamp(6rem, 12vw, 10rem);
+  border-top: 1px solid var(--line);
+}
+
+.contact-glow {
+  position: absolute;
+  inset: -25%;
+  z-index: -1;
+  background:
+    radial-gradient(38% 42% at 22% 32%, var(--accent-soft), transparent 70%),
+    radial-gradient(
+      30% 36% at 78% 64%,
+      color-mix(in oklab, var(--accent) 18%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      26% 30% at 50% 100%,
+      color-mix(in oklab, var(--accent) 12%, transparent),
+      transparent 70%
+    );
+  filter: blur(30px);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .contact-glow {
+    animation: glow-drift 22s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes glow-drift {
+  0% {
+    transform: translate3d(-4%, -2%, 0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate3d(3%, 4%, 0) rotate(8deg) scale(1.08);
+  }
+  100% {
+    transform: translate3d(5%, -3%, 0) rotate(-6deg) scale(1.02);
+  }
+}
+
+.contact-eyebrow {
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.slogan {
+  display: flex;
+  flex-direction: column;
+  font-size: clamp(3.5rem, 0.5rem + 12vw, 12rem);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  /* Allowed to wrap: a machine translation can run far longer than the
+     source, and a nowrap line would be clipped by the section. */
+  text-wrap: balance;
+}
+
+.slogan-line {
+  display: block;
+  padding-bottom: 0.08em;
+  will-change: transform;
+}
+
+/* The tide photograph blended over a sweeping fg-to-accent gradient. The
+   photo alone is mostly near-black water and would vanish on the dark page,
+   so it is screened over the gradient: the letters stay bright and the
+   sunset highlights show through as texture. */
+.slogan-a {
+  background-image:
+    url('/wave-sunset.jpg'),
+    linear-gradient(100deg, var(--fg) 0%, var(--accent) 35%, var(--fg) 65%, var(--accent) 100%);
+  background-repeat: no-repeat;
+  background-size: cover, 220% 100%;
+  background-position:
+    50% calc(20% + var(--p, 0.5) * 60%),
+    calc(var(--p, 0.5) * 100%) 0;
+  background-blend-mode: screen, normal;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transform: translate3d(calc((0.5 - var(--p, 0.5)) * 10%), 0, 0);
+}
+
+.slogan-b {
+  --fill: clamp(0, calc((var(--p, 1) - 0.25) * 3.5), 1);
+  align-self: flex-end;
+  color: color-mix(in oklab, var(--accent) calc(var(--fill) * 100%), transparent);
+  -webkit-text-stroke: 1.5px var(--accent);
+  transform: translate3d(calc((var(--p, 0.5) - 0.5) * 10%), 0, 0);
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+  margin-top: clamp(3.5rem, 8vw, 6.5rem);
+}
+
+.contact-lead {
+  max-width: 36ch;
+}
+
+.channels {
+  border-top: 1px solid var(--line-strong);
+}
+
+.channel {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) auto 1.5rem;
+  align-items: center;
+  gap: 1rem;
+  padding: clamp(1.1rem, 2.4vw, 1.6rem) 0.75rem;
+  border-bottom: 1px solid var(--line-strong);
+  color: var(--fg);
+  text-decoration: none;
+  transition: color var(--dur-hover) var(--ease);
+}
+
+/* A fill that rises from the hairline on hover, in the accent. */
+a.channel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: 50% 100%;
+  transition: transform 420ms var(--ease);
+}
+
+a.channel:hover,
+a.channel:focus-visible {
+  color: var(--on-accent);
+}
+
+a.channel:hover::before,
+a.channel:focus-visible::before {
+  transform: scaleY(1);
+}
+
+.channel-icon {
+  color: var(--accent);
+  transition: color var(--dur-hover) var(--ease);
+}
+
+a.channel:hover .channel-icon,
+a.channel:focus-visible .channel-icon {
+  color: inherit;
+}
+
+.channel-name {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  line-height: 1.1;
+}
+
+.channel-value {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  text-align: right;
+}
+
+.channel-arrow {
+  transition: transform var(--dur-hover) var(--ease);
+}
+
+a.channel:hover .channel-arrow {
+  transform: translate(3px, -3px);
+}
+
+.channel.is-soon {
+  color: var(--fg-muted);
+}
+
+.channel.is-soon .channel-value {
+  grid-column: 3 / 5;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: var(--step-0);
+}
+
+@media (max-width: 860px) {
+  .contact-grid {
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 560px) {
+  .slogan-b {
+    align-self: flex-start;
+  }
+
+  .channel {
+    grid-template-columns: 1.75rem minmax(0, 1fr) 1.25rem;
+    grid-template-areas:
+      'icon name arrow'
+      'icon value arrow';
+    row-gap: 0.25rem;
+  }
+
+  .channel-icon {
+    grid-area: icon;
+  }
+
+  .channel-name {
+    grid-area: name;
+  }
+
+  .channel-value,
+  .channel.is-soon .channel-value {
+    grid-area: value;
+    text-align: left;
+  }
+
+  .channel-arrow {
+    grid-area: arrow;
+  }
+}
+
 
 /* --- Footer ------------------------------------------------------------- */
 
 .footer {
+  position: relative;
   padding-block: clamp(3rem, 6vw, 4.5rem) 2rem;
   border-top: 1px solid var(--line);
+}
+
+/* The line Nav watches for. Absolute and 1px rather than a bare div: a
+   zero-height target does not reliably raise intersection callbacks, and
+   taking it out of flow keeps it from adding to the footer's height. */
+#footer-sentinel {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: 1px;
+  pointer-events: none;
 }
 
 .footer-grid {
@@ -1764,16 +2346,6 @@
   transform: none;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.spin {
-  animation: spin 900ms linear infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -1783,10 +2355,6 @@
     opacity: 1;
     transform: none;
     transition: none;
-  }
-
-  .spin {
-    animation: none;
   }
 
   *,

@@ -7,5 +7,4 @@ import { createContext } from 'react';
 // out a second Context identity while the mounted provider still holds the
 // first, and every consumer throws "must be used inside …" until a hard reload.
 // Keeping these here means the identity survives any refresh of the providers.
-export const ThemeContext = createContext(null);
 export const LocaleContext = createContext(null);

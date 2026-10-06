@@ -32,7 +32,7 @@ export default function ScrollExpandHero() {
                 heading and stays in the accessibility tree the whole time, so a
                 screen reader gets the proposition rather than the brand name.
                 This layer only exists while the window is closed. */}
-            <p className="expand-brand" aria-hidden="true">
+            <p className="expand-brand" aria-hidden="true" translate="no">
               Tidence
             </p>
 
@@ -46,12 +46,19 @@ export default function ScrollExpandHero() {
             <div className="expand-reveal">
               <p className="expand-sub">{t('hero.sub')}</p>
 
-              <a className="btn btn-lg" href="#work">
+              <a className="btn btn-lg" href="#build">
                 {t('hero.cta')}
                 <ArrowDown size={16} weight="regular" aria-hidden="true" />
               </a>
             </div>
           </div>
+
+          {/* Tells first-time readers the page continues below. It fades as
+              the sequence starts, so it is only there while it is needed. */}
+          <a className="expand-cue" href="#build">
+            <span className="expand-cue-text">{t('hero.scroll')}</span>
+            <span className="expand-cue-line" aria-hidden="true" />
+          </a>
         </div>
       </div>
 

@@ -3,10 +3,18 @@ import { Dithering, ImageDithering } from '@paper-design/shaders-react';
 
 const POSTER = '/wave-sunset.jpg';
 
-const MODES = ['photodither', 'dither', 'photo'];
-const DEFAULT_MODE = 'photodither';
+const MODES = ['veil', 'photodither', 'dither', 'photo'];
 
-/** Read once on mount: ?effect=photodither|dither|photo */
+// The photograph with a light dither laid over it, rather than the photograph
+// replaced by one. Full dither read as an effect for its own sake; as a veil it
+// is texture, and it thins out further as the window opens (see App.css).
+const DEFAULT_MODE = 'veil';
+
+// Phones get the plain graded photo: no shader to pay for, and the hero there
+// is a static opening rather than a scroll sequence.
+const PHONE = '(max-width: 760px)';
+
+/** Read once on mount: ?effect=veil|photodither|dither|photo */
 const readMode = () => {
   const asked = new URLSearchParams(window.location.search).get('effect');
   return MODES.includes(asked) ? asked : DEFAULT_MODE;
@@ -72,6 +80,7 @@ export default function HeroMedia() {
     const connection = navigator.connection;
     if (connection?.saveData) return 'photo';
     if (/2g/.test(connection?.effectiveType ?? '')) return 'photo';
+    if (window.matchMedia(PHONE).matches) return 'photo';
 
     const asked = readMode();
 
@@ -113,6 +122,28 @@ export default function HeroMedia() {
         rotation={num('rotation', 0)}
         speed={num('speed', 0.3)}
       />
+    );
+  }
+
+  if (mode === 'veil') {
+    return (
+      <>
+        <img ref={ref} src={POSTER} alt="" width="1600" height="900" fetchPriority="high" decoding="async" />
+        <ImageDithering
+          className="hero-shader hero-veil"
+          image={POSTER}
+          fit="cover"
+          width="100%"
+          height="100%"
+          colorBack={token('--scrim', '#0e1b21')}
+          colorFront={token('--accent-on-media', '#5cc9be')}
+          colorHighlight={token('--on-media', '#f4f8f7')}
+          type={pick('type', GRIDS, '8x8')}
+          size={num('size', 2)}
+          colorSteps={num('steps', 3)}
+          scale={num('scale', 1)}
+        />
+      </>
     );
   }
 

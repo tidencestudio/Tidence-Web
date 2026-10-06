@@ -13,7 +13,14 @@ const read = () => {
   } catch {
     // Private mode denies localStorage; fall through to the browser language.
   }
-  return (navigator.language || 'en').toLowerCase().startsWith('es') ? 'es' : 'en';
+  // The reader's whole preference list, in order, not just the first entry:
+  // someone in Spain with ['ca', 'es', 'en'] should land on Spanish.
+  const wanted = navigator.languages?.length ? navigator.languages : [navigator.language || 'en'];
+  for (const tag of wanted) {
+    const base = tag.toLowerCase().split('-')[0];
+    if (base in DICTIONARIES) return base;
+  }
+  return 'en';
 };
 
 /** Resolves a dotted path, falling back to English before falling back to the key. */
@@ -23,8 +30,14 @@ const lookup = (dict, path) =>
 export function LocaleProvider({ children }) {
   const [locale, setLocaleState] = useState(read);
 
+  // An accurate lang is what lets the browser offer translation in the first
+  // place, and what it translates from. The title and description follow so
+  // the tab and share preview are in the page's language too.
   useEffect(() => {
+    const dict = DICTIONARIES[locale] ?? en;
     document.documentElement.lang = locale;
+    document.title = lookup(dict, 'meta.title');
+    document.querySelector('meta[name="description"]')?.setAttribute('content', lookup(dict, 'meta.description'));
   }, [locale]);
 
   const setLocale = useCallback((next) => {
@@ -32,7 +45,7 @@ export function LocaleProvider({ children }) {
     try {
       localStorage.setItem(KEY, next);
     } catch {
-      // Same as the theme: remembering is optional, applying is not.
+      // Remembering is optional; applying is not.
     }
   }, []);
 

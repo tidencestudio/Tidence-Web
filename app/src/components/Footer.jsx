@@ -7,18 +7,25 @@ export default function Footer() {
 
   return (
     <footer className="footer">
+      {/* Marks where the footer meets the bar. Nav watches it and retracts:
+          the footer is taller than a laptop viewport, so at the foot of the
+          page its first row would otherwise sit under the sticky bar for
+          good, with no scroll left to free it. */}
+      <div id="footer-sentinel" aria-hidden="true" />
+
       <div className="container footer-grid">
         <div className="footer-brand">
           <span className="nav-mark">
             <WaveLogo />
           </span>
-          Tidence
+          <span translate="no">Tidence</span>
         </div>
 
         <nav className="footer-col" aria-label={t('footer.sections')}>
           <h2>{t('footer.sections')}</h2>
-          <a href="#work">{t('nav.work')}</a>
-          <a href="#studio">{t('nav.studio')}</a>
+          <a href="#build">{t('nav.build')}</a>
+          <a href="#journey">{t('nav.journey')}</a>
+          <a href="#story">{t('nav.story')}</a>
           <a href="#contact">{t('nav.contact')}</a>
         </nav>
 
@@ -41,13 +48,12 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="footer-wordmark">
+      <div className="footer-wordmark" translate="no">
         <WordmarkHover text="TIDENCE" />
       </div>
 
       <p className="footer-base">
-        <span>Tidence, {new Date().getFullYear()}</span>
-        <span>{t('footer.built')}</span>
+        <span><span translate="no">Tidence</span>, {new Date().getFullYear()}</span>
       </p>
     </footer>
   );

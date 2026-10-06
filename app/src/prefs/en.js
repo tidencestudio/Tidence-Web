@@ -2,87 +2,122 @@
 // there falls back to the string here rather than printing a key.
 export default {
   meta: {
+    title: 'Tidence — Websites, CRMs and business automation',
+    description:
+      'Tidence is a digital studio building websites, CRMs, office automation and the everyday tools a business runs on.',
     skip: 'Skip to content',
     openOutside: '(opens in a new tab)',
   },
 
   nav: {
     label: 'Primary',
-    work: 'Work',
-    studio: 'Studio',
+    build: 'What we build',
+    journey: 'Process',
+    story: 'Journal',
     contact: 'Contact',
     cta: 'Start a project',
     language: 'Language',
-    themeToLight: 'Switch to light theme',
-    themeToDark: 'Switch to dark theme',
   },
 
   hero: {
-    lead: 'We design and build the web,',
-    em: 'end to end',
-    sub: 'A two-person studio. You talk to the people writing the code, not to someone relaying messages.',
-    cta: 'See the work',
+    lead: 'We build the tools',
+    em: 'your business runs on',
+    sub: 'Websites, CRMs and the automations that quietly run your office. Designed, built and looked after by one team, start to finish.',
+    cta: 'Take the journey',
+    scroll: 'Scroll to explore',
   },
 
   manifesto: {
-    lead: 'Most studios put three people between you and the person writing your code.',
-    resolve: 'We put none.',
+    lead: 'Most businesses buy software off the shelf and then spend years working around it.',
+    resolve: 'We build around you.',
     support:
-      'No project manager relaying requirements. No junior inheriting the build halfway through. The two people you meet are the two people who ship it.',
+      'We start from how your business already runs, then design the site, the system and the automation to fit it. One team carries the work from the first conversation to long after launch.',
   },
 
-  capabilities: {
-    title: 'Four things,\ndone properly.',
-    lead: 'We would rather be good at a short list than available for a long one.',
+  marquee: {
+    words: ['Websites', 'CRMs', 'Automation', 'Dashboards', 'Bots', 'Internal tools', 'Integrations'],
+  },
+
+  services: {
+    eyebrow: 'What we build',
+    title: 'A website is\nwhere it starts.',
+    lead: 'Most businesses come to us for a site and stay for what is behind it: the client list living in five spreadsheets, the report someone rebuilds every Monday, the copy and paste between two systems that never talk.',
     items: {
-      front: {
-        title: 'Front end',
-        text: 'React and Vite, built to the design rather than to a template. Responsive, keyboard operable and fast on the phones people actually own.',
+      web: {
+        kind: 'Sites and web apps',
+        title: 'Websites that do work',
+        text: 'Not a brochure. A site that books, sells, takes enquiries and tells you what happened, designed for your business rather than poured into a template.',
+        examples: ['Company and landing sites', 'Online stores and bookings', 'Client portals', 'Web platforms and SaaS'],
       },
-      back: {
-        title: 'Back end',
-        text: 'Node and Python services, REST APIs and the plumbing between them. Written so the next person can read it.',
+      crm: {
+        kind: 'CRMs and client systems',
+        title: 'Your clients, in one place',
+        text: 'A CRM shaped around how you actually sell, instead of a generic one you bend yourself around. Every lead, quote and follow up where the whole team can see it.',
+        examples: ['Lead and sales pipelines', 'Client records and history', 'Quotes, invoices and payments', 'Follow up reminders'],
       },
-      data: {
-        title: 'Data',
-        text: 'PostgreSQL and Redis schemas designed before the first query, so reporting does not become a rewrite six months later.',
+      automation: {
+        kind: 'Office automation',
+        title: 'The work that does itself',
+        text: 'We find the tasks someone repeats every day and hand them to software. Reports build overnight, invoices send on time, and data moves between your tools on its own.',
+        examples: ['Reports that build themselves', 'Documents and invoices from templates', 'Email and WhatsApp notifications', 'Syncing data between systems'],
       },
-      security: {
-        title: 'Security',
-        text: 'Pentesting on our own work. Auth, session handling and input validation get checked before anything ships.',
+      everyday: {
+        kind: 'Everyday tools',
+        title: 'Small tools, big hours back',
+        text: 'Not every problem needs a platform. Sometimes it is a dashboard, a bot or a fifty line script, and it saves somebody an hour every single day.',
+        examples: ['Internal dashboards', 'Inventory and scheduling', 'Chat bots for teams and clients', 'Scripts for the boring parts'],
       },
     },
   },
 
-  work: {
-    title: 'Things we have shipped',
-    live: 'Live',
-    source: 'Source',
-    shotAlt: 'Screenshot of {name}',
-    projects: {
-      birdie: {
-        kind: '2D arcade game',
-        text: "Drive a blue bird's taxi. Pick up passengers, dodge potholes, watch the tank. 22 unlockable hats, a day and night cycle, global leaderboards.",
+  journey: {
+    eyebrow: 'The journey',
+    title: 'From an idea\nto something that\nruns every day.',
+    lead: 'Every project travels the same seven stages. Here is what happens at each one, and what you have in your hands when it ends.',
+    hint: 'Keep scrolling',
+    stageLabel: 'Stage {n} of {total}',
+    stages: {
+      listen: {
+        kicker: 'First conversation',
+        title: 'Listen',
+        text: 'We start with how your business runs today, not with technology. Where time goes, what breaks, what you wish just happened.',
+        out: ['A discovery call', 'The real problem, named'],
       },
-      textnode: {
-        kind: 'Note taking app',
-        text: 'Notes for people who think faster than they file. Full CRUD, no ceremony.',
+      map: {
+        kicker: 'Scope',
+        title: 'Map',
+        text: 'We write down what is being built and what is not, what it costs and when it lands. Agreed in writing before anything is committed.',
+        out: ['Written scope', 'Timeline and price'],
       },
-      automator: {
-        kind: 'AI automation platform',
-        text: 'A conversational platform wired into Automator, fronted by a 3D interface built with Three.js.',
+      design: {
+        kicker: 'Interface',
+        title: 'Design',
+        text: 'Screens, flows and the shape of the data. You see and click through it early, while changing it is still cheap.',
+        out: ['Clickable prototype', 'Data model'],
       },
-      attendance: {
-        kind: 'Fullstack platform',
-        text: 'Attendance end to end. An Express backend, a React frontend and REST APIs driving reporting in real time.',
+      build: {
+        kicker: 'Code',
+        title: 'Build',
+        text: 'The team that designed it writes it. Short cycles, a live preview you can open any day, and no handoff in the middle.',
+        out: ['Weekly live previews', 'Readable code you own'],
       },
-      ecobot: {
-        kind: 'Discord bot',
-        text: 'Environmental awareness bot. Quizzes, green points, custom reminders.',
+      connect: {
+        kicker: 'Automation',
+        title: 'Connect',
+        text: 'We wire it into the rest of your day: email, WhatsApp, payments, spreadsheets, the tools you already pay for. This is where the hours come back.',
+        out: ['Integrations', 'Automated tasks'],
       },
-      currency: {
-        kind: 'Desktop application',
-        text: 'Live exchange rates pulled from an external API, with the business logic handled in C#.',
+      launch: {
+        kicker: 'Release',
+        title: 'Launch',
+        text: 'Security checked, tested on real phones, and shipped. We train your team and stay close for the first weeks of real use.',
+        out: ['Live system', 'Team walkthrough'],
+      },
+      tend: {
+        kicker: 'After',
+        title: 'Tend',
+        text: 'Software is a tide, not a monument. We keep it healthy, improve it as you grow, and are a message away when you need something new.',
+        out: ['Maintenance', 'A studio on call'],
       },
     },
   },
@@ -90,9 +125,9 @@ export default {
   approach: {
     title: 'How we work',
     items: {
-      both: {
-        k: 'You get both of us',
-        v: 'There is no account layer. The person who answers your email is the person editing the file.',
+      team: {
+        k: 'One team, start to finish',
+        v: 'The people who scope your project are the people who build it. No handoffs between vendors, and no context lost along the way.',
       },
       scope: {
         k: 'Scope before code',
@@ -100,53 +135,63 @@ export default {
       },
       ships: {
         k: 'It ships or it does not count',
-        v: 'Every project below is live, or its source is public. Nothing here is a mockup.',
+        v: 'We hand over something running, documented and yours. Not a mockup, not a slide deck.',
       },
     },
   },
 
-  studio: {
-    title: 'Two people build all of it.\nYou talk to both.',
-    roles: {
-      founder: 'Founder',
-      cofounder: 'Co-founder',
+  journal: {
+    eyebrow: 'Journal',
+    title: 'Notes from\nthe studio.',
+    lead: 'Who we are, how we work, and how a couple of side projects turned into an agency.',
+    by: 'By Tidence',
+    read: 'Read the full story',
+    close: 'Show less',
+    feature: {
+      tag: 'Our story',
+      minutes: '4 min read',
+      title: 'How Tidence started',
+      dek: 'Before there were clients there were side projects: a game, a notes app, an attendance system and a Discord bot. This is how those turned into a studio.',
+      intro:
+        'Tidence began the way most good tools do, with people building things for themselves. Alexander Ross was designing interfaces and database schemas and pulling apart his own work to see where it broke. Bryan De Jesus was writing the backend systems that keep data moving between services. Separately, they kept shipping.',
+      body: [
+        'The projects were small but real. An arcade game with global leaderboards. A notes app with no ceremony. An attendance platform reporting in real time. A Discord bot handing out green points. A desktop app pulling live exchange rates. Each one was a lesson in finishing things, not just starting them.',
+        'Somewhere along the way the questions changed. Instead of asking how something was built, people started asking whether it could be built for them: a website that took bookings, a client list that lived somewhere other than a spreadsheet, a report that would just appear every Monday.',
+        'That was the moment Tidence stopped being two portfolios and became one studio. The name comes from the tide: steady, recurring work that keeps moving whether or not anyone is watching. It is how we think about software too. It should run quietly, every day, and keep running.',
+        'Today we design and build websites, CRMs and the automation behind them, for businesses that would rather spend their hours on the work only they can do.',
+      ],
+      quote: 'Software should run quietly, every day, and keep running.',
+      caption: 'Where it started: a desk, a laptop and a list of things to build.',
     },
-    keys: {
-      site: 'Site',
-      email: 'Email',
-      github: 'GitHub',
-      contact: 'Contact',
-    },
-    people: {
-      alexander: {
-        text: 'Front end, database architecture and pentesting. Builds the interface and keeps the security honest.',
+    posts: {
+      who: {
+        tag: 'About us',
+        title: 'Who we are',
+        text: 'Tidence is a digital studio for websites, CRMs and business automation, founded by Alexander Ross (front end, data and security) and Bryan De Jesus (backend systems and APIs).',
       },
-      bryan: {
-        text: 'Backend systems. APIs and architectures that move data between things and keep moving it under load.',
+      stack: {
+        tag: 'Studio notes',
+        title: 'What we build with',
+        text: 'React and Vite on the front, Node and Python behind it, PostgreSQL and Redis for the data. Chosen to be fast to build on and easy for the next person to read.',
+      },
+      principles: {
+        tag: 'Principles',
+        title: 'What we will not do',
+        text: 'Sell you a template as a custom build. Lock you out of your own code. Ship anything we have not tested on a real phone and checked for security first.',
       },
     },
   },
 
   contact: {
-    title: 'Start a project',
-    lead: 'Tell us what you are building. You will hear back from one of us within a day.',
-    name: 'Name',
-    email: 'Email',
-    brief: 'What are you building',
-    briefHelp: 'Rough is fine. Scope, timing and budget if you have them.',
-    submit: 'Start a project',
-    sending: 'Opening mail',
-    summary: 'There are {count} fields to fix.',
-    doneTitle: 'Your mail client is open',
-    doneText: 'We have written the message for you. Send it and we will reply within a day. If nothing opened, write to',
-    again: 'Write another',
-    subject: 'New project enquiry from {name}',
-    errors: {
-      name: 'Tell us what to call you.',
-      emailMissing: 'We need an address to reply to.',
-      emailInvalid: 'That address is missing an @ or a domain.',
-      briefMissing: 'A sentence or two is enough to start.',
-      briefShort: 'A little more detail helps us answer usefully.',
+    eyebrow: 'Last stage, first step',
+    sloganA: 'Imagine it.',
+    sloganB: 'We build it.',
+    lead: 'Tell us what you picture, a site, a CRM, the task you would love to never do again. You will hear back from the studio within one business day.',
+    soon: 'Coming soon',
+    channels: {
+      whatsapp: 'WhatsApp',
+      instagram: 'Instagram',
+      email: 'Email',
     },
   },
 
@@ -158,6 +203,5 @@ export default {
     email: 'Email',
     privacy: 'Privacy',
     terms: 'Terms',
-    built: 'Built by the two people listed above',
   },
 };

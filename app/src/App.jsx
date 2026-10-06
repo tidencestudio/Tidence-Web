@@ -1,14 +1,16 @@
 import Nav from './components/Nav';
 import ScrollExpandHero from './components/ScrollExpandHero';
 import Manifesto from './components/Manifesto';
-import Capabilities from './components/Capabilities';
-import Work from './components/Work';
+import Marquee from './components/Marquee';
+import Services from './components/Services';
+import Journey from './components/Journey';
 import Approach from './components/Approach';
-import Studio from './components/Studio';
+import Journal from './components/Journal';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import SonarGrid from './components/SonarGrid';
+import ScrollProgress from './components/ScrollProgress';
 import useHashLanding from './components/useHashLanding';
-import { ThemeProvider } from './prefs/theme';
 import { LocaleProvider } from './prefs/locale';
 import { useT } from './prefs/hooks';
 import './App.css';
@@ -16,7 +18,7 @@ import './App.css';
 function Site() {
   const t = useT();
 
-  // A shared /#work link has to land on the work section, not the top.
+  // A shared /#journey link has to land on that section, not the top.
   useHashLanding();
 
   return (
@@ -30,18 +32,21 @@ function Site() {
       <main id="main">
         <ScrollExpandHero />
         <Manifesto />
-        <Capabilities />
-        <Work />
+        <Marquee />
+        <Services />
+        <Journey />
         <Approach />
-        <Studio />
+        <Journal />
         <Contact />
       </main>
 
       <Footer />
 
-      {/* Both fixed, inert and never on a scrolling container: a texture that
+      {/* The sonar field sits behind everything; the grain sits on top. Both
+          are fixed and inert, never on a scrolling container: a layer that
           repaints with the page destroys frame budget on mobile. */}
-      <div className="texture" aria-hidden="true" />
+      <SonarGrid />
+      <ScrollProgress />
       <div className="grain" aria-hidden="true" />
     </>
   );
@@ -49,10 +54,8 @@ function Site() {
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <LocaleProvider>
-        <Site />
-      </LocaleProvider>
-    </ThemeProvider>
+    <LocaleProvider>
+      <Site />
+    </LocaleProvider>
   );
 }

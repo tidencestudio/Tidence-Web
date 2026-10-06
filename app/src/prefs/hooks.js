@@ -1,16 +1,10 @@
 import { useContext } from 'react';
-import { LocaleContext, ThemeContext } from './context';
+import { LocaleContext } from './context';
 
 export const LOCALES = [
   ['en', 'English'],
   ['es', 'Español'],
 ];
-
-export function useTheme() {
-  const value = useContext(ThemeContext);
-  if (!value) throw new Error('useTheme must be used inside ThemeProvider');
-  return value;
-}
 
 export function useLocale() {
   const value = useContext(LocaleContext);
