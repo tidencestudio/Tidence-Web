@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import useScrollProgress from './useScrollProgress';
+import photo from './photo';
 import { useLocale } from '../prefs/hooks';
 
 /* One Unsplash photograph per stage, picked to show the stage itself: a
@@ -42,13 +43,12 @@ export default function Journey() {
   // Scroll progress at which each stage counts as the current one: halfway
   // through its arrival. Written by measure(), read by the counter.
   const arrivals = useRef([]);
-  const [pinned, setPinned] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia(PIN_QUERY).matches
-  );
+  const [pinned, setPinned] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia(PIN_QUERY);
     const sync = () => setPinned(mq.matches);
+    sync();
     mq.addEventListener('change', sync);
     return () => mq.removeEventListener('change', sync);
   }, []);
@@ -144,12 +144,10 @@ export default function Journey() {
 
                   <figure className="stage-shot">
                     <img
-                      src={s.shot}
+                      {...photo(s.shot, [400, 640, 900], '(max-width: 760px) 80vw, 420px')}
                       alt=""
                       loading="lazy"
                       decoding="async"
-                      width="900"
-                      height="1100"
                     />
                   </figure>
 

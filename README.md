@@ -18,7 +18,7 @@ app/                 Vite + React app (current source of truth)
     index.css         CSS variables for the ocean palette
   public/
     favicon*.png      brand favicon (from the guideline deck)
-    wave-sunset.jpg   hero background photo
+    wave-sunset-*.avif/webp  hero photo at 640/960/1600 px; og.jpg is the share image
 
 reference/            historical reference only, not built
   logo/
@@ -54,3 +54,14 @@ is set in this shell, which makes npm omit devDependencies by default.
 
 - Info page (portfolio/case studies + team) not yet built
 - Services strip copy still placeholder
+
+## Build and SEO
+
+`npm run build` (in `app/`) runs three steps: the client build, an SSR build of
+`src/entry-server.jsx`, and `scripts/prerender.mjs`, which renders `/`,
+`/privacy` and `/terms` to static HTML (stylesheet inlined), then writes
+`robots.txt` and `sitemap.xml`. The client hydrates that HTML; a Spanish reader
+gets a normal client render instead. The canonical origin comes from `SITE_URL`,
+else Vercel's `VERCEL_PROJECT_PRODUCTION_URL`, else `https://tidence.vercel.app`.
+Fonts are self-hosted in `src/fonts`; Newsreader loads only when the journal
+section nears the viewport.

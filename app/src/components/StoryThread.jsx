@@ -1,8 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-
-const calm = () =>
-  typeof window !== 'undefined' &&
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+import useMedia, { REDUCED_MOTION } from './useMedia';
 
 /**
  * One segment of the line that runs down the page through the story.
@@ -17,7 +14,9 @@ const calm = () =>
  */
 export default function StoryThread({ label }) {
   const ref = useRef(null);
-  const [drawn, setDrawn] = useState(calm);
+  const calm = useMedia(REDUCED_MOTION);
+  const [seen, setSeen] = useState(false);
+  const drawn = calm || seen;
 
   useEffect(() => {
     const el = ref.current;
@@ -26,7 +25,7 @@ export default function StoryThread({ label }) {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setDrawn(true);
+          setSeen(true);
           observer.disconnect();
         }
       },

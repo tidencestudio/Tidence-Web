@@ -59,7 +59,8 @@ function Site() {
 const LEGAL = { '/privacy': 'privacy', '/terms': 'terms' };
 
 export default function App() {
-  const doc = LEGAL[window.location.pathname.replace(/\/+$/, '') || '/'];
+  const path = typeof window === 'undefined' ? globalThis.__PRERENDER_PATH__ : window.location.pathname;
+  const doc = LEGAL[(path ?? '/').replace(/\/+$/, '') || '/'];
 
   return (
     <LocaleProvider titlePath={doc ? `legal.${doc}.metaTitle` : undefined}>

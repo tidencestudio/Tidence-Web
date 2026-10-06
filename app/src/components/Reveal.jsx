@@ -1,8 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-
-const prefersReducedMotion = () =>
-  typeof window !== 'undefined' &&
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+import useMedia, { REDUCED_MOTION } from './useMedia';
 
 /**
  * Reveals its children the first time they scroll into view.
@@ -14,7 +11,9 @@ const prefersReducedMotion = () =>
  */
 export default function Reveal({ as: Tag = 'div', delay = 0, className = '', children, ...rest }) {
   const ref = useRef(null);
-  const [shown, setShown] = useState(prefersReducedMotion);
+  const calm = useMedia(REDUCED_MOTION);
+  const [seen, setSeen] = useState(false);
+  const shown = calm || seen;
 
   useEffect(() => {
     const el = ref.current;
@@ -23,7 +22,7 @@ export default function Reveal({ as: Tag = 'div', delay = 0, className = '', chi
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setShown(true);
+          setSeen(true);
           observer.disconnect();
         }
       },
@@ -38,7 +37,7 @@ export default function Reveal({ as: Tag = 'div', delay = 0, className = '', chi
       requestAnimationFrame(() => {
         const rect = el.getBoundingClientRect();
         if (rect.top < window.innerHeight && rect.bottom > 0) {
-          setShown(true);
+          setSeen(true);
           observer.disconnect();
         }
       })

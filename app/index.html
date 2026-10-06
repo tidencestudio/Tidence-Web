@@ -12,14 +12,27 @@
       content="Tidence is a digital studio building websites, CRMs, office automation and the everyday tools a business runs on."
     />
 
+    <link rel="canonical" href="__SITE_URL__/" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Tidence" />
+    <meta property="og:url" content="__SITE_URL__/" />
     <meta property="og:title" content="Tidence — Web design and development studio" />
     <meta
       property="og:description"
       content="A digital studio building websites, CRMs, office automation and the everyday tools a business runs on."
     />
-    <meta property="og:image" content="/og.jpg" />
+    <meta property="og:image" content="__SITE_URL__/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Tidence — Web design and development studio" />
+    <meta
+      name="twitter:description"
+      content="A digital studio building websites, CRMs, office automation and the everyday tools a business runs on."
+    />
+    <meta name="twitter:image" content="__SITE_URL__/og.jpg" />
 
     <!-- The favicon from the brand guideline, used as supplied. The ?v= query
          makes browsers that cached the old wave icon fetch this one. -->
@@ -27,15 +40,33 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png?v=3" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Fonts are self-hosted (src/fonts, declared in src/fonts.css). Only the
+         two faces the first screen uses are preloaded. -->
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/bricolage.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/dm-mono-400.woff2" crossorigin />
+
+    <!-- The hero image is the LCP element on every viewport. Same srcset and
+         sizes as HeroMedia.jsx, so the preload and the <img> pick one file. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=DM+Mono:wght@300;400;500&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="image"
+      type="image/avif"
+      imagesrcset="/wave-sunset-640.avif 640w, /wave-sunset-960.avif 960w, /wave-sunset-1600.avif 1600w"
+      imagesizes="100vw"
+      fetchpriority="high"
     />
 
-    <!-- The hero image is the LCP element on every viewport. -->
-    <link rel="preload" as="image" href="/wave-sunset.jpg" fetchpriority="high" />
+    <!-- The prerendered markup is English. A Spanish reader's page is rendered
+         by the client instead (main.jsx sets data-client on #root), so the
+         English version is hidden for the moment before that happens. -->
+    <style>
+      html[lang='es'] #root:not([data-client]) {
+        visibility: hidden;
+      }
+    </style>
+
+    <!-- Filled in per page by scripts/prerender.mjs. -->
+    <!--jsonld-->
   </head>
   <body>
     <!-- Runs before first paint so the page never renders in the wrong

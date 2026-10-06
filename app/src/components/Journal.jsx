@@ -2,6 +2,7 @@ import { useId, useState } from 'react';
 import { CaretDown } from '@phosphor-icons/react';
 import StoryThread from './StoryThread';
 import Reveal from './Reveal';
+import photo from './photo';
 import { useT } from '../prefs/hooks';
 
 /* Unsplash photographs matched to each piece: the desk the story starts at,
@@ -59,12 +60,10 @@ export default function Journal() {
           <Reveal as="figure" className="feature-shot reveal-from-left">
             <div className="feature-frame">
               <img
-                src={FEATURE_SHOT}
+                {...photo(FEATURE_SHOT, [500, 800, 1200], '(max-width: 900px) 92vw, 480px')}
                 alt=""
                 loading="lazy"
                 decoding="async"
-                width="1200"
-                height="1500"
               />
             </div>
             <figcaption>{t('journal.feature.caption')}</figcaption>
@@ -124,7 +123,12 @@ export default function Journal() {
                 <p className="note-text">{t(`journal.posts.${p.key}.text`)}</p>
               </div>
               <div className="note-shot" aria-hidden="true">
-                <img src={p.shot} alt="" loading="lazy" decoding="async" width="600" height="450" />
+                <img
+                  {...photo(p.shot, [300, 600], '(max-width: 620px) 40vw, 300px')}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
             </Reveal>
           ))}

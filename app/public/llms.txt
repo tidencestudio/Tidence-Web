@@ -1,0 +1,9 @@
+# Tidence
+
+> Tidence is a digital studio that builds websites, CRMs, office automation and the everyday tools a business runs on.
+
+- [Home](https://tidence.vercel.app/): what we build, how we work, and how to get in touch
+- [Privacy policy](https://tidence.vercel.app/privacy)
+- [Terms of service](https://tidence.vercel.app/terms)
+
+The site is available in English and Spanish.

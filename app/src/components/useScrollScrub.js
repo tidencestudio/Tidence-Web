@@ -38,11 +38,12 @@ const DURATION = 1000; // Nominal; currentTime is the only thing that moves.
  * page and nowhere else.
  */
 export default function useScrollScrub() {
-  const [wide, setWide] = useState(() => window.matchMedia(SEQUENCE).matches);
+  const [wide, setWide] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia(SEQUENCE);
     const sync = () => setWide(mq.matches);
+    sync();
     mq.addEventListener('change', sync);
     return () => mq.removeEventListener('change', sync);
   }, []);

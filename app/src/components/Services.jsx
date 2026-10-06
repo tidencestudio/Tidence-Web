@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { AppWindow, AddressBook, GearSix, Lightning } from '@phosphor-icons/react';
 import StoryThread from './StoryThread';
 import Reveal from './Reveal';
+import photo from './photo';
 import useScrollProgress from './useScrollProgress';
 import { useT } from '../prefs/hooks';
 
@@ -42,12 +43,10 @@ function ServiceCard({ s, i, total }) {
 
         <div className="service-shot">
           <img
-            src={s.shot}
+            {...photo(s.shot, [480, 800, 1200], '(max-width: 900px) 92vw, 640px')}
             alt=""
             loading="lazy"
             decoding="async"
-            width="1200"
-            height="900"
           />
         </div>
       </article>
