@@ -40,7 +40,9 @@ export default function Footer() {
       </div>
 
       <p className="footer-base">
-        <span><span translate="no">Tidence</span>, {new Date().getFullYear()}</span>
+        <span>
+          © {new Date().getFullYear()} <span translate="no">Tidence</span>. {t('footer.rights')}
+        </span>
       </p>
     </footer>
   );

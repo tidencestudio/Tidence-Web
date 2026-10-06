@@ -198,6 +198,7 @@ export default {
     legal: 'Legal',
     privacy: 'Privacy',
     terms: 'Terms',
+    rights: 'All rights reserved.',
   },
 
   legal,

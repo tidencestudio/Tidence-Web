@@ -199,6 +199,7 @@ export default {
     legal: 'Legal',
     privacy: 'Privacidad',
     terms: 'Términos',
+    rights: 'Todos los derechos reservados.',
   },
 
   legal,
