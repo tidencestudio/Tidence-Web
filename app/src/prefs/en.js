@@ -115,11 +115,11 @@ export default {
         text: 'Security checked, tested on real phones, and shipped. We train your team and stay close for the first weeks of real use.',
         out: ['Live system', 'Team walkthrough'],
       },
-      tend: {
-        kicker: 'After',
-        title: 'Tend',
-        text: 'Software is a tide, not a monument. We keep it healthy, improve it as you grow, and are a message away when you need something new.',
-        out: ['Maintenance', 'A studio on call'],
+      support: {
+        kicker: 'After launch',
+        title: 'Support',
+        text: 'Software keeps moving after launch. We maintain it, fix what breaks, make the changes you ask for and add what you need as you grow.',
+        out: ['Maintenance and fixes', 'Changes on request'],
       },
     },
   },
@@ -173,8 +173,8 @@ export default {
       },
       stack: {
         tag: 'Studio notes',
-        title: 'What we build with',
-        text: 'React and Vite on the front, Node and Python behind it, PostgreSQL and Redis for the data. Chosen to be fast to build on and easy for the next person to read.',
+        title: 'The right tools for the job',
+        text: 'We are not tied to one stack. Web and mobile, cloud and on-site, SQL and NoSQL, AI and the tools you already pay for: we choose what fits your problem and your team, and learn whatever the job needs.',
       },
       principles: {
         tag: 'Principles',

@@ -116,11 +116,11 @@ export default {
         text: 'Revisado en seguridad, probado en teléfonos reales y publicado. Capacitamos a tu equipo y nos quedamos cerca las primeras semanas de uso real.',
         out: ['Sistema en vivo', 'Recorrido con tu equipo'],
       },
-      tend: {
-        kicker: 'Después',
-        title: 'Cuidar',
-        text: 'El software es una marea, no un monumento. Lo mantenemos sano, lo mejoramos a medida que creces y estamos a un mensaje cuando necesitas algo nuevo.',
-        out: ['Mantenimiento', 'Un estudio disponible'],
+      support: {
+        kicker: 'Tras el lanzamiento',
+        title: 'Soporte',
+        text: 'El software sigue en movimiento después del lanzamiento. Lo mantenemos, arreglamos lo que falle, hacemos los cambios que pidas y añadimos lo que necesites a medida que creces.',
+        out: ['Mantenimiento y arreglos', 'Cambios a pedido'],
       },
     },
   },
@@ -174,8 +174,8 @@ export default {
       },
       stack: {
         tag: 'Notas del estudio',
-        title: 'Con qué construimos',
-        text: 'React y Vite al frente, Node y Python detrás, PostgreSQL y Redis para los datos. Elegidos para construir rápido y para que la próxima persona los lea con facilidad.',
+        title: 'La herramienta adecuada para cada trabajo',
+        text: 'No estamos atados a un solo stack. Web y móvil, nube y servidores propios, SQL y NoSQL, IA y las herramientas que ya pagas: elegimos lo que encaja con tu problema y tu equipo, y aprendemos lo que el trabajo necesite.',
       },
       principles: {
         tag: 'Principios',

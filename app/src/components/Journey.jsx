@@ -4,7 +4,7 @@ import { useLocale } from '../prefs/hooks';
 
 /* One Unsplash photograph per stage, picked to show the stage itself: a
    conversation over coffee, a plan written down, wireframes, code, a payment
-   on a phone, a phone being tested, a plant being tended. Revealed by a wipe
+   on a phone, a phone being tested, a developer at work after launch. Revealed by a wipe
    as each stage arrives.
    TODO: replace with real studio photography when there is some. */
 const stages = [
@@ -14,7 +14,7 @@ const stages = [
   { key: 'build', shot: 'https://images.unsplash.com/photo-1619410283995-43d9134e7656?auto=format&fit=crop&w=900&h=1100&q=70' },
   { key: 'connect', shot: 'https://images.unsplash.com/photo-1556742521-9713bf272865?auto=format&fit=crop&w=900&h=1100&q=70' },
   { key: 'launch', shot: 'https://images.unsplash.com/photo-1633250391894-397930e3f5f2?auto=format&fit=crop&w=900&h=1100&q=70' },
-  { key: 'tend', shot: 'https://images.unsplash.com/photo-1515150144380-bca9f1650ed9?auto=format&fit=crop&w=900&h=1100&q=70' },
+  { key: 'support', shot: 'https://images.unsplash.com/photo-1534665482403-a909d0d97c67?auto=format&fit=crop&w=900&h=1100&q=70' },
 ];
 
 const TOTAL = stages.length;
