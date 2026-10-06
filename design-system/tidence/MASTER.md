@@ -39,6 +39,87 @@ white headline type onto a pale page, and a scrim heavy enough to rescue dark
 type would wash the photograph out. The nav takes those same media colours while
 it floats over the hero and returns to the theme once it lifts past it.
 
+## Revision: Journal voice, legal pages, contact channels
+
+**The journal speaks in a serif.** The rest of the page pitches in Geist; the
+journal tells a story, so it changes voice to **Newsreader** (`--font-editorial`),
+an editorial face with optical sizes, used only inside `.journal`. The spread
+is set like a magazine:
+- a masthead title in light display weight, its second line in italic mint
+- a mono running head ruled above and below, with slashes between its parts
+- an italic dek
+- the body in the text cut, with old-style figures, hyphenation and indented
+  paragraphs instead of gaps
+- a small-caps opening line into a three-line drop cap (`initial-letter`
+  where supported, a float elsewhere)
+- a hung, ruled italic pull quote
+- a square end mark, the shape of the mark's bar
+- an "Fig. 1" mono key on the caption
+- a contents-style notes index with large italic numerals
+
+Metadata stays in IBM Plex Mono.
+
+**Legal pages.** `/privacy` and `/terms`, bilingual, from `prefs/legal.{en,es}.js`.
+Routing is a path lookup in `App.jsx` (two pages do not justify a router);
+`vercel.json` rewrites both paths to `index.html`. The privacy policy describes
+what the site actually does: no forms, analytics or tracking cookies; one
+localStorage key (`tidence-lang`); Vercel, Google Fonts and Picsum loaded as
+third parties. **If the site ever adds a form, analytics or a newsletter, the
+policy must change with it.** The copy is a sensible draft, not legal advice;
+it names no governing law and should be reviewed before relying on it.
+
+**Contact.** Email `tidencestudio@gmail.com`, Instagram `@tidence.dev`.
+WhatsApp still renders as "coming soon". The footer's "Elsewhere" column was
+removed; the footer is now brand, sections and legal.
+
+## Revision: Transformative Teal rebrand (supersedes palette, type and mark)
+
+Source: the 7a "Transformative Teal" brand sheet. Every colour, the mark and the
+type below replace the earlier values. Layout, motion, IA and the single dark
+theme are unchanged.
+
+**Palette.** foam `#F2FFFA`, mint `#7FF5D8`, teal `#13C2B0`, deep `#00434A`,
+ink `#070F12`. The page is set on ink, as the sheet is.
+
+| Role | Value | On bg | On surface | On surface raised |
+|---|---|---|---|---|
+| Background | `#070F12` (ink) | | | |
+| Surface | `#0C1A1E` | | | |
+| Surface raised | `#12272C` | | | |
+| Foreground | `#F2FFFA` (foam) | 18.84 | 17.31 | 15.13 |
+| Muted foreground | `#BCD6CF` | 12.58 | 11.55 | 10.10 |
+| Dim foreground | `#9FBDB6` | 9.60 | 8.82 | 7.71 |
+| Accent | `#13C2B0` (teal) | 8.63 | 7.93 | 6.93 |
+| Accent hover / highlight | `#7FF5D8` (mint) | 14.69 | 13.50 | 11.80 |
+| On accent | `#070F12` | 8.63 on teal, 14.69 on mint | | |
+| Media scrim | `#070F12` | | | |
+
+Floor is teal on surface raised at 6.93:1, up from 6.25. Surfaces step toward
+deep rather than toward grey. Mint is the hover state and the hero emphasis;
+it is the same hue family as teal, so the one-accent rule still holds. Deep is
+used inside the mark and the wordmark ramp; it is too dark to carry text on ink.
+
+**Mark.** An anchor drawn as a T: a foam-to-mint bar over a sea-green stem
+(`#52B1A5` to `#2F6F76`), with a dark fold (`#03171A`) where they meet.
+`TidenceMark.jsx` holds the geometry, traced from the sheet and symmetrised;
+stop colours are CSS tokens (`--mark-*`). It replaces the wave mark in the
+nav, footer, favicon and `brand/`. The closed hero plate carries the lowercase
+wordmark alone, with no mark, by request.
+
+**Wordmark.** Lowercase `tidence`, Geist 700, tracked `-0.055em`. The footer
+outline uses `-0.012em` instead, since tighter outlines cross.
+
+**Type.** Goudy Bookletter / Fanwood / JetBrains Mono are replaced by **Geist**
+(display 600 with `--track-display: -0.035em` and 1.04 leading; body 400) and
+**IBM Plex Mono** (labels, buttons), matching the sheet. Geist ships real
+weights, so `font-synthesis-weight: none` and the size-only hierarchy rule are
+retired. Marquee italics are synthesised oblique; Geist has no italic.
+
+**Brand files.** `brand/` previously held three 6-byte files that were not
+valid SVG. They are now the dark icon, light icon and horizontal lockup. The
+lockup's wordmark is live text: outline it before sending it anywhere Geist is
+not installed.
+
 ## Revision: Deep water (single dark theme), sonar background
 
 **One theme only: dark ground, light text, high contrast.** The light theme and

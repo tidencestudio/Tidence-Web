@@ -115,8 +115,8 @@ export default function HeroMedia() {
         type={pick('type', GRIDS, '4x4')}
         width="100%"
         height="100%"
-        colorBack={token('--scrim', '#0e1b21')}
-        colorFront={token('--accent-on-media', '#5cc9be')}
+        colorBack={token('--scrim', '#070f12')}
+        colorFront={token('--accent-on-media', '#13c2b0')}
         size={num('size', 2)}
         scale={num('scale', 0.75)}
         rotation={num('rotation', 0)}
@@ -135,9 +135,9 @@ export default function HeroMedia() {
           fit="cover"
           width="100%"
           height="100%"
-          colorBack={token('--scrim', '#0e1b21')}
-          colorFront={token('--accent-on-media', '#5cc9be')}
-          colorHighlight={token('--on-media', '#f4f8f7')}
+          colorBack={token('--scrim', '#070f12')}
+          colorFront={token('--accent-on-media', '#13c2b0')}
+          colorHighlight={token('--highlight-on-media', '#7ff5d8')}
           type={pick('type', GRIDS, '8x8')}
           size={num('size', 2)}
           colorSteps={num('steps', 3)}
@@ -158,9 +158,9 @@ export default function HeroMedia() {
         fit="cover"
         width="100%"
         height="100%"
-        colorBack={token('--scrim', '#0e1b21')}
-        colorFront={token('--accent-on-media', '#5cc9be')}
-        colorHighlight={token('--on-media', '#f4f8f7')}
+        colorBack={token('--scrim', '#070f12')}
+        colorFront={token('--accent-on-media', '#13c2b0')}
+        colorHighlight={token('--highlight-on-media', '#7ff5d8')}
         originalColors={flag('original', false)}
         inverted={flag('inverted', false)}
         type={pick('type', GRIDS, '8x8')}

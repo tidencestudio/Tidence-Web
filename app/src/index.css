@@ -1,64 +1,80 @@
 /* ==========================================================================
    Tidence - design tokens
    Single source: design-system/tidence/MASTER.md
-   One theme: "Deep water", dark ground and light text, tuned so contrast is
-   high enough everywhere that no alternate palette is needed.
+   Palette: 7a "Transformative Teal" brand sheet.
+     foam  #F2FFFA   mint  #7FF5D8   teal  #13C2B0
+     deep  #00434A   ink   #070F12
+   One theme: ink ground, foam type, as the brand sheet is set.
    ========================================================================== */
 
-/* Every text pair clears 6.25:1 and most clear AAA (7:1). Against the page:
-   fg 15.9, muted 10.8, dim 8.9, accent 10.1. The floor is dim text on
-   surface-2 at 6.25. The ground is a step deeper than the previous dark
-   (#122229) and the text tokens a step brighter, so the gain comes from both
-   ends; the old floor was 4.61. Verified pairs are in MASTER.md. */
+/* Every text pair clears 7:1 against the page except dim on raised surface.
+   Measured pairs are in MASTER.md. Surfaces step toward deep rather than
+   toward grey, so a card reads as deeper water, not as a lighter panel. */
 :root {
   color-scheme: dark;
 
-  --bg: #0f1e24;
-  --surface: #172b33;
-  --surface-2: #203a44;
+  --bg: #070f12;
+  --surface: #0c1a1e;
+  --surface-2: #12272c;
 
-  --fg: #f3f8f7;
-  --fg-muted: #c0d1d4;
-  --fg-dim: #a9bfc4;
+  --fg: #f2fffa;
+  --fg-muted: #bcd6cf;
+  --fg-dim: #9fbdb6;
 
-  --accent: #6fd8cd;
-  --accent-hover: #95e6dd;
-  --accent-soft: rgba(111, 216, 205, 0.16);
-  --on-accent: #06171b;
+  --accent: #13c2b0;
+  --accent-hover: #7ff5d8;
+  --accent-soft: rgba(19, 194, 176, 0.14);
+  --on-accent: #070f12;
 
-  --line: rgba(243, 248, 247, 0.14);
-  --line-strong: rgba(243, 248, 247, 0.26);
+  --line: rgba(242, 255, 250, 0.12);
+  --line-strong: rgba(242, 255, 250, 0.24);
 
-  --dot: rgba(243, 248, 247, 0.06);
-  --grain-opacity: 0.03;
-  --shadow: 0 24px 60px -24px rgba(4, 12, 15, 0.9);
+  --dot: rgba(127, 245, 216, 0.05);
+  --grain-opacity: 0.035;
+  --shadow: 0 24px 60px -24px rgba(1, 6, 8, 0.9);
+
+  /* The mark: foam-to-mint bar over a sea-green stem, dark fold. */
+  --mark-bar-0: #f2fffa;
+  --mark-bar-1: #a4f5dd;
+  --mark-stem-0: #52b1a5;
+  --mark-stem-1: #2f6f76;
+  --mark-fold: #03171a;
 }
 
 :root {
   /* --- Color: on media -------------------------------------------------
      Kept separate from the page tokens: they sit on the hero photograph, and
      have to hold against the image rather than against the page ground. */
-  --on-media: #f4f8f7;
-  --on-media-muted: #c8d8d6;
-  --accent-on-media: #6fd8cd;
-  --on-accent-media: #06171b;
-  /* Deeper than the page, but only by a step. Left at the old near-black it
-     opened a visible seam between the hero and the lifted background below. */
-  --scrim: #0c191e;
+  --on-media: #f2fffa;
+  --on-media-muted: #bfd9d2;
+  --accent-on-media: #13c2b0;
+  --highlight-on-media: #7ff5d8;
+  --on-accent-media: #070f12;
+  --scrim: #070f12;
 
-  /* --- Type ------------------------------------------------------------- */
-  --font-display: 'Goudy Bookletter 1911', 'Fanwood Text', Georgia, serif;
-  --font-body: 'Fanwood Text', Georgia, 'Times New Roman', serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  /* --- Type -------------------------------------------------------------
+     Geist for display and body: the closest open match to the bold, tightly
+     tracked grotesque of the wordmark. IBM Plex Mono for labels, as on the
+     brand sheet. */
+  --font-display: 'Geist', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Geist', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  /* The journal's voice: an editorial serif with optical sizes, so one
+     family covers both the display headlines and the reading text. Used
+     only inside the journal, where the page stops pitching and starts
+     telling a story. */
+  --font-editorial: 'Newsreader', Georgia, 'Times New Roman', serif;
 
   --step--1: 0.875rem; /* 14 */
   --step-0: 1.0625rem; /* 17 */
   --step-1: 1.1875rem; /* 19 */
-  --step-2: 1.4375rem; /* 23 */
-  --step-3: 1.875rem; /* 30 */
-  --step-4: clamp(1.75rem, 1.2rem + 2.4vw, 2.375rem);
-  --step-5: clamp(2rem, 1.1rem + 3.4vw, 2.875rem);
-  --step-6: clamp(2.5rem, 1rem + 5.4vw, 3.875rem);
+  --step-2: 1.375rem; /* 22 */
+  --step-3: 1.75rem; /* 28 */
+  --step-4: clamp(1.75rem, 1.2rem + 2.4vw, 2.5rem);
+  --step-5: clamp(2.125rem, 1.1rem + 3.8vw, 3.5rem);
+  --step-6: clamp(2.75rem, 1rem + 6.2vw, 5.25rem);
+
+  --track-display: -0.035em;
 
   /* --- Space ------------------------------------------------------------ */
   --gutter: clamp(1.25rem, 5vw, 3rem);
@@ -111,9 +127,6 @@ body {
   font-family: var(--font-body);
   font-size: var(--step-0);
   line-height: 1.6;
-  /* Neither serif ships a bold. Blocking synthesis keeps the browser from
-     smearing one on and makes any stray font-weight visible in review. */
-  font-synthesis-weight: none;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -122,11 +135,11 @@ h1,
 h2,
 h3 {
   font-family: var(--font-display);
-  font-weight: 400;
-  /* Goudy has long ascenders and descenders and a wide set width. It needs
-     more leading and none of the negative tracking a grotesque wants. */
-  line-height: 1.12;
-  letter-spacing: -0.005em;
+  font-weight: 600;
+  /* Tight, like the wordmark. A grotesque at display size wants negative
+     tracking and short leading; body copy keeps the default. */
+  line-height: 1.04;
+  letter-spacing: var(--track-display);
   text-wrap: balance;
   margin: 0;
 }
@@ -168,6 +181,11 @@ ul {
 /* Data-ish figures never jitter as they change. */
 .tnum {
   font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: var(--accent-hover);
+  color: var(--bg);
 }
 
 /* --- Focus --------------------------------------------------------------

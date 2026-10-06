@@ -32,9 +32,9 @@ export default function ScrollExpandHero() {
                 heading and stays in the accessibility tree the whole time, so a
                 screen reader gets the proposition rather than the brand name.
                 This layer only exists while the window is closed. */}
-            <p className="expand-brand" aria-hidden="true" translate="no">
-              Tidence
-            </p>
+            <div className="expand-brand" aria-hidden="true" translate="no">
+              <span className="logo-word">tidence</span>
+            </div>
 
             <h1 className="expand-title">
               <span className="expand-line expand-line-a">{t('hero.lead')}</span>

@@ -9,7 +9,7 @@ static HTML explorations, kept for history — not part of the build.
 app/                 Vite + React app (current source of truth)
   src/
     components/
-      WaveLogo.jsx    two parallel tilted wave lines, color as a prop
+      TidenceMark.jsx anchor-T brand mark, gradient stops from CSS tokens
       Nav.jsx         logo left, plain nav elements from center to right
       Hero.jsx        photo-background hero, English copy, left-aligned
       Services.jsx    3-column services strip
@@ -45,9 +45,10 @@ is set in this shell, which makes npm omit devDependencies by default.
 
 ## Brand
 
-- Fonts: Fraunces (serif, headlines) / Space Grotesk (sans, body + nav)
-- Ocean palette: foam `#F5F8F7`, teal `#2E8B93`, navy `#123240`, slate `#7C99A0`
-- Wave mark: two parallel tilted stroke paths, kept intentionally asymmetric
+- Brand sheet: 7a "Transformative Teal". Anchor-T mark, lowercase `tidence` wordmark.
+- Palette: foam `#F2FFFA`, mint `#7FF5D8`, teal `#13C2B0`, deep `#00434A`, ink `#070F12`
+- Fonts: Geist (display + body) / IBM Plex Mono (labels)
+- Mark: `app/src/components/TidenceMark.jsx`; exports in `brand/`
 
 ## Open threads
 

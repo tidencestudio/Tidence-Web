@@ -1,6 +1,8 @@
 // Neutral Latin American Spanish, addressing the reader as "tú": the studio's
 // pitch is direct work with the people building the product, and "usted" would
 // put back the distance the copy is arguing against.
+import legal from './legal.es';
+
 export default {
   meta: {
     title: 'Tidence — Sitios web, CRMs y automatización para negocios',
@@ -198,11 +200,10 @@ export default {
 
   footer: {
     sections: 'Secciones',
-    elsewhere: 'En otros sitios',
     legal: 'Legal',
-    github: 'GitHub',
-    email: 'Correo',
     privacy: 'Privacidad',
     terms: 'Términos',
   },
+
+  legal,
 };

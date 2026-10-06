@@ -1,1 +1,15 @@
-²ø1šYì
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 400">
+  <!-- Wordmark is live text in Geist 700. Outline it in a vector editor before
+       sending this file anywhere Geist is not installed. -->
+  <defs>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0.4"><stop offset="0" stop-color="#F2FFFA"/><stop offset="1" stop-color="#A4F5DD"/></linearGradient>
+    <linearGradient id="stem" gradientUnits="userSpaceOnUse" x1="140" y1="62" x2="234" y2="384"><stop offset="0" stop-color="#52B1A5"/><stop offset="1" stop-color="#2F6F76"/></linearGradient>
+  </defs>
+  <rect width="1240" height="400" fill="#070F12"/>
+  <g transform="translate(40 8)">
+    <rect width="374" height="62" fill="url(#bar)"/>
+    <path d="M156 62H218V343H245L297 293L322 207H364L336 321L269 384H105L38 321L10 207H52L77 293L129 343H156Z" fill="url(#stem)"/>
+    <path d="M156 62H218V124Z" fill="#03171A"/>
+  </g>
+  <text x="470" y="290" fill="#F2FFFA" font-family="Geist, 'Helvetica Neue', Arial, sans-serif" font-weight="700" font-size="250" letter-spacing="-13">tidence</text>
+</svg>

@@ -27,6 +27,7 @@ export default function Journal() {
   const t = useT();
   const [open, setOpen] = useState(false);
   const bodyId = useId();
+  const [titleTop, titleRest] = t('journal.title').split('\n');
 
   return (
     <section className="section journal" id="story">
@@ -36,7 +37,17 @@ export default function Journal() {
         <div className="journal-head">
           <Reveal>
             <p className="eyebrow">{t('journal.eyebrow')}</p>
-            <h2 className="journal-title prewrap">{t('journal.title')}</h2>
+            {/* The second line turns to italic, so the title reads as a
+                masthead rather than a sentence. */}
+            <h2 className="journal-title">
+              {titleTop}
+              {titleRest && (
+                <>
+                  <br />
+                  <em>{titleRest}</em>
+                </>
+              )}
+            </h2>
           </Reveal>
           <Reveal as="p" className="lead reveal-from-right" delay={120}>
             {t('journal.lead')}

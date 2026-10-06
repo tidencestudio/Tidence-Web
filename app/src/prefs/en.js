@@ -1,5 +1,7 @@
 // Source of truth for site copy. Spanish mirrors this shape; anything missing
 // there falls back to the string here rather than printing a key.
+import legal from './legal.en';
+
 export default {
   meta: {
     title: 'Tidence — Websites, CRMs and business automation',
@@ -197,11 +199,10 @@ export default {
 
   footer: {
     sections: 'Sections',
-    elsewhere: 'Elsewhere',
     legal: 'Legal',
-    github: 'GitHub',
-    email: 'Email',
     privacy: 'Privacy',
     terms: 'Terms',
   },
+
+  legal,
 };

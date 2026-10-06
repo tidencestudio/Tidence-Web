@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { ArrowUpRight } from '@phosphor-icons/react';
-import WaveLogo from './WaveLogo';
-import { useLocale, LOCALES } from '../prefs/hooks';
+import Logo from './Logo';
+import LanguageSwitch from './LanguageSwitch';
+import { useT } from '../prefs/hooks';
 
 // Matches the .nav height in App.css; the observer needs it as a number.
 const NAV_H = 76;
@@ -24,7 +25,7 @@ export default function Nav() {
   const [lifted, setLifted] = useState(false);
   const [atEnd, setAtEnd] = useState(false);
   const [current, setCurrent] = useState('');
-  const { locale, setLocale, t } = useLocale();
+  const t = useT();
 
   useEffect(() => {
     const sentinel = document.getElementById('nav-sentinel');
@@ -80,11 +81,8 @@ export default function Nav() {
 
   return (
     <header className={`nav ${lifted ? 'is-lifted' : ''} ${atEnd ? 'is-retracted' : ''}`}>
-      <a className="nav-brand" href="#top">
-        <span className="nav-mark">
-          <WaveLogo />
-        </span>
-        <span translate="no">Tidence</span>
+      <a className="nav-brand" href="#top" aria-label="Tidence">
+        <Logo />
       </a>
 
       <nav className="nav-links" aria-label={t('nav.label')}>
@@ -101,25 +99,7 @@ export default function Nav() {
       </nav>
 
       <div className="nav-prefs">
-        {/* A real radio group rather than a cycling button: two languages fit,
-            and a screen reader hears both options and which one is on. */}
-        <div className="switch" role="group" aria-label={t('nav.language')}>
-          {LOCALES.map(([code, label]) => (
-            <button
-              key={code}
-              type="button"
-              onClick={() => setLocale(code)}
-              aria-pressed={locale === code}
-              // The visible label is a two-letter code; the accessible name is
-              // the language's own name, so it is announced in that language.
-              aria-label={label}
-              lang={code}
-              className={locale === code ? 'is-on' : undefined}
-            >
-              {code.toUpperCase()}
-            </button>
-          ))}
-        </div>
+        <LanguageSwitch />
 
         <a className="btn btn-sm nav-cta" href="#contact">
           {t('nav.cta')}

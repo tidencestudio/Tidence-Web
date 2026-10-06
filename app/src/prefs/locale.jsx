@@ -27,7 +27,8 @@ const read = () => {
 const lookup = (dict, path) =>
   path.split('.').reduce((node, part) => (node == null ? undefined : node[part]), dict);
 
-export function LocaleProvider({ children }) {
+/** `titlePath` lets a page other than the home page name its own tab. */
+export function LocaleProvider({ children, titlePath = 'meta.title' }) {
   const [locale, setLocaleState] = useState(read);
 
   // An accurate lang is what lets the browser offer translation in the first
@@ -36,9 +37,9 @@ export function LocaleProvider({ children }) {
   useEffect(() => {
     const dict = DICTIONARIES[locale] ?? en;
     document.documentElement.lang = locale;
-    document.title = lookup(dict, 'meta.title');
+    document.title = lookup(dict, titlePath) ?? lookup(en, titlePath);
     document.querySelector('meta[name="description"]')?.setAttribute('content', lookup(dict, 'meta.description'));
-  }, [locale]);
+  }, [locale, titlePath]);
 
   const setLocale = useCallback((next) => {
     setLocaleState(next);

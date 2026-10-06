@@ -11,6 +11,7 @@ import Footer from './components/Footer';
 import SonarGrid from './components/SonarGrid';
 import ScrollProgress from './components/ScrollProgress';
 import useHashLanding from './components/useHashLanding';
+import LegalPage from './components/LegalPage';
 import { LocaleProvider } from './prefs/locale';
 import { useT } from './prefs/hooks';
 import './App.css';
@@ -52,10 +53,17 @@ function Site() {
   );
 }
 
+// Two static pages beside the home page do not justify a router. The path is
+// read once; links between pages are ordinary navigations. vercel.json
+// rewrites these paths to index.html, and Vite's dev server already does.
+const LEGAL = { '/privacy': 'privacy', '/terms': 'terms' };
+
 export default function App() {
+  const doc = LEGAL[window.location.pathname.replace(/\/+$/, '') || '/'];
+
   return (
-    <LocaleProvider>
-      <Site />
+    <LocaleProvider titlePath={doc ? `legal.${doc}.metaTitle` : undefined}>
+      {doc ? <LegalPage doc={doc} /> : <Site />}
     </LocaleProvider>
   );
 }

@@ -1,4 +1,4 @@
-import WaveLogo from './WaveLogo';
+import Logo from './Logo';
 import WordmarkHover from './WordmarkHover';
 import { useT } from '../prefs/hooks';
 
@@ -15,31 +15,18 @@ export default function Footer() {
 
       <div className="container footer-grid">
         <div className="footer-brand">
-          <span className="nav-mark">
-            <WaveLogo />
-          </span>
-          <span translate="no">Tidence</span>
+          <Logo />
         </div>
 
+        {/* Root-relative, so they also work from the legal pages; on the home
+            page they are still same-document jumps. */}
         <nav className="footer-col" aria-label={t('footer.sections')}>
           <h2>{t('footer.sections')}</h2>
-          <a href="#build">{t('nav.build')}</a>
-          <a href="#journey">{t('nav.journey')}</a>
-          <a href="#story">{t('nav.story')}</a>
-          <a href="#contact">{t('nav.contact')}</a>
+          <a href="/#build">{t('nav.build')}</a>
+          <a href="/#journey">{t('nav.journey')}</a>
+          <a href="/#story">{t('nav.story')}</a>
+          <a href="/#contact">{t('nav.contact')}</a>
         </nav>
-
-        <div className="footer-col">
-          <h2>{t('footer.elsewhere')}</h2>
-          <a
-            href="https://github.com/alexrosstrabajo-design"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            {t('footer.github')}
-          </a>
-          <a href="mailto:alexrosstrabajo@gmail.com">{t('footer.email')}</a>
-        </div>
 
         <div className="footer-col">
           <h2>{t('footer.legal')}</h2>
@@ -49,7 +36,7 @@ export default function Footer() {
       </div>
 
       <div className="footer-wordmark" translate="no">
-        <WordmarkHover text="TIDENCE" />
+        <WordmarkHover text="tidence" />
       </div>
 
       <p className="footer-base">

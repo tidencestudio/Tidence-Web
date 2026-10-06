@@ -3,5 +3,15 @@
   "framework": null,
   "installCommand": "cd app && npm install",
   "buildCommand": "cd app && npm run build",
-  "outputDirectory": "app/dist"
+  "outputDirectory": "app/dist",
+  "rewrites": [
+    {
+      "source": "/privacy",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/index.html"
+    }
+  ]
 }

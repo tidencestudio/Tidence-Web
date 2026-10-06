@@ -9,14 +9,14 @@ import Reveal from './Reveal';
 import useScrollProgress from './useScrollProgress';
 import { useT } from '../prefs/hooks';
 
-/* TODO: fill in the studio's real handles. An empty `value` renders the row
-   as "coming soon" with no link, so nothing here points anywhere false.
+/* An empty `value` renders the row as "coming soon" with no link, so nothing
+   here points anywhere false.
      whatsapp  - digits only with country code, e.g. '18095550123'
      instagram - the handle without the @ */
 const CHANNELS = [
   { key: 'whatsapp', Icon: WhatsappLogo, value: '' },
-  { key: 'instagram', Icon: InstagramLogo, value: '' },
-  { key: 'email', Icon: EnvelopeSimple, value: 'alexrosstrabajo@gmail.com' },
+  { key: 'instagram', Icon: InstagramLogo, value: 'tidence.dev' },
+  { key: 'email', Icon: EnvelopeSimple, value: 'tidencestudio@gmail.com' },
 ];
 
 const hrefFor = (key, value) => {
@@ -24,7 +24,7 @@ const hrefFor = (key, value) => {
     case 'whatsapp':
       return `https://wa.me/${value.replace(/\D/g, '')}`;
     case 'instagram':
-      return `https://instagram.com/${value.replace(/^@/, '')}`;
+      return `https://www.instagram.com/${value.replace(/^@/, '')}/`;
     case 'email':
       return `mailto:${value}`;
     default:

@@ -12,7 +12,7 @@ import { useEffect, useRef } from 'react';
  * The reveal is decorative and pointer-only. On a touch screen, or under
  * reduced motion, the static outline is the whole component.
  */
-export default function WordmarkHover({ text = 'TIDENCE' }) {
+export default function WordmarkHover({ text = 'tidence' }) {
   const svgRef = useRef(null);
   const maskRef = useRef(null);
 
@@ -85,8 +85,8 @@ export default function WordmarkHover({ text = 'TIDENCE' }) {
       aria-label={text}
     >
       <defs>
-        {/* A single-hue ramp. The source used a five-colour rainbow, which
-            would be the only place on the site carrying a second accent. */}
+        {/* The brand ramp: deep sea-green through teal to mint, the same
+            run of colour as the mark. */}
         {/* Stop colours are set in CSS, not as attributes: a presentation
             attribute is not a CSS declaration, so var() never resolves there
             and the stops silently fall back to black. */}
