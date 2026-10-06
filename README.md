@@ -17,7 +17,7 @@ app/                 Vite + React app (current source of truth)
     App.jsx           assembles Hero + Services + Footer
     index.css         CSS variables for the ocean palette
   public/
-    favicon.svg       wave mark favicon
+    favicon*.png      brand favicon (from the guideline deck)
     wave-sunset.jpg   hero background photo
 
 reference/            historical reference only, not built
