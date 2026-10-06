@@ -45,9 +45,9 @@ is set in this shell, which makes npm omit devDependencies by default.
 
 ## Brand
 
-- Brand sheet: 7a "Transformative Teal". Anchor-T mark, lowercase `tidence` wordmark.
-- Palette: foam `#F2FFFA`, mint `#7FF5D8`, teal `#13C2B0`, deep `#00434A`, ink `#070F12`
-- Fonts: Geist (display + body) / IBM Plex Mono (labels)
+- Guideline: `Tidence-Brand` (2026), "Transformative Teal". Folded-anchor mark, lowercase `tidence` wordmark.
+- Palette: Foam `#F2FFFA`, Spray `#7FF5D8`, Lagoon `#13C2B0`, Current `#0E8C86`, Reef `#00737A`, Deep `#00434A`, Trench `#00191C`, Abyss `#070F12`
+- Fonts: Bricolage Grotesque (wordmark, headlines, body) / DM Mono (data, labels) / Newsreader (journal only)
 - Mark: `app/src/components/TidenceMark.jsx`; exports in `brand/`
 
 ## Open threads

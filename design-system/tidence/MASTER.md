@@ -39,6 +39,54 @@ white headline type onto a pale page, and a scrim heavy enough to rescue dark
 type would wash the photograph out. The nav takes those same media colours while
 it floats over the hero and returns to the theme once it lifts past it.
 
+## Revision: Brand guideline applied (Tidence-Brand, 2026). Supersedes below.
+
+Source: `Tidence-Brand.pptx`. Where this section disagrees with any older
+section, this one wins.
+
+**Palette, named.** Exposed as tokens (`--foam` … `--abyss`); components use
+the role tokens, not these.
+
+| Name | Hex | Role on the site |
+|---|---|---|
+| Foam | `#F2FFFA` | `--fg`, mark bar start |
+| Spray | `#7FF5D8` | `--accent-hover`, labels, mark bar end |
+| Lagoon | `#13C2B0` | `--accent`, mark stem start |
+| Current | `#0E8C86` | gradients only (4.7:1 on Abyss, never small text) |
+| Reef | `#00737A` | mark stem end |
+| Deep | `#00434A` | icon gradient end |
+| Trench | `#00191C` | `--surface`, mark fold, mark on gradient icons |
+| Abyss | `#070F12` | `--bg` |
+
+Neutrals from the deck: muted text `#B8D4CE` (12.3:1 on Abyss), hairline
+`#1C2B2E`. Text floor is dim on surface-2 at 8.05:1.
+
+**Gradients.** Bar Foam → Spray. Stem Lagoon → Reef. Icon Spray → Current →
+Deep (`--gradient-icon`). Film grain on brand exports is ink speckle merged
+over the fill, kept light (blended grey noise desaturated the teal).
+
+**Type.** Bricolage Grotesque for the wordmark, headlines and body; DM Mono
+for data and labels. Geist and IBM Plex Mono are retired. Scale and tracking
+from the deck, scaled for the web:
+
+| Role | Weight | Deck size | Web | Tracking |
+|---|---|---|---|---|
+| Display | 800 | 144 | `--step-display`, slogan | `-0.045em` |
+| H1 | 800 | 80 | `--step-6` | `-0.04em` |
+| H2 | 700 | 52 | `--step-5`, statements | `-0.03em` |
+| Body | 400 | 30 | `--step-0` | default |
+| Wordmark | 800 | | | `-0.05em` |
+| Label | DM Mono 400 | | uppercase, Spray | `+0.1em` |
+
+The journal keeps Newsreader as its one sanctioned exception. Bricolage ships
+no italic, so the few italic UI strings outside the journal are synthesised.
+
+**Exports in `brand/`.** `mark.svg`, `icon-gradient.svg` (primary),
+`icon-abyss.svg`, `icon-foam-mark.svg`, `favicon.svg` (flat Spray mark on
+Abyss, also `app/public/favicon.svg`), `lockup-on-gradient.svg`,
+`lockup-on-foam.svg`, `wordmark-on-gradient.svg`. Lockup text is live
+Bricolage 800; outline it before using it anywhere the font is not installed.
+
 ## Revision: Journal voice, legal pages, contact channels
 
 **The journal speaks in a serif.** The rest of the page pitches in Geist; the

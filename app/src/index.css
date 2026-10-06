@@ -1,44 +1,56 @@
 /* ==========================================================================
    Tidence - design tokens
    Single source: design-system/tidence/MASTER.md
-   Palette: 7a "Transformative Teal" brand sheet.
-     foam  #F2FFFA   mint  #7FF5D8   teal  #13C2B0
-     deep  #00434A   ink   #070F12
-   One theme: ink ground, foam type, as the brand sheet is set.
+   Brand guideline: Tidence-Brand (2026), "Transformative Teal".
+     Foam    #F2FFFA   Spray  #7FF5D8   Lagoon #13C2B0   Current #0E8C86
+     Reef    #00737A   Deep   #00434A   Trench #00191C   Abyss   #070F12
+   One theme: Abyss ground, Foam type, as the guideline sets it.
    ========================================================================== */
 
-/* Every text pair clears 7:1 against the page except dim on raised surface.
-   Measured pairs are in MASTER.md. Surfaces step toward deep rather than
-   toward grey, so a card reads as deeper water, not as a lighter panel. */
 :root {
   color-scheme: dark;
 
-  --bg: #070f12;
-  --surface: #0c1a1e;
-  --surface-2: #12272c;
+  /* The named palette. Components use the roles below, not these. */
+  --foam: #f2fffa;
+  --spray: #7ff5d8;
+  --lagoon: #13c2b0;
+  --current: #0e8c86; /* 4.7:1 on Abyss: gradients only, never small text */
+  --reef: #00737a;
+  --deep: #00434a;
+  --trench: #00191c;
+  --abyss: #070f12;
 
-  --fg: #f2fffa;
-  --fg-muted: #bcd6cf;
+  /* Roles. Text floor: dim on surface-2 at 8.05:1. Pairs in MASTER.md. */
+  --bg: var(--abyss);
+  --surface: var(--trench);
+  --surface-2: #0b2427;
+
+  --fg: var(--foam);
+  --fg-muted: #b8d4ce;
   --fg-dim: #9fbdb6;
 
-  --accent: #13c2b0;
-  --accent-hover: #7ff5d8;
+  --accent: var(--lagoon);
+  --accent-hover: var(--spray);
   --accent-soft: rgba(19, 194, 176, 0.14);
-  --on-accent: #070f12;
+  --on-accent: var(--abyss);
 
-  --line: rgba(242, 255, 250, 0.12);
-  --line-strong: rgba(242, 255, 250, 0.24);
+  --line: #1c2b2e;
+  --line-strong: #2b4145;
 
   --dot: rgba(127, 245, 216, 0.05);
   --grain-opacity: 0.035;
-  --shadow: 0 24px 60px -24px rgba(1, 6, 8, 0.9);
+  --shadow: 0 24px 60px -24px rgba(0, 10, 12, 0.9);
 
-  /* The mark: foam-to-mint bar over a sea-green stem, dark fold. */
-  --mark-bar-0: #f2fffa;
-  --mark-bar-1: #a4f5dd;
-  --mark-stem-0: #52b1a5;
-  --mark-stem-1: #2f6f76;
-  --mark-fold: #03171a;
+  /* The mark, per the guideline: bar Foam to Spray, stem Lagoon to Reef,
+     shadow fold in Trench. */
+  --mark-bar-0: var(--foam);
+  --mark-bar-1: var(--spray);
+  --mark-stem-0: var(--lagoon);
+  --mark-stem-1: var(--reef);
+  --mark-fold: var(--trench);
+
+  /* Icon and lockup panels: Spray through Current to Deep. */
+  --gradient-icon: linear-gradient(135deg, var(--spray) 0%, var(--current) 52%, var(--deep) 100%);
 }
 
 :root {
@@ -46,23 +58,21 @@
      Kept separate from the page tokens: they sit on the hero photograph, and
      have to hold against the image rather than against the page ground. */
   --on-media: #f2fffa;
-  --on-media-muted: #bfd9d2;
+  --on-media-muted: #b8d4ce;
   --accent-on-media: #13c2b0;
   --highlight-on-media: #7ff5d8;
   --on-accent-media: #070f12;
   --scrim: #070f12;
 
   /* --- Type -------------------------------------------------------------
-     Geist for display and body: the closest open match to the bold, tightly
-     tracked grotesque of the wordmark. IBM Plex Mono for labels, as on the
-     brand sheet. */
-  --font-display: 'Geist', 'Helvetica Neue', Arial, sans-serif;
-  --font-body: 'Geist', 'Helvetica Neue', Arial, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  /* The journal's voice: an editorial serif with optical sizes, so one
-     family covers both the display headlines and the reading text. Used
-     only inside the journal, where the page stops pitching and starts
-     telling a story. */
+     Bricolage Grotesque for the wordmark, headlines and body; DM Mono for
+     data and labels. Newsreader is the one sanctioned exception: the journal's
+     editorial voice. Weights and tracking follow the guideline's type scale:
+     Display 800 at -0.045em, H1 800 at -0.04em, H2 700 at -0.03em, the
+     wordmark 800 at -0.05em, mono labels uppercase at +0.1em. */
+  --font-display: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, monospace;
   --font-editorial: 'Newsreader', Georgia, 'Times New Roman', serif;
 
   --step--1: 0.875rem; /* 14 */
@@ -71,10 +81,15 @@
   --step-2: 1.375rem; /* 22 */
   --step-3: 1.75rem; /* 28 */
   --step-4: clamp(1.75rem, 1.2rem + 2.4vw, 2.5rem);
-  --step-5: clamp(2.125rem, 1.1rem + 3.8vw, 3.5rem);
-  --step-6: clamp(2.75rem, 1rem + 6.2vw, 5.25rem);
+  --step-5: clamp(2.25rem, 1.1rem + 4vw, 3.25rem); /* H2, 52 */
+  --step-6: clamp(2.75rem, 1rem + 6.4vw, 5rem); /* H1, 80 */
+  --step-display: clamp(3.5rem, 0.5rem + 10vw, 9rem); /* Display, 144 */
 
-  --track-display: -0.035em;
+  --track-display: -0.045em;
+  --track-h1: -0.04em;
+  --track-h2: -0.03em;
+  --track-wordmark: -0.05em;
+  --track-label: 0.1em;
 
   /* --- Space ------------------------------------------------------------ */
   --gutter: clamp(1.25rem, 5vw, 3rem);
@@ -135,13 +150,20 @@ h1,
 h2,
 h3 {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 800;
+  font-optical-sizing: auto;
   /* Tight, like the wordmark. A grotesque at display size wants negative
      tracking and short leading; body copy keeps the default. */
-  line-height: 1.04;
-  letter-spacing: var(--track-display);
+  line-height: 1;
+  letter-spacing: var(--track-h1);
   text-wrap: balance;
   margin: 0;
+}
+
+h3 {
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: var(--track-h2);
 }
 
 p {

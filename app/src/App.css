@@ -271,10 +271,10 @@ footer a {
    Mark plus lowercase wordmark, set as on the brand sheet: heavy and tight. */
 .logo-word {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 800;
   font-size: 1.625rem;
   line-height: 1;
-  letter-spacing: -0.055em;
+  letter-spacing: var(--track-wordmark);
   /* Lowercase x-height sits low; nudge it up to centre on the mark. */
   transform: translateY(-0.04em);
 }
@@ -1053,10 +1053,10 @@ footer a {
 .manifesto-lead {
   max-width: 20ch;
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 700;
   font-size: clamp(1.9rem, 1rem + 3.6vw, 3.25rem);
-  line-height: 1.16;
-  letter-spacing: var(--track-display);
+  line-height: 1.06;
+  letter-spacing: var(--track-h2);
   text-wrap: balance;
 }
 
@@ -1065,10 +1065,10 @@ footer a {
   max-width: 20ch;
   text-align: right;
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 700;
   font-size: clamp(1.9rem, 1rem + 3.6vw, 3.25rem);
-  line-height: 1.16;
-  letter-spacing: var(--track-display);
+  line-height: 1.06;
+  letter-spacing: var(--track-h2);
   color: var(--accent);
 }
 
@@ -1104,9 +1104,11 @@ footer a {
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 1.5rem;
-  font: 500 var(--step--1) / 1 var(--font-mono);
-  letter-spacing: 0.06em;
-  color: var(--accent);
+  /* The guideline's label: DM Mono, uppercase, tracked +0.1em, in Spray. */
+  font: 400 var(--step--1) / 1 var(--font-mono);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--accent-hover);
 }
 
 .eyebrow::before {
@@ -1185,7 +1187,7 @@ footer a {
 
 .marquee-row-a {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 700;
   transform: translate3d(calc(var(--p, 0.5) * -22%), 0, 0);
 }
 
@@ -1401,7 +1403,7 @@ footer a {
 
 .stage-num {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 700;
   line-height: 0.8;
   color: transparent;
   -webkit-text-stroke: 1px var(--line-strong);
@@ -1668,9 +1670,9 @@ footer a {
 
 .approach-row dt {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 700;
   font-size: var(--step-3);
-  letter-spacing: var(--track-display);
+  letter-spacing: var(--track-h2);
   line-height: 1.2;
 }
 
@@ -1715,7 +1717,7 @@ footer a {
    while the story runs down the right, then a numbered index of short notes.
    Cards are deliberately absent; hairlines and type do the structuring.
 
-   The one section set in a serif. Everywhere else the page pitches in Geist;
+   The one section set in a serif. Everywhere else the page pitches in Bricolage;
    here it tells a story, so it changes voice to Newsreader, an editorial face
    with optical sizes: the same family draws the hairline-contrast display
    cuts and the sturdier text cut. Mono stays for the metadata, as it would
@@ -2329,7 +2331,7 @@ footer a {
   flex-direction: column;
   font-size: clamp(3.5rem, 0.5rem + 12vw, 12rem);
   line-height: 0.92;
-  letter-spacing: -0.045em;
+  letter-spacing: var(--track-display);
   /* Allowed to wrap: a machine translation can run far longer than the
      source, and a nowrap line would be clipped by the section. */
   text-wrap: balance;
@@ -2433,7 +2435,7 @@ a.channel:focus-visible .channel-icon {
 
 .channel-name {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 700;
   font-size: var(--step-3);
   line-height: 1.1;
 }
@@ -2578,11 +2580,11 @@ a.channel:hover .channel-arrow {
 
 .wordmark text {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 78px;
-  /* As tight as the outlines allow: any tighter and neighbouring strokes
-     cross, which reads as a rendering fault rather than as tracking. */
-  letter-spacing: -0.012em;
+  font-weight: 800;
+  font-size: 74px;
+  /* As tight as the outlines allow: Bricolage 800 is wide, and any tighter
+     neighbouring strokes cross, which reads as a fault rather than tracking. */
+  letter-spacing: 0;
   fill: none;
   stroke-width: 0.55;
   paint-order: stroke;
@@ -2635,7 +2637,7 @@ a.channel:hover .channel-arrow {
 @media (max-width: 760px) {
   .wordmark text {
     stroke-width: 1.15;
-    font-size: 74px;
+    font-size: 70px;
   }
 
   .wordmark-lit {
