@@ -162,7 +162,7 @@ export default {
         'That was the moment Tidence stopped being two portfolios and became one studio. The name comes from the tide: steady, recurring work that keeps moving whether or not anyone is watching. It is how we think about software too. It should run quietly, every day, and keep running.',
         'Today we design and build websites, CRMs and the automation behind them, for businesses that would rather spend their hours on the work only they can do.',
       ],
-      quote: 'We build what you will actually use, not what looks good in a demo.',
+      quote: 'Built to be used, not shown.',
       caption: 'Where it started: a desk, a laptop and a list of things to build.',
     },
     posts: {

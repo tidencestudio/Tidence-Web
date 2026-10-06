@@ -163,7 +163,7 @@ export default {
         'Ese fue el momento en que Tidence dejó de ser dos portafolios y se convirtió en un estudio. El nombre viene de la marea: trabajo constante y recurrente que sigue moviéndose aunque nadie lo esté mirando. Así pensamos también el software. Debe funcionar en silencio, todos los días, y seguir funcionando.',
         'Hoy diseñamos y construimos sitios web, CRMs y la automatización detrás de ellos, para negocios que prefieren dedicar sus horas al trabajo que solo ellos pueden hacer.',
       ],
-      quote: 'Construimos lo que de verdad vas a usar, no lo que luce bien en una demo.',
+      quote: 'Hecho para usarse, no para mostrarse.',
       caption: 'Donde empezó: un escritorio, una laptop y una lista de cosas por construir.',
     },
     posts: {
