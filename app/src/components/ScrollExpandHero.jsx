@@ -33,7 +33,7 @@ export default function ScrollExpandHero() {
                 screen reader gets the proposition rather than the brand name.
                 This layer only exists while the window is closed. */}
             <div className="expand-brand" aria-hidden="true" translate="no">
-              <span className="logo-word">tidence</span>
+              <span className="logo-word">Tidence</span>
             </div>
 
             <h1 className="expand-title">
