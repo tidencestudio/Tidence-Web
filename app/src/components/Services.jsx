@@ -5,17 +5,17 @@ import Reveal from './Reveal';
 import useScrollProgress from './useScrollProgress';
 import { useT } from '../prefs/hooks';
 
-/* Photos are Unsplash images served through Picsum by fixed id, so they are
-   stable between loads. They are treated in CSS into the page's single teal
-   duotone and only take their own colour once the card settles, which keeps
-   four unrelated photographs reading as one set.
+/* Unsplash photographs (free licence) chosen to show what each card is about:
+   a site on a laptop, a team around shared screens, a spreadsheet being
+   worked, a dashboard. Fixed ids and crops, so they are stable between loads;
+   the shared grade lives in App.css.
 
    TODO: swap for real photography or product screenshots when they exist. */
 const services = [
-  { key: 'web', Icon: AppWindow, shot: 'https://picsum.photos/id/2/1200/900' },
-  { key: 'crm', Icon: AddressBook, shot: 'https://picsum.photos/id/1/1200/900' },
-  { key: 'automation', Icon: GearSix, shot: 'https://picsum.photos/id/491/1200/900' },
-  { key: 'everyday', Icon: Lightning, shot: 'https://picsum.photos/id/60/1200/900' },
+  { key: 'web', Icon: AppWindow, shot: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&h=900&q=70' },
+  { key: 'crm', Icon: AddressBook, shot: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&h=900&q=70' },
+  { key: 'automation', Icon: GearSix, shot: 'https://images.unsplash.com/photo-1759752393975-7ca7b302fcc6?auto=format&fit=crop&w=1200&h=900&q=70' },
+  { key: 'everyday', Icon: Lightning, shot: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&h=900&q=70' },
 ];
 
 function ServiceCard({ s, i, total }) {

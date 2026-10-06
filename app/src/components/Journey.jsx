@@ -2,17 +2,19 @@ import { useEffect, useRef, useState } from 'react';
 import useScrollProgress from './useScrollProgress';
 import { useLocale } from '../prefs/hooks';
 
-/* One photograph per stage, Unsplash via Picsum by fixed id. Duotoned in CSS
-   like the service cards, and revealed by a wipe as each stage arrives.
+/* One Unsplash photograph per stage, picked to show the stage itself: a
+   conversation over coffee, a plan written down, wireframes, code, a payment
+   on a phone, a phone being tested, a plant being tended. Revealed by a wipe
+   as each stage arrives.
    TODO: replace with real studio photography when there is some. */
 const stages = [
-  { key: 'listen', shot: 'https://picsum.photos/id/30/900/1100' },
-  { key: 'map', shot: 'https://picsum.photos/id/24/900/1100' },
-  { key: 'design', shot: 'https://picsum.photos/id/534/900/1100' },
-  { key: 'build', shot: 'https://picsum.photos/id/180/900/1100' },
-  { key: 'connect', shot: 'https://picsum.photos/id/175/900/1100' },
-  { key: 'launch', shot: 'https://picsum.photos/id/867/900/1100' },
-  { key: 'tend', shot: 'https://picsum.photos/id/381/900/1100' },
+  { key: 'listen', shot: 'https://images.unsplash.com/photo-1604881988758-f76ad2f7aac1?auto=format&fit=crop&w=900&h=1100&q=70' },
+  { key: 'map', shot: 'https://images.unsplash.com/photo-1513128034602-7814ccaddd4e?auto=format&fit=crop&w=900&h=1100&q=70' },
+  { key: 'design', shot: 'https://images.unsplash.com/photo-1600132806608-231446b2e7af?auto=format&fit=crop&w=900&h=1100&q=70' },
+  { key: 'build', shot: 'https://images.unsplash.com/photo-1619410283995-43d9134e7656?auto=format&fit=crop&w=900&h=1100&q=70' },
+  { key: 'connect', shot: 'https://images.unsplash.com/photo-1556742521-9713bf272865?auto=format&fit=crop&w=900&h=1100&q=70' },
+  { key: 'launch', shot: 'https://images.unsplash.com/photo-1633250391894-397930e3f5f2?auto=format&fit=crop&w=900&h=1100&q=70' },
+  { key: 'tend', shot: 'https://images.unsplash.com/photo-1515150144380-bca9f1650ed9?auto=format&fit=crop&w=900&h=1100&q=70' },
 ];
 
 const TOTAL = stages.length;

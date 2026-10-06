@@ -4,15 +4,16 @@ import StoryThread from './StoryThread';
 import Reveal from './Reveal';
 import { useT } from '../prefs/hooks';
 
-/* Photos are Unsplash images served through Picsum by fixed id, duotoned in
-   CSS like every other photograph on the page.
+/* Unsplash photographs matched to each piece: the desk the story starts at,
+   two developers, code, handwritten notes. Graded in CSS like every other
+   photograph on the page.
    TODO: swap for real studio photography when it exists. */
-const FEATURE_SHOT = 'https://picsum.photos/id/26/1200/1500';
+const FEATURE_SHOT = 'https://images.unsplash.com/photo-1484788984921-03950022c9ef?auto=format&fit=crop&w=1200&h=1500&q=70';
 
 const posts = [
-  { key: 'who', shot: 'https://picsum.photos/id/20/600/450' },
-  { key: 'stack', shot: 'https://picsum.photos/id/119/600/450' },
-  { key: 'principles', shot: 'https://picsum.photos/id/486/600/450' },
+  { key: 'who', shot: 'https://images.unsplash.com/photo-1629904853893-c2c8981a1dc5?auto=format&fit=crop&w=600&h=450&q=70' },
+  { key: 'stack', shot: 'https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?auto=format&fit=crop&w=600&h=450&q=70' },
+  { key: 'principles', shot: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=600&h=450&q=70' },
 ];
 
 /**
