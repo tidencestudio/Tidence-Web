@@ -2,6 +2,7 @@ import { ArrowDown } from '@phosphor-icons/react';
 import { useT } from '../prefs/hooks';
 import useScrollScrub from './useScrollScrub';
 import HeroMedia from './HeroMedia';
+import smoothScrollTo from './smoothScroll';
 
 /**
  * Cinematic opening: a small plate of media that opens to full bleed as the
@@ -17,6 +18,14 @@ export default function ScrollExpandHero() {
   const t = useT();
 
   useScrollScrub();
+
+  // A real link (it still works without JS and can be opened in a new tab),
+  // upgraded to a paced scroll so the hero sequence plays out on the way down.
+  const toStart = (event) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+    event.preventDefault();
+    smoothScrollTo('start');
+  };
 
   return (
     <section className="expand" id="top">
@@ -46,7 +55,7 @@ export default function ScrollExpandHero() {
             <div className="expand-reveal">
               <p className="expand-sub">{t('hero.sub')}</p>
 
-              <a className="btn btn-lg" href="#start">
+              <a className="btn btn-lg" href="#start" onClick={toStart}>
                 {t('hero.cta')}
                 <ArrowDown size={16} weight="regular" aria-hidden="true" />
               </a>
@@ -55,7 +64,7 @@ export default function ScrollExpandHero() {
 
           {/* Tells first-time readers the page continues below. It fades as
               the sequence starts, so it is only there while it is needed. */}
-          <a className="expand-cue" href="#start">
+          <a className="expand-cue" href="#start" onClick={toStart}>
             <span className="expand-cue-text">{t('hero.scroll')}</span>
             <span className="expand-cue-line" aria-hidden="true" />
           </a>

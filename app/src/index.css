@@ -226,6 +226,12 @@ ul {
   border-radius: 0;
 }
 
+/* Sections that receive focus from script (after an in-page scroll) are
+   landmarks, not controls; a ring around a whole section is noise. */
+[tabindex='-1']:focus {
+  outline: none;
+}
+
 /* --- Skip link ---------------------------------------------------------- */
 .skip {
   position: fixed;
