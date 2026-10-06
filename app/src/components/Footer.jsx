@@ -23,8 +23,8 @@ export default function Footer() {
         <nav className="footer-col" aria-label={t('footer.sections')}>
           <h2>{t('footer.sections')}</h2>
           <a href="/#build">{t('nav.build')}</a>
-          <a href="/#journey">{t('nav.journey')}</a>
-          <a href="/#story">{t('nav.story')}</a>
+          <a href="/#process">{t('nav.process')}</a>
+          <a href="/#about">{t('nav.about')}</a>
           <a href="/#contact">{t('nav.contact')}</a>
         </nav>
 

@@ -27,7 +27,7 @@ export default function Hero() {
   const toStart = (event) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
     event.preventDefault();
-    smoothScrollTo('start');
+    smoothScrollTo('build');
   };
 
   return (
@@ -48,7 +48,7 @@ export default function Hero() {
             <EnvelopeSimple size={18} weight="regular" aria-hidden="true" />
             {t('hero.ctaEmail')}
           </a>
-          <a className="link hero-more" href="#start" onClick={toStart}>
+          <a className="link hero-more" href="#build" onClick={toStart}>
             {t('hero.ctaMore')}
             <ArrowDown size={14} weight="regular" aria-hidden="true" />
           </a>

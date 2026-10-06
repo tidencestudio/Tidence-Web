@@ -22,7 +22,7 @@ Last updated: 2026-10-06.
 - The name comes from the tide: steady, recurring work that keeps moving
   whether or not anyone is watching. Software should run quietly, every day,
   and keep running.
-- Based in Bolivia; works in Spanish and English. Clients are small and
+- Works in Spanish and English. Clients are small and
   medium businesses that would rather spend their hours on the work only they
   can do.
 
@@ -31,19 +31,22 @@ Last updated: 2026-10-06.
 | Use | English | Spanish |
 |---|---|---|
 | Headline | We build the tools your business runs on. | Construimos las herramientas con las que funciona tu negocio. |
-| Subhead | Websites, CRMs and the automations that quietly run your office. Designed, built and looked after by one team, start to finish. | Sitios web, CRMs y las automatizaciones que mueven tu oficina en silencio. Diseñado, construido y cuidado por un solo equipo, de principio a fin. |
-| Manifesto | Most businesses buy software off the shelf and then spend years working around it. **We build around you.** | La mayoría compra software genérico y pasa años adaptándose a él. **Nosotros construimos alrededor de ti.** |
+| Subhead | Websites, CRMs and automations for your business. Built by a team of two. | Sitios web, CRMs y automatizaciones para tu negocio. Hechos por un equipo de dos. |
+| Manifesto (ads only, not on the site) | Most businesses buy software off the shelf and then spend years working around it. **We build around you.** | La mayoría compra software genérico y pasa años adaptándose a él. **Nosotros construimos alrededor de ti.** |
 | Closing slogan | Imagine it. We build it. | Imagínalo. Lo construimos. |
-| Quote | Built to be used, not shown. | Hecho para usarse, no para mostrarse. |
+| Quote (ads only) | Built to be used, not shown. | Hecho para usarse, no para mostrarse. |
 | Primary CTA | Start a project | Empezar un proyecto |
-| Secondary CTA | Take the journey / See the work | Hacer el recorrido |
-| Services | Websites that do work · Your clients, in one place · The work that does itself · Small tools, big hours back | |
-| Process (7 stages) | Listen · Map · Design · Build · Connect · Launch · Support | Escuchar · Mapear · Diseñar · Construir · Conectar · Lanzar · Soporte |
-| What we will not do | Sell you a template as a custom build. Lock you out of your own code. Ship anything we have not tested on a real phone and checked for security first. | |
+| Secondary CTA | See what we do | Mira qué hacemos |
+| Services | Websites · CRM · Automation · Custom tools | Sitios web · CRM · Automatización · Herramientas a medida |
+| Process (4 steps) | We talk · We plan · We build · We launch and stay | Hablamos · Planeamos · Construimos · Lanzamos y te acompañamos |
+| What we will not do (ads only) | Sell you a template as a custom build. Lock you out of your own code. Ship anything we have not tested on a real phone and checked for security first. | |
 
 ### Voice
 
-- Plain, specific, confident. Short sentences. Active voice.
+- Plain language first. One idea per sentence, about 12 words or fewer,
+  everyday words a client would use (not "integrations" when "connect your
+  tools" will do). The website is deliberately short: about 180 words.
+- Specific and confident. Active voice.
 - Sentence case everywhere, including headlines. Never Title Case.
 - Spanish addresses the reader as **tú**, never usted: the whole pitch is that
   you talk to the two of them directly.

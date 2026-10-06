@@ -38,8 +38,6 @@ export default function Contact() {
       <div className="contact-glow" aria-hidden="true" />
 
       <div className="container">
-        <p className="eyebrow contact-eyebrow">{t('contact.eyebrow')}</p>
-
         <h2 className="slogan">
           <span className="slogan-line slogan-a">{t('contact.sloganA')}</span>
           <span className="slogan-line slogan-b">{t('contact.sloganB')}</span>

@@ -1,11 +1,8 @@
 import Nav from './components/Nav';
 import Hero from './components/Hero';
-import Manifesto from './components/Manifesto';
-import Marquee from './components/Marquee';
 import Services from './components/Services';
-import Journey from './components/Journey';
-import Approach from './components/Approach';
-import Journal from './components/Journal';
+import Process from './components/Process';
+import About from './components/About';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import Backdrop from './components/Backdrop';
@@ -19,7 +16,7 @@ import './App.css';
 function Site() {
   const t = useT();
 
-  // A shared /#journey link has to land on that section, not the top.
+  // A shared /#process link has to land on that section, not the top.
   useHashLanding();
 
   return (
@@ -32,12 +29,9 @@ function Site() {
 
       <main id="main">
         <Hero />
-        <Manifesto />
-        <Marquee />
         <Services />
-        <Journey />
-        <Approach />
-        <Journal />
+        <Process />
+        <About />
         <Contact />
       </main>
 

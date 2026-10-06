@@ -39,6 +39,38 @@ white headline type onto a pale page, and a scrim heavy enough to rescue dark
 type would wash the photograph out. The nav takes those same media colours while
 it floats over the hero and returns to the theme once it lifts past it.
 
+## Revision: Simplified to five plain sections. Supersedes the section list and narrative below.
+
+The page was cut to the essentials for accessibility: about 180 visible
+words, down from about 1,300.
+
+**Sections, in order:**
+1. Hero (the headline, one line, the CTAs, and the panel with the enquiry
+   form)
+2. What we do (`#build`)
+3. How we work (`#process`)
+4. Who we are (`#about`)
+5. Contact
+
+**Removed:** Manifesto, Marquee, Approach, the Journal (feature article and
+notes), the pinned stacking service cards and their photographs, the pinned
+horizontal Journey and its seven stage photographs, the story thread, and the
+word reveal. The journal's lazy-loaded Newsreader roman and full italic are
+gone with it; only the 13 KB hero italic display cut remains.
+
+**The new sections are plain:**
+- What we do: a grid of four cards, each an icon, a title and one sentence.
+- How we work: a real `<ol>` of four steps (talk, plan, build, launch and
+  stay), one sentence each.
+- Who we are: two sentences.
+
+None of them pin, scroll sideways or hide content behind motion; they scroll
+normally and read top to bottom. Headings run h1 to h2 to h3 with no gaps.
+
+**Copy rule:** plain language, one idea per sentence, about 12 words or
+fewer, everyday words. The prerendered home page dropped from 86 KB to 46 KB
+and the stylesheet from about 2,500 lines to 1,500.
+
 ## Revision: Page-wide shader, three-voice headline, lockup in the panel. Supersedes below where they differ.
 
 **The shader is the whole page's background.** `Backdrop.jsx` now renders

@@ -9,8 +9,8 @@ const NAV_H = 76;
 
 const sections = [
   ['build', 'nav.build'],
-  ['journey', 'nav.journey'],
-  ['story', 'nav.story'],
+  ['process', 'nav.process'],
+  ['about', 'nav.about'],
   ['contact', 'nav.contact'],
 ];
 
