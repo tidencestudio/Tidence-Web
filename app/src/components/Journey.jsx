@@ -39,6 +39,9 @@ export default function Journey() {
   const trackRef = useRef(null);
   const railRef = useRef(null);
   const counterRef = useRef(null);
+  // Scroll progress at which each stage counts as the current one: halfway
+  // through its arrival. Written by measure(), read by the counter.
+  const arrivals = useRef([]);
   const [pinned, setPinned] = useState(
     () => typeof window !== 'undefined' && window.matchMedia(PIN_QUERY).matches
   );
@@ -73,9 +76,12 @@ export default function Journey() {
       // is how much progress it takes to travel the next 45%. CSS turns the
       // two into a per-stage 0 to 1 that drives its reveal.
       if (shift > 0) {
-        rail.querySelectorAll('.stage').forEach((stage) => {
-          stage.style.setProperty('--at', ((stage.offsetLeft - vw * 0.85) / shift).toFixed(4));
-          stage.style.setProperty('--span', ((vw * 0.45) / shift).toFixed(4));
+        const span = (vw * 0.45) / shift;
+        arrivals.current = [...rail.querySelectorAll('.stage')].map((stage) => {
+          const at = (stage.offsetLeft - vw * 0.85) / shift;
+          stage.style.setProperty('--at', at.toFixed(4));
+          stage.style.setProperty('--span', span.toFixed(4));
+          return at + span / 2;
         });
       }
     };
@@ -96,11 +102,16 @@ export default function Journey() {
   // The counter is the one value that has to exist as text, so it is written
   // directly rather than through state: a re-render per scroll frame would
   // rebuild seven panels for the sake of two digits.
+  //
+  // It counts stages that have arrived rather than dividing the scroll into
+  // sevenths: the intro panel takes the first stretch of the rail, so equal
+  // sevenths flipped the number at a different point in every stage.
   const lastStage = useRef(-1);
   useScrollProgress(trackRef, {
     mode: 'pin',
     onProgress: (p) => {
-      const stage = Math.min(Math.floor(p * TOTAL), TOTAL - 1);
+      const arrived = arrivals.current.filter((at) => at <= p).length;
+      const stage = Math.min(Math.max(arrived, 1), TOTAL) - 1;
       if (stage === lastStage.current || !counterRef.current) return;
       lastStage.current = stage;
       counterRef.current.textContent = String(stage + 1).padStart(2, '0');
@@ -179,12 +190,10 @@ export default function Journey() {
                 <path
                   className="journey-tide-base"
                   d="M0 20 Q 50 2 100 20 T 200 20 T 300 20 T 400 20 T 500 20 T 600 20 T 700 20 T 800 20 T 900 20 T 1000 20 T 1100 20 T 1200 20"
-                  pathLength="1"
                 />
                 <path
                   className="journey-tide-live"
                   d="M0 20 Q 50 2 100 20 T 200 20 T 300 20 T 400 20 T 500 20 T 600 20 T 700 20 T 800 20 T 900 20 T 1000 20 T 1100 20 T 1200 20"
-                  pathLength="1"
                 />
               </svg>
             </div>

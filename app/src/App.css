@@ -1469,7 +1469,14 @@ footer a {
   filter: none;
 }
 
-/* The HUD: where you are, and the tide line drawing behind you. */
+/* The HUD: where you are, and the tide line drawing behind you.
+
+   The live wave is revealed by clipping, not by stroke-dasharray: the dash
+   version leaned on pathLength plus non-scaling-stroke plus a unitless calc()
+   offset, which Chromium happens to get right and Safari and Firefox do not
+   (the line came out dotted and fully drawn). A clip-path inset in percent of
+   the path's own box works the same everywhere. The vertical insets are
+   negative so the stroke is not shaved off at the wave's crests. */
 .journey-hud {
   position: absolute;
   left: var(--gutter);
@@ -1506,13 +1513,14 @@ footer a {
 }
 
 .journey-tide-base {
-  stroke: var(--line-strong);
+  /* Its own tone rather than the hairline token: the track has to read as a
+     track, or the filled part looks like it stops in mid-air. */
+  stroke: color-mix(in oklab, var(--fg-dim) 42%, transparent);
 }
 
 .journey-tide-live {
   stroke: var(--accent);
-  stroke-dasharray: 1 2;
-  stroke-dashoffset: calc(1 - var(--p, 0));
+  clip-path: inset(-100% calc((1 - var(--p, 0)) * 100%) -100% 0);
 }
 
 /* Stacked: phones, narrow windows and reduced motion */
