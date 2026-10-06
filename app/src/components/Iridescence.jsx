@@ -8,8 +8,9 @@ import { useEffect, useRef } from 'react';
  *   never runs during prerender, and never delays the first paint.
  * - The loop only runs while the canvas is on screen and the tab is visible.
  * - Reduced motion draws one still frame and stops.
- * - Device pixel ratio is capped at 1.5; the pattern is soft and does not
- *   need more, and it is the biggest lever on GPU cost.
+ * - Device pixel ratio is capped at 1.5, and `scale` renders below the
+ *   element's size (the browser stretches it back up). The pattern is soft,
+ *   so half resolution is invisible and quarters the GPU cost.
  * - If WebGL is unavailable the container stays empty and the CSS gradient
  *   behind it is what shows.
  */
@@ -64,6 +65,7 @@ export default function Iridescence({
   speed = 1.0,
   amplitude = 0.1,
   mouseReact = true,
+  scale = 1,
   className = '',
   ...rest
 }) {
@@ -111,7 +113,7 @@ export default function Iridescence({
       const mesh = new Mesh(gl, { geometry: new Triangle(gl), program });
 
       const resize = () => {
-        renderer.setSize(ctn.offsetWidth, ctn.offsetHeight);
+        renderer.setSize(Math.ceil(ctn.offsetWidth * scale), Math.ceil(ctn.offsetHeight * scale));
         program.uniforms.uResolution.value = new Color(
           gl.canvas.width,
           gl.canvas.height,
@@ -195,7 +197,7 @@ export default function Iridescence({
       disposed = true;
       cleanup();
     };
-  }, [r, g, b, speed, amplitude, mouseReact]);
+  }, [r, g, b, speed, amplitude, mouseReact, scale]);
 
   return <div ref={ctnDom} className={`iridescence ${className}`} aria-hidden="true" {...rest} />;
 }

@@ -41,17 +41,18 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
 
     <!-- Fonts are self-hosted (src/fonts, declared in src/fonts.css). Only the
-         two faces the first screen uses are preloaded. -->
+         faces the first screen uses are preloaded. -->
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/bricolage.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/dm-mono-400.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/newsreader-italic-display.woff2" crossorigin />
 
     <!-- The hero image is the LCP element on every viewport. Same srcset and
          sizes as HeroMedia.jsx, so the preload and the <img> pick one file. -->
     <link
       rel="preload"
       as="image"
-      type="image/avif"
-      imagesrcset="/wave-sunset-640.avif 640w, /wave-sunset-960.avif 960w, /wave-sunset-1600.avif 1600w"
+      type="image/webp"
+      imagesrcset="/lockup-640.webp 640w, /lockup-960.webp 960w, /lockup-1600.webp 1600w"
       imagesizes="(min-width: 1200px) 640px, (min-width: 900px) 55vw, 100vw"
       fetchpriority="high"
     />

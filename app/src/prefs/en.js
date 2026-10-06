@@ -22,15 +22,12 @@ export default {
   },
 
   hero: {
-    eyebrow: 'Websites · CRMs · Automation',
     lead: 'We build the tools',
-    em: 'your business runs on',
+    em: 'your business',
+    strong: 'runs on.',
     sub: 'Websites, CRMs and the automations that quietly run your office. Designed, built and looked after by one team, start to finish.',
-    badgeChip: 'Open',
-    badge: 'Taking on new projects',
     ctaEmail: 'Email us about a project',
     ctaMore: 'See how we work',
-    readout: 'Tide',
     tilesLabel: 'Quick links',
     tileEmail: 'Email the studio',
     tileWork: 'What we build',

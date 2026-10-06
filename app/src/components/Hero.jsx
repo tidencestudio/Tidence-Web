@@ -3,21 +3,17 @@ import { ArrowDown, ArrowUpRight, EnvelopeSimple, PaperPlaneTilt, WhatsappLogo }
 import { useT } from '../prefs/hooks';
 import { EMAIL, WHATSAPP, mailtoHref, whatsappHref } from '../contact';
 import HeroMedia from './HeroMedia';
-import Iridescence from './Iridescence';
 import smoothScrollTo from './smoothScroll';
 import useScrollProgress from './useScrollProgress';
 
 const NEEDS = ['website', 'crm', 'automation', 'other'];
 
-// The shader's tint, as supplied: a sea-green just greener than Lagoon.
-const SHADER_COLOR = [0.06274509803921569, 0.7254901960784313, 0.5058823529411764];
-
 /**
- * The opening, laid out like a product launch: a badge, one centred
- * proposition, one action, then a wide panel tilted back in perspective that
- * straightens as it scrolls into view. The panel holds the sunset wave and a
- * real enquiry form, so the "product" on show is the first step of working
- * with the studio.
+ * The opening, laid out like a product launch: one centred proposition, one
+ * action, then a wide panel tilted back in perspective that straightens as it
+ * scrolls into view. The panel holds the brand lockup and a real enquiry
+ * form, so the "product" on show is the first step of working with the
+ * studio. The moving light behind it is the page-wide Backdrop.
  *
  * The form never posts anywhere. Sending composes an email (or a WhatsApp
  * message, once a number is set in contact.js) with what the visitor typed,
@@ -36,18 +32,13 @@ export default function Hero() {
 
   return (
     <section className="hero" id="top">
-      <div className="hero-sky" aria-hidden="true">
-        <Iridescence color={SHADER_COLOR} mouseReact={false} amplitude={0.1} speed={2} />
-      </div>
-
       <div className="container hero-head">
-        <p className="hero-badge">
-          <span className="hero-badge-chip">{t('hero.badgeChip')}</span>
-          {t('hero.badge')}
-        </p>
-
+        {/* Three voices in one line: a light lead-in, the subject in an
+            editorial italic, and the verb set heavy so the sentence lands. */}
         <h1 className="hero-title">
-          {t('hero.lead')} <span className="hero-em">{t('hero.em')}</span>.
+          <span className="hero-lead">{t('hero.lead')}</span>{' '}
+          <em className="hero-em">{t('hero.em')}</em>{' '}
+          <span className="hero-strong">{t('hero.strong')}</span>
         </h1>
 
         <p className="hero-sub">{t('hero.sub')}</p>
@@ -68,10 +59,6 @@ export default function Hero() {
         <div className="hero-panel" ref={panelRef}>
           <figure className="hero-shot">
             <HeroMedia />
-            <figcaption className="hero-readout">
-              <span>{t('hero.readout')}</span>
-              <span className="tnum">04.10.26 · 1.284 m</span>
-            </figcaption>
           </figure>
 
           <EnquiryForm />

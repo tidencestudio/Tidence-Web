@@ -39,6 +39,40 @@ white headline type onto a pale page, and a scrim heavy enough to rescue dark
 type would wash the photograph out. The nav takes those same media colours while
 it floats over the hero and returns to the theme once it lifts past it.
 
+## Revision: Page-wide shader, three-voice headline, lockup in the panel. Supersedes below where they differ.
+
+**The shader is the whole page's background.** `Backdrop.jsx` now renders
+`Iridescence` fixed behind every section; the hero no longer has its own
+sky, and the drifting radial pools are gone.
+- It renders at half resolution (`scale={0.5}`) and the browser stretches it
+  back up. The pattern is soft, so this is invisible and quarters the GPU
+  cost of running full screen all the time.
+- It still pauses in hidden tabs, holds still under reduced motion, and falls
+  back to a CSS gradient without WebGL.
+- A page-wide Abyss veil (70% centre, 82% edges) keeps every text colour
+  above 5:1 even on the brightest light: Foam 11.2, muted 7.3, dim 5.6,
+  Lagoon 5.1, Sunlit 6.9.
+
+**The badge is removed.** The hero opens on the headline.
+
+**Three-voice headline.** It used to be one weight throughout. Now:
+- the lead-in in Bricolage 300 ("We build the tools")
+- the subject in Newsreader italic, Sunlit, set 1.1em to match x-heights
+  ("your business")
+- the landing words in Bricolage 800 ("runs on.")
+
+The whole line keeps the Foam-to-Spray light. The italic is a dedicated
+display cut, `Newsreader Display` (weight 400, optical size 72, Latin and
+Spanish letters only): 13 KB, eager and preloaded, so the first screen never
+swaps fonts. The journal's full variable Newsreader still loads lazily.
+Spanish: "Construimos las herramientas *con las que trabaja* **tu negocio.**"
+
+**The panel shows the brand lockup, not the wave.** `lockup-{640,960,1600}.webp`
+(source `brand/lockup-16x10.png`): the mark and wordmark taken pixel for
+pixel from the deck's lockup export, on the Spray-to-Current-to-Deep
+gradient with light grain, widened to 16:10. The tide readout is gone with
+the wave. The wave remains only as the texture of the "Imagine it." slogan.
+
 ## Revision: Launch-style hero over an Iridescence shader. Supersedes the split hero below.
 
 Modelled on the Framer landing page's structure, in Tidence's own type,

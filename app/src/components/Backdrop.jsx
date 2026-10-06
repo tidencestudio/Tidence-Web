@@ -1,22 +1,21 @@
+import Iridescence from './Iridescence';
+
+// The shader's tint, as supplied: a sea-green just greener than Lagoon.
+const SHADER_COLOR = [0.06274509803921569, 0.7254901960784313, 0.5058823529411764];
+
 /**
- * The page background: blurred light drifting slowly over the Abyss ground,
- * like sun through deep water.
+ * The page background: the Iridescence shader, fixed behind every section so
+ * the whole page sits in the same moving light, under an Abyss veil that
+ * keeps every text pair readable (measured in MASTER.md).
  *
- * Pure CSS (see `.backdrop` in App.css). Each pool is a radial gradient that
- * already fades to nothing, so no `filter: blur()` is needed and the drift is
- * a transform the compositor handles alone. It replaced SonarGrid, a canvas
- * dot field that redrew every frame.
- *
- * Fixed and inert, never on a scrolling container. Under reduced motion the
- * pools hold still.
+ * Fixed and inert, never on a scrolling container. The shader renders at
+ * half resolution and is scaled up by the browser: the pattern is soft, so
+ * nobody can tell, and it quarters the GPU cost of running full screen.
  */
 export default function Backdrop() {
   return (
     <div className="backdrop" aria-hidden="true">
-      <span className="pool pool-a" />
-      <span className="pool pool-b" />
-      <span className="pool pool-c" />
-      <span className="pool pool-d" />
+      <Iridescence color={SHADER_COLOR} mouseReact={false} amplitude={0.1} speed={2} scale={0.5} />
     </div>
   );
 }

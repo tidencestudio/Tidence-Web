@@ -1,6 +1,7 @@
-/* Newsreader sets only text far below the first screen, and it is the
-   largest font here. It is imported after load (see main.jsx) so it never
-   competes with the hero for bandwidth; until then Georgia stands in. */
+/* Newsreader roman sets only text far below the first screen (the journal).
+   It is imported after load (see main.jsx) so it never competes with the
+   hero for bandwidth; until then Georgia stands in. The hero headline's
+   italic is a separate small display cut in fonts.css. */
 @font-face {
   font-family: 'Newsreader';
   font-style: normal;

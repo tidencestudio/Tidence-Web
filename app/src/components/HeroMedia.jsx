@@ -1,27 +1,26 @@
 const SIZES = [640, 960, 1600];
-const srcSet = (ext) => SIZES.map((w) => `/wave-sunset-${w}.${ext} ${w}w`).join(', ');
+const srcSet = SIZES.map((w) => `/lockup-${w}.webp ${w}w`).join(', ');
 
 /**
- * The hero's photograph, clean: the sunset wave in its own colour, on the
- * left of the tilted panel. About 640px wide on desktop and full width on
- * phones; keep `sizes` in step with the panel grid.
+ * The panel's picture: the brand lockup (mark and wordmark) on the icon
+ * gradient, at 16:10. The logo shapes are taken pixel for pixel from the
+ * guideline deck's lockup export; only the canvas was widened to fit the
+ * panel. Source file: brand/lockup-16x10.png.
  *
- * AVIF and WebP at three widths: a phone fetches about 12 KB instead of the
- * 245 KB original. Keep the srcsets in sync with the preload in index.html.
+ * About 640px wide on desktop and full width on phones; keep `sizes` in step
+ * with the panel grid and with the preload in index.html.
  */
 export default function HeroMedia() {
   return (
-    <picture>
-      <source type="image/avif" srcSet={srcSet('avif')} sizes="(min-width: 1200px) 640px, (min-width: 900px) 55vw, 100vw" />
-      <source type="image/webp" srcSet={srcSet('webp')} sizes="(min-width: 1200px) 640px, (min-width: 900px) 55vw, 100vw" />
-      <img
-        src="/wave-sunset-960.webp"
-        alt=""
-        width="1600"
-        height="900"
-        fetchPriority="high"
-        decoding="async"
-      />
-    </picture>
+    <img
+      src="/lockup-960.webp"
+      srcSet={srcSet}
+      sizes="(min-width: 1200px) 640px, (min-width: 900px) 55vw, 100vw"
+      alt="Tidence"
+      width="1600"
+      height="1000"
+      fetchPriority="high"
+      decoding="async"
+    />
   );
 }

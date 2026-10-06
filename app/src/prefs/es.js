@@ -23,15 +23,12 @@ export default {
   },
 
   hero: {
-    eyebrow: 'Sitios web · CRMs · Automatización',
     lead: 'Construimos las herramientas',
-    em: 'con las que trabaja tu negocio',
+    em: 'con las que trabaja',
+    strong: 'tu negocio.',
     sub: 'Sitios web, CRMs y las automatizaciones que mueven tu oficina sin que nadie lo note. Diseñado, construido y cuidado por un mismo equipo, de principio a fin.',
-    badgeChip: 'Abierto',
-    badge: 'Aceptando proyectos nuevos',
     ctaEmail: 'Escríbenos sobre tu proyecto',
     ctaMore: 'Mira cómo trabajamos',
-    readout: 'Marea',
     tilesLabel: 'Accesos rápidos',
     tileEmail: 'Escribir al estudio',
     tileWork: 'Qué construimos',

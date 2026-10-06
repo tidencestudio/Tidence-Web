@@ -143,7 +143,7 @@ moment, not the logo.
 | `lockup-on-gradient.svg` | Mark + wordmark on the icon gradient |
 | `lockup-on-foam.svg` | Mark + wordmark on Foam |
 | `wordmark-on-gradient.svg` | Wordmark alone on the icon gradient |
-| `../app/public/wave-sunset-1600.webp` (also `.avif`, and 640/960 widths) | The hero photograph (sunset wave) |
+| `lockup-16x10.png` | Mark + wordmark on the icon gradient at 16:10, logo pixels taken from the deck. The website hero's picture. |
 | `../app/src/fonts/` | Bricolage Grotesque and DM Mono as woff2, for tools that need font files |
 
 The lockup SVGs set the wordmark as live text in Bricolage Grotesque 800:
@@ -162,7 +162,7 @@ the safest files for video and print.
 | H2 | Bricolage Grotesque | 700 | `-0.03em` | 52px; line-height 1.06 |
 | Body | Bricolage Grotesque | 400 | 0 | 30px in the deck, 17px on the web; line-height 1.6 |
 | Label / data | DM Mono | 400 | `+0.1em` | **Uppercase**, in Spray, often preceded by a 2rem hairline rule |
-| Editorial (web journal only) | Newsreader | 300–400, italic | | The one serif. Not for ads, decks or posts. |
+| Editorial | Newsreader | 300–400, italic | | The one serif. Two uses only: the website journal, and the italic middle phrase of a headline set in three voices (see below). |
 
 Both main faces are free on Google Fonts: "Bricolage Grotesque" (variable,
 opsz 12–96, wght 200–800) and "DM Mono" (300/400/500). The woff2 files are
@@ -171,6 +171,12 @@ italic; do not fake one. Hierarchy comes from weight and size, never colour
 alone.
 
 Type scale for the web: 14 · 17 · 19 · 22 · 28 · 52 · 80 · 144.
+
+**Three-voice headline** (the website hero, and any big statement in an ad
+or post): a light lead-in in Bricolage 300, the subject in Newsreader italic
+in Sunlit, and the landing words in Bricolage 800. Example: "We build the
+tools *your business* **runs on.**" One per composition; everything else
+stays single-voice.
 
 ---
 
@@ -203,8 +209,9 @@ Type scale for the web: 14 · 17 · 19 · 22 · 28 · 52 · 80 · 144.
 
 - Photographs in their **natural colour** with a light shared grade
   (`saturate 0.85, contrast 1.04`). **No teal tint, no duotone, no
-  black-and-white.** The sunset wave is the one hero image; its warm sun is
-  what Sunlit picks up.
+  black-and-white.** The website hero shows the brand lockup, not a
+  photograph; the sunset wave survives only as the texture inside the
+  "Imagine it." slogan.
 - Subjects: real work, not stock-office clichés. A laptop with a real site on
   it, two people at one screen, a spreadsheet being worked, hands on a phone
   paying, a plan in a notebook. No handshakes, no "diverse team" posed shots,
