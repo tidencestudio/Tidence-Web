@@ -39,6 +39,38 @@ white headline type onto a pale page, and a scrim heavy enough to rescue dark
 type would wash the photograph out. The nav takes those same media colours while
 it floats over the hero and returns to the theme once it lifts past it.
 
+## Revision: Clean imagery and a warm counter-accent. Supersedes below.
+
+**Hero is a clean photograph.** The dither (veil, photodither and dither
+modes), the WebGL shader and the teal colour-blend tint are all gone, and
+`@paper-design/shaders-react` is uninstalled. The image runs in its own colour
+with a light grade (contrast 1.04, brightness 0.96). The scrim stays, for
+legibility only.
+
+**Photographs keep their colour.** The greyscale-plus-teal duotone is removed.
+Every photo shares one light grade (`saturate(0.85) contrast(1.04)`) and goes
+to full saturation on hover.
+
+**Sunlit, the counter-accent.** `--sun: #EDC27A`, a sand-gold, sunlight on the
+water: 11.6:1 on Abyss, 9.7:1 on the raised surface. Teal kept the page
+reading blue end to end, so the work is now split:
+- **Teal (Lagoon/Spray):** brand and every interactive state. Buttons, links,
+  nav underline, language switch, progress line, labels, the manifesto
+  resolve, the slogan.
+- **Sunlit:** small marks only. Icons (services, contact channels), numerals
+  (notes, legal sections, journey stages and their outline fill), bullets,
+  marquee dots, the hero emphasis (it picks up the sun in the photograph), and
+  the journal's drop cap, masthead italic, quote mark, caption key and end
+  mark.
+- **Never Sunlit:** buttons, links, focus rings. It is decoration, not
+  affordance.
+
+**Sonar dots are neutral.** The background field draws in `--fg-dim` instead
+of teal; it was the largest single source of blue on the page.
+
+This is an addition to the guideline's palette, at the client's request; the
+guideline itself is all teal.
+
 ## Revision: Brand guideline applied (Tidence-Brand, 2026). Supersedes below.
 
 Source: `Tidence-Brand.pptx`. Where this section disagrees with any older

@@ -49,6 +49,14 @@
   --mark-stem-1: var(--reef);
   --mark-fold: var(--trench);
 
+  /* Counter-accent: sunlight on the water. Teal carries the brand and every
+     interactive state; this warm sand-gold takes the small marks (icons,
+     numerals, bullets, emphasis) so the page is not blue end to end. Used
+     sparingly, never for buttons or links. 11.6:1 on Abyss, 9.7:1 on the
+     raised surface. */
+  --sun: #edc27a;
+  --sun-soft: rgba(237, 194, 122, 0.14);
+
   /* Icon and lockup panels: Spray through Current to Deep. */
   --gradient-icon: linear-gradient(135deg, var(--spray) 0%, var(--current) 52%, var(--deep) 100%);
 }
@@ -60,7 +68,7 @@
   --on-media: #f2fffa;
   --on-media-muted: #b8d4ce;
   --accent-on-media: #13c2b0;
-  --highlight-on-media: #7ff5d8;
+  --highlight-on-media: #edc27a; /* the sun in the photograph */
   --on-accent-media: #070f12;
   --scrim: #070f12;
 

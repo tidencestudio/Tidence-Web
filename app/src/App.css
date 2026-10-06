@@ -95,7 +95,7 @@ footer a {
   z-index: -1;
   width: 100%;
   height: 100%;
-  color: var(--accent);
+  color: var(--fg-dim);
   pointer-events: none;
 }
 
@@ -495,49 +495,21 @@ footer a {
 }
 
 /* --- Media treatment ----------------------------------------------------
-   What separates a hero that looks commissioned from one that looks like
-   stock is almost never the clip; it is the grade. Footage is pulled toward
-   monochrome, contrast is lifted so the darks crush, and the whole thing is
-   tinted to the brand. A literal, fully saturated clip reads as a template no
-   matter how good the photography is.
-
-   All four knobs are tokens: dial them per clip rather than re-cutting one. */
+   The photograph runs clean: its own colour, no brand tint and no dither.
+   Only a touch of contrast, and the scrim below for legibility. Dial the
+   knobs per image rather than re-cutting one. */
 .expand-media {
-  --media-saturate: 0.5;
-  --media-contrast: 1.14;
-  --media-brightness: 0.92;
-  --media-tint: 0.2;
+  --media-saturate: 1;
+  --media-contrast: 1.04;
+  --media-brightness: 0.96;
 }
 
-.expand-media img,
-.expand-media video,
-.expand-media canvas {
+.expand-media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   filter: saturate(var(--media-saturate)) contrast(var(--media-contrast))
     brightness(var(--media-brightness));
-}
-
-/* The tint. `color` blending keeps the footage's luminosity and takes only the
-   hue, so this reads as a graded image rather than a coloured sheet laid on
-   top of one. Clipped with the media, so the closed window is graded too. */
-/* The shaders render into a canvas that the library sizes itself. */
-.hero-shader,
-.hero-shader canvas {
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
-}
-
-.expand-media::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--accent-on-media);
-  mix-blend-mode: color;
-  opacity: var(--media-tint);
-  pointer-events: none;
 }
 
 .expand-scrim {
@@ -604,8 +576,8 @@ footer a {
   display: block;
 }
 
-/* Emphasis by colour: mint, the brightest step of the palette, so the
-   phrase reads as light on water. */
+/* Emphasis by colour: the warm counter-accent, picking up the sun in the
+   photograph behind it. */
 .hero-em {
   color: var(--highlight-on-media);
 }
@@ -619,7 +591,7 @@ footer a {
 }
 
 .expand-copy .btn:hover {
-  background: var(--highlight-on-media);
+  background: var(--accent-hover);
 }
 
 .expand-reveal {
@@ -637,17 +609,6 @@ footer a {
   line-height: 1.55;
   color: var(--on-media);
   text-shadow: 0 1px 24px color-mix(in oklab, var(--scrim) 70%, transparent);
-}
-
-/* The dither, laid over the photograph as a veil instead of replacing it.
-   Screen blending means only the lit dots register; the shader's dark ground
-   adds next to nothing, so the photo stays a photo. */
-.hero-veil {
-  position: absolute;
-  inset: 0;
-  mix-blend-mode: screen;
-  opacity: 0.35;
-  pointer-events: none;
 }
 
 /* --- Scroll cue ----------------------------------------------------------
@@ -751,8 +712,7 @@ footer a {
   :root.scrub .expand-title,
   :root.scrub .expand-line,
   :root.scrub .expand-reveal,
-  :root.scrub .expand-cue,
-  :root.scrub .hero-veil {
+  :root.scrub .expand-cue {
     animation-duration: 1s;
     animation-timing-function: linear;
     animation-fill-mode: both;
@@ -801,10 +761,6 @@ footer a {
     animation-name: cue-out;
   }
 
-  :root.scrub .hero-veil {
-    animation-name: veil-thin;
-  }
-
   :root.scrub .expand-cue:focus-visible {
     animation: none;
     opacity: 1;
@@ -820,19 +776,6 @@ footer a {
     100% {
       opacity: 0;
       visibility: hidden;
-    }
-  }
-
-  /* Most present on the closed plate, where it reads as the brand's dot
-     language, and thinning to a trace once the photograph is full bleed. */
-  @keyframes veil-thin {
-    0%,
-    10% {
-      opacity: 0.7;
-    }
-    72%,
-    100% {
-      opacity: 0.16;
     }
   }
 
@@ -1118,9 +1061,11 @@ footer a {
   background: currentColor;
 }
 
-/* --- Duotone photographs ------------------------------------------------
-   Every placeholder photo is greyed, then tinted with the one accent, so
-   unrelated pictures read as a single set. Hover gives one its colour back. */
+/* --- Photographs ---------------------------------------------------------
+   Shown in their own colour. They used to be greyed and tinted teal, which
+   turned every picture on the page the same blue. A light, shared grade
+   (slightly muted, slightly lifted contrast) is what ties them together now;
+   hover brings each to full saturation. */
 
 .service-shot,
 .stage-shot,
@@ -1139,25 +1084,12 @@ footer a {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(1) contrast(1.08) brightness(0.92);
+  filter: saturate(0.85) contrast(1.04);
   transition:
     filter var(--dur-enter) var(--ease),
     transform 1200ms var(--ease);
 }
 
-.service-shot::after,
-.stage-shot::after,
-.feature-frame::after,
-.note-shot::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--accent);
-  mix-blend-mode: color;
-  opacity: 0.6;
-  pointer-events: none;
-  transition: opacity var(--dur-enter) var(--ease);
-}
 
 /* --- Marquee ------------------------------------------------------------
    Two lines of oversized type pulled in opposite directions by the scroll.
@@ -1204,7 +1136,7 @@ footer a {
   width: 0.14em;
   height: 0.14em;
   margin-inline: 0.45em;
-  background: var(--accent);
+  background: var(--sun);
   transform: rotate(45deg);
 }
 
@@ -1270,7 +1202,7 @@ footer a {
 
 .service-index .tnum,
 .service-index svg {
-  color: var(--accent);
+  color: var(--sun);
 }
 
 .service-title {
@@ -1307,16 +1239,12 @@ footer a {
   width: 5px;
   height: 5px;
   margin-top: 0.5em;
-  background: var(--accent);
+  background: var(--sun);
 }
 
 .service-card:hover .service-shot img {
   filter: none;
   transform: scale(1.04);
-}
-
-.service-card:hover .service-shot::after {
-  opacity: 0;
 }
 
 @media (max-width: 860px) {
@@ -1413,7 +1341,7 @@ footer a {
 .stage-kicker {
   font-family: var(--font-mono);
   font-size: var(--step--1);
-  color: var(--accent);
+  color: var(--sun);
 }
 
 .stage-title {
@@ -1501,10 +1429,10 @@ footer a {
   left: -0.12em;
   z-index: 1;
   font-size: clamp(8rem, 13vw, 13rem);
-  /* Outline fills in with the accent as the stage arrives. */
+  /* Outline warms to the sun as the stage arrives. */
   -webkit-text-stroke-color: color-mix(
     in oklab,
-    var(--accent) calc(var(--local) * 100%),
+    var(--sun) calc(var(--local) * 100%),
     var(--line-strong)
   );
   transform: translate3d(calc((1 - var(--local)) * 45%), 0, 0);
@@ -1531,10 +1459,6 @@ footer a {
 
 .stage:hover .stage-shot img {
   filter: none;
-}
-
-.stage:hover .stage-shot::after {
-  opacity: 0;
 }
 
 /* The HUD: where you are, and the tide line drawing behind you. */
@@ -1626,7 +1550,7 @@ footer a {
   left: -0.06em;
   z-index: 1;
   font-size: clamp(4.5rem, 16vw, 8rem);
-  -webkit-text-stroke-color: var(--accent);
+  -webkit-text-stroke-color: var(--sun);
 }
 
 .is-stacked .stage-shot {
@@ -1750,7 +1674,7 @@ footer a {
 
 .journal-title em {
   font-style: italic;
-  color: var(--accent-hover);
+  color: var(--sun);
 }
 
 .journal-head .lead {
@@ -1800,7 +1724,7 @@ footer a {
   font-size: 0.6875rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--sun);
 }
 
 /* Running head: tag, byline and reading time on one ruled line. */
@@ -1885,7 +1809,7 @@ footer a {
   font-style: normal;
   font-size: 4.9em;
   line-height: 0.78;
-  color: var(--accent);
+  color: var(--sun);
 }
 
 @supports (initial-letter: 3) or (-webkit-initial-letter: 3) {
@@ -1928,7 +1852,7 @@ footer a {
   width: 0.5em;
   height: 0.5em;
   margin-left: 0.45em;
-  background: var(--accent);
+  background: var(--sun);
 }
 
 /* The pull quote breaks the column: large light italic, hung quotation mark,
@@ -1949,7 +1873,7 @@ footer a {
   font-family: var(--ed);
   font-size: clamp(4rem, 3rem + 3vw, 6rem);
   line-height: 1;
-  color: var(--accent);
+  color: var(--sun);
 }
 
 .feature-body .feature-quote p {
@@ -1962,7 +1886,7 @@ footer a {
   letter-spacing: -0.015em;
   text-indent: 0;
   hyphens: manual;
-  color: var(--accent-hover);
+  color: var(--fg);
 }
 
 .feature-toggle {
@@ -2008,7 +1932,7 @@ footer a {
   font-size: clamp(2.25rem, 1.5rem + 2vw, 3.25rem);
   line-height: 1;
   font-variant-numeric: lining-nums;
-  color: var(--accent);
+  color: var(--sun);
   padding-left: 0.25rem;
 }
 
@@ -2045,10 +1969,6 @@ footer a {
 .note:hover .note-shot img {
   filter: none;
   transform: scale(1.05);
-}
-
-.note:hover .note-shot::after {
-  opacity: 0;
 }
 
 @media (max-width: 900px) {
@@ -2206,7 +2126,7 @@ footer a {
   font-size: var(--step--1);
   font-weight: 400;
   letter-spacing: 0;
-  color: var(--accent);
+  color: var(--sun);
 }
 
 .legal-section p,
@@ -2238,7 +2158,7 @@ footer a {
   top: 0.7em;
   width: 0.4rem;
   height: 0.4rem;
-  background: var(--accent);
+  background: var(--sun);
 }
 
 .legal-contact {
@@ -2424,7 +2344,7 @@ a.channel:focus-visible::before {
 }
 
 .channel-icon {
-  color: var(--accent);
+  color: var(--sun);
   transition: color var(--dur-hover) var(--ease);
 }
 
