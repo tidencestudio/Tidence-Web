@@ -114,9 +114,9 @@ The journal keeps Newsreader as its one sanctioned exception. Bricolage ships
 no italic, so the few italic UI strings outside the journal are synthesised.
 
 **Exports in `brand/`.** `mark.svg`, `icon-gradient.svg` (primary),
-`icon-abyss.svg`, `icon-foam-mark.svg`, `favicon.png` (the guideline's own
-favicon file, used as supplied; the site serves it at 32, 180 and 512px from
-`app/public/`), `lockup-on-gradient.svg`,
+`icon-abyss.svg`, `icon-foam-mark.svg`, `favicon.png` and `icon-gradient.png`
+(the guideline's "Gradient · primary" app icon, used as supplied; the site
+serves it as the favicon at 32, 180 and 192px from `app/public/`), `lockup-on-gradient.svg`,
 `lockup-on-foam.svg`, `wordmark-on-gradient.svg`. Lockup text is live
 Bricolage 800; outline it before using it anywhere the font is not installed.
 
