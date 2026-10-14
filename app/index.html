@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#070F12" />
+
+    <title>Tidence — Web design and development studio</title>
+    <meta
+      name="description"
+      content="Tidence is a digital studio building websites, CRMs, office automation and the everyday tools a business runs on."
+    />
+
+    <link rel="canonical" href="__SITE_URL__/" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Tidence" />
+    <meta property="og:url" content="__SITE_URL__/" />
+    <meta property="og:title" content="Tidence — Web design and development studio" />
+    <meta
+      property="og:description"
+      content="A digital studio building websites, CRMs, office automation and the everyday tools a business runs on."
+    />
+    <meta property="og:image" content="__SITE_URL__/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Tidence — Web design and development studio" />
+    <meta
+      name="twitter:description"
+      content="A digital studio building websites, CRMs, office automation and the everyday tools a business runs on."
+    />
+    <meta name="twitter:image" content="__SITE_URL__/og.jpg" />
+
+    <!-- The favicon from the brand guideline, used as supplied. The ?v= query
+         makes browsers that cached the old wave icon fetch this one. -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=3" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png?v=3" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
+
+    <!-- Fonts are self-hosted (src/fonts, declared in src/fonts.css). Only the
+         faces the first screen uses are preloaded. -->
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/bricolage.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/dm-mono-400.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/newsreader-italic-display.woff2" crossorigin />
+
+    <!-- The hero image is the LCP element on every viewport. Same srcset and
+         sizes as HeroMedia.jsx, so the preload and the <img> pick one file. -->
+    <link
+      rel="preload"
+      as="image"
+      type="image/webp"
+      imagesrcset="/lockup-640.webp 640w, /lockup-960.webp 960w, /lockup-1600.webp 1600w"
+      imagesizes="(min-width: 1200px) 640px, (min-width: 900px) 55vw, 100vw"
+      fetchpriority="high"
+    />
+
+    <!-- The prerendered markup is English. A Spanish reader's page is rendered
+         by the client instead (main.jsx sets data-client on #root), so the
+         English version is hidden for the moment before that happens. -->
+    <style>
+      html[lang='es'] #root:not([data-client]) {
+        visibility: hidden;
+      }
+    </style>
+
+    <!-- Filled in per page by scripts/prerender.mjs. -->
+    <!--jsonld-->
+  </head>
+  <body>
+    <!-- Runs before first paint so the page never renders in the wrong
+         language and flips. This is the only inline script on the page. -->
+    <script>
+      (function () {
+        var root = document.documentElement;
+        try {
+          var lang = localStorage.getItem('tidence-lang');
+          if (lang !== 'en' && lang !== 'es') {
+            var wanted = navigator.languages && navigator.languages.length
+              ? navigator.languages
+              : [navigator.language || 'en'];
+            lang = 'en';
+            for (var i = 0; i < wanted.length; i++) {
+              var base = String(wanted[i]).toLowerCase().split('-')[0];
+              if (base === 'en' || base === 'es') { lang = base; break; }
+            }
+          }
+          root.lang = lang;
+        } catch (e) {
+          // Private mode can throw on localStorage.
+          root.lang = 'en';
+        }
+      })();
+    </script>
+
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

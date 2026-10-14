@@ -1,0 +1,258 @@
+/* ==========================================================================
+   Tidence - design tokens
+   Single source: design-system/tidence/MASTER.md
+   Brand guideline: Tidence-Brand (2026), "Transformative Teal".
+     Foam    #F2FFFA   Spray  #7FF5D8   Lagoon #13C2B0   Current #0E8C86
+     Reef    #00737A   Deep   #00434A   Trench #00191C   Abyss   #070F12
+   One theme: Abyss ground, Foam type, as the guideline sets it.
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+
+  /* The named palette. Components use the roles below, not these. */
+  --foam: #f2fffa;
+  --spray: #7ff5d8;
+  --lagoon: #13c2b0;
+  --current: #0e8c86; /* 4.7:1 on Abyss: gradients only, never small text */
+  --reef: #00737a;
+  --deep: #00434a;
+  --trench: #00191c;
+  --abyss: #070f12;
+
+  /* Roles. Text floor: dim on surface-2 at 8.05:1. Pairs in MASTER.md. */
+  --bg: var(--abyss);
+  --surface: var(--trench);
+  --surface-2: #0b2427;
+
+  --fg: var(--foam);
+  --fg-muted: #b8d4ce;
+  --fg-dim: #9fbdb6;
+
+  --accent: var(--lagoon);
+  --accent-hover: var(--spray);
+  --accent-soft: rgba(19, 194, 176, 0.14);
+  --on-accent: var(--abyss);
+
+  --line: #1c2b2e;
+  --line-strong: #2b4145;
+
+  --dot: rgba(127, 245, 216, 0.05);
+  --grain-opacity: 0.035;
+  --shadow: 0 24px 60px -24px rgba(0, 10, 12, 0.9);
+
+  /* The mark, per the guideline: bar Foam to Spray, stem Lagoon to Reef,
+     shadow fold in Trench. */
+  --mark-bar-0: var(--foam);
+  --mark-bar-1: var(--spray);
+  --mark-stem-0: var(--lagoon);
+  --mark-stem-1: var(--reef);
+  --mark-fold: var(--trench);
+
+  /* Counter-accent: sunlight on the water. Teal carries the brand and every
+     interactive state; this warm sand-gold takes the small marks (icons,
+     numerals, bullets, emphasis) so the page is not blue end to end. Used
+     sparingly, never for buttons or links. 11.6:1 on Abyss, 9.7:1 on the
+     raised surface. */
+  --sun: #edc27a;
+  --sun-soft: rgba(237, 194, 122, 0.14);
+
+  /* Icon and lockup panels: Spray through Current to Deep. */
+  --gradient-icon: linear-gradient(135deg, var(--spray) 0%, var(--current) 52%, var(--deep) 100%);
+}
+
+:root {
+  /* --- Type -------------------------------------------------------------
+     Bricolage Grotesque for the wordmark, headlines and body; DM Mono for
+     data and labels. Newsreader is the one sanctioned exception: the journal's
+     editorial voice. Weights and tracking follow the guideline's type scale:
+     Display 800 at -0.045em, H1 800 at -0.04em, H2 700 at -0.03em, the
+     wordmark 800 at -0.05em, mono labels uppercase at +0.1em. */
+  --font-display: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, monospace;
+  --font-editorial: 'Newsreader', Georgia, 'Times New Roman', serif;
+
+  --step--1: 0.875rem; /* 14 */
+  --step-0: 1.0625rem; /* 17 */
+  --step-1: 1.1875rem; /* 19 */
+  --step-2: 1.375rem; /* 22 */
+  --step-3: 1.75rem; /* 28 */
+  --step-4: clamp(1.75rem, 1.2rem + 2.4vw, 2.5rem);
+  --step-5: clamp(2.25rem, 1.1rem + 4vw, 3.25rem); /* H2, 52 */
+  --step-6: clamp(2.75rem, 1rem + 6.4vw, 5rem); /* H1, 80 */
+  --step-display: clamp(3.5rem, 0.5rem + 10vw, 9rem); /* Display, 144 */
+
+  --track-display: -0.045em;
+  --track-h1: -0.04em;
+  --track-h2: -0.03em;
+  --track-wordmark: -0.05em;
+  --track-label: 0.1em;
+
+  /* --- Space ------------------------------------------------------------ */
+  --gutter: clamp(1.25rem, 5vw, 3rem);
+  --space-section: clamp(6rem, 12vw, 10rem);
+  --container: 1280px;
+
+  /* --- Motion ----------------------------------------------------------- */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-enter: 600ms;
+  --dur-exit: 380ms;
+  --dur-hover: 200ms;
+
+  /* --- Layers ----------------------------------------------------------- */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-nav: 20;
+  --z-overlay: 30;
+  --z-grain: 40;
+  --z-skip: 50;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* No native scrollbar. The grey OS bar cut a strip off the right edge of
+     every section on Windows; ScrollProgress.jsx draws a slim accent line in
+     its place. Scrolling by wheel, touch, keys and trackpad is unaffected. */
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+  /* Anchor targets clear the sticky nav instead of hiding under it. */
+  scroll-padding-top: 6rem;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  margin: 0;
+  /* Belt and braces against any sideways scroll on narrow screens. `clip`
+     rather than `hidden`, so sticky positioning keeps working. */
+  overflow-x: clip;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-optical-sizing: auto;
+  /* Tight, like the wordmark. A grotesque at display size wants negative
+     tracking and short leading; body copy keeps the default. */
+  line-height: 1;
+  letter-spacing: var(--track-h1);
+  text-wrap: balance;
+  margin: 0;
+}
+
+h3 {
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: var(--track-h2);
+}
+
+p {
+  text-wrap: pretty;
+  margin: 0;
+}
+
+/* URLs, repo names and other unbreakable tokens reflow instead of
+   widening their container. */
+a,
+li,
+p,
+dd {
+  overflow-wrap: anywhere;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Data-ish figures never jitter as they change. */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: var(--accent-hover);
+  color: var(--bg);
+}
+
+/* --- Focus --------------------------------------------------------------
+   One visible ring for every interactive element. Never removed. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 0;
+}
+
+/* Sections that receive focus from script (after an in-page scroll) are
+   landmarks, not controls; a ring around a whole section is noise. */
+[tabindex='-1']:focus {
+  outline: none;
+}
+
+/* --- Skip link ---------------------------------------------------------- */
+.skip {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: var(--z-skip);
+  padding: 0.75rem 1.25rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: 500 var(--step--1) / 1 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform var(--dur-hover) var(--ease);
+}
+
+/* Plain :focus, not :focus-visible. A skip link has to appear whenever it
+   holds focus, including when script moves focus to it. */
+.skip:focus {
+  transform: none;
+}
+
+/* --- Screen reader only ------------------------------------------------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

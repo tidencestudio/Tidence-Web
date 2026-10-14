@@ -1,0 +1,47 @@
+/* Self-hosted, latin subset only (covers English and Spanish). Served from
+   our own origin so the first paint never waits on a third-party stylesheet.
+   The two faces used above the fold are preloaded from index.html. */
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 200 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url('./fonts/bricolage.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'DM Mono';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('./fonts/dm-mono-300.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'DM Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/dm-mono-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'DM Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./fonts/dm-mono-500.woff2') format('woff2');
+}
+
+/* The italic voice in the hero headline: Newsreader Italic, instanced at
+   weight 400 and display optical size 72, Latin and Spanish letters only.
+   13 KB against 147 KB for the full variable italic the journal uses.
+   Eager and preloaded, so the first screen never swaps from a fallback. */
+@font-face {
+  font-family: 'Newsreader Display';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/newsreader-italic-display.woff2') format('woff2');
+}
