@@ -8,6 +8,7 @@ import Footer from './components/Footer';
 import Backdrop from './components/Backdrop';
 import ScrollProgress from './components/ScrollProgress';
 import useHashLanding from './components/useHashLanding';
+import useAnchorScroll from './components/useAnchorScroll';
 import LegalPage from './components/LegalPage';
 import { LocaleProvider } from './prefs/locale';
 import { useT } from './prefs/hooks';
@@ -55,6 +56,9 @@ const LEGAL = { '/privacy': 'privacy', '/terms': 'terms' };
 export default function App() {
   const path = typeof window === 'undefined' ? globalThis.__PRERENDER_PATH__ : window.location.pathname;
   const doc = LEGAL[(path ?? '/').replace(/\/+$/, '') || '/'];
+
+  // Section links scroll without ever writing `#section` into the URL.
+  useAnchorScroll();
 
   return (
     <LocaleProvider titlePath={doc ? `legal.${doc}.metaTitle` : undefined}>

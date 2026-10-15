@@ -3,7 +3,6 @@ import { ArrowDown, ArrowUpRight, EnvelopeSimple, PaperPlaneTilt, WhatsappLogo }
 import { useT } from '../prefs/hooks';
 import { EMAIL, WHATSAPP, mailtoHref, whatsappHref } from '../contact';
 import HeroMedia from './HeroMedia';
-import smoothScrollTo from './smoothScroll';
 import useScrollProgress from './useScrollProgress';
 
 const NEEDS = ['website', 'crm', 'automation', 'other'];
@@ -24,12 +23,6 @@ export default function Hero() {
   const panelRef = useRef(null);
   useScrollProgress(panelRef, { mode: 'pass' });
 
-  const toStart = (event) => {
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
-    event.preventDefault();
-    smoothScrollTo('build');
-  };
-
   return (
     <section className="hero" id="top">
       <div className="container hero-head">
@@ -48,7 +41,7 @@ export default function Hero() {
             <EnvelopeSimple size={18} weight="regular" aria-hidden="true" />
             {t('hero.ctaEmail')}
           </a>
-          <a className="link hero-more" href="#build" onClick={toStart}>
+          <a className="link hero-more" href="#build">
             {t('hero.ctaMore')}
             <ArrowDown size={14} weight="regular" aria-hidden="true" />
           </a>

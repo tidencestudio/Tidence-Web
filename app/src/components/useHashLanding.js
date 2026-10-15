@@ -19,6 +19,9 @@ export default function useHashLanding() {
 
     const id = decodeURIComponent(hash.slice(1));
     const timers = [];
+
+    // Honour the link, but do not keep it: the page never shows `#section`.
+    history.replaceState(history.state, '', window.location.pathname + window.location.search);
     let frame = 0;
 
     // 'instant' rather than 'auto': `auto` defers to the computed

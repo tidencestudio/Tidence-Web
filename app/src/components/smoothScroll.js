@@ -22,9 +22,9 @@ export default function smoothScrollTo(id) {
   const distance = end - start;
 
   const settle = () => {
-    // Keep the URL shareable and hand focus to the section for keyboard and
-    // screen-reader users, without a second jump.
-    history.pushState(null, '', `#${id}`);
+    // Hand focus to the section for keyboard and screen-reader users, without
+    // a second jump. The URL is left alone: the address bar stays the plain
+    // page address however the reader moves around it.
     if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
     target.focus({ preventScroll: true });
   };

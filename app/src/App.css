@@ -930,6 +930,15 @@ main {
   list-style: none;
 }
 
+/* Scroll room after the last card. A sticky card is only held while its
+   parent still has height below it, so without this the last card is the
+   end of the stack: it never reaches its own slot, stops short above the
+   third, and the whole pile releases the moment it arrives. */
+.services-stack::after {
+  content: '';
+  height: 45vh;
+}
+
 .service {
   position: sticky;
   top: calc(6.5rem + var(--i) * 1.4rem);
@@ -1022,6 +1031,10 @@ main {
   .service {
     position: relative;
     top: auto;
+  }
+
+  .services-stack::after {
+    content: none;
   }
 
   .service-card {
