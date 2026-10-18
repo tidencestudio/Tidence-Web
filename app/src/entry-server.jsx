@@ -7,3 +7,4 @@ export function render(path) {
   return renderToString(<App />)
 }
 export { default as en } from './prefs/en.js'
+export { default as es } from './prefs/es.js'

@@ -1,35 +1,24 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { LOCALE_CODES } from '../routes';
 import { LocaleContext } from './context';
 import en from './en';
 import es from './es';
 
-const KEY = 'tidence-lang';
 const DICTIONARIES = { en, es };
-
-const read = () => {
-  try {
-    const stored = localStorage.getItem(KEY);
-    if (stored in DICTIONARIES) return stored;
-  } catch {
-    // Private mode denies localStorage; fall through to the browser language.
-  }
-  // The reader's whole preference list, in order, not just the first entry:
-  // someone in Spain with ['ca', 'es', 'en'] should land on Spanish.
-  const wanted = navigator.languages?.length ? navigator.languages : [navigator.language || 'en'];
-  for (const tag of wanted) {
-    const base = tag.toLowerCase().split('-')[0];
-    if (base in DICTIONARIES) return base;
-  }
-  return 'en';
-};
 
 /** Resolves a dotted path, falling back to English before falling back to the key. */
 const lookup = (dict, path) =>
   path.split('.').reduce((node, part) => (node == null ? undefined : node[part]), dict);
 
-/** `titlePath` lets a page other than the home page name its own tab. */
-export function LocaleProvider({ children, titlePath = 'meta.title' }) {
-  const [locale, setLocaleState] = useState(read);
+/**
+ * The language comes from the URL (/en or /es, read in App.jsx) and is passed
+ * in as initialLocale, so the server render and the first client render agree.
+ * Switching language swaps the prefix in the address bar in place: no reload,
+ * the reader keeps their scroll position, and the new URL is shareable.
+ * `titlePath` lets a page other than the home page name its own tab.
+ */
+export function LocaleProvider({ children, initialLocale = 'en', titlePath = 'meta.title' }) {
+  const [locale, setLocaleState] = useState(initialLocale);
 
   // An accurate lang is what lets the browser offer translation in the first
   // place, and what it translates from. The title and description follow so
@@ -42,12 +31,13 @@ export function LocaleProvider({ children, titlePath = 'meta.title' }) {
   }, [locale, titlePath]);
 
   const setLocale = useCallback((next) => {
+    if (!LOCALE_CODES.includes(next)) return;
     setLocaleState(next);
-    try {
-      localStorage.setItem(KEY, next);
-    } catch {
-      // Remembering is optional; applying is not.
-    }
+    const { pathname, search, hash } = window.location;
+    const swapped = /^\/(en|es)(?=\/|$)/.test(pathname)
+      ? pathname.replace(/^\/(en|es)(?=\/|$)/, `/${next}`)
+      : `/${next}${pathname === '/' ? '' : pathname}`;
+    history.replaceState(history.state, '', swapped + search + hash);
   }, []);
 
   const value = useMemo(() => {

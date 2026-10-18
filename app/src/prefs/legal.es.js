@@ -18,7 +18,7 @@ export default {
         heading: 'Qué recoge el sitio',
         body: [
           'Nada por sí solo. Este sitio no tiene cuentas, publicidad, analítica ni cookies de seguimiento. La única información que nos llega es la que escribes en el formulario de consulta o la que nos envías directamente.',
-          'Lo único que guarda es tu elección de idioma, inglés o español, en tu propio navegador bajo la clave “tidence-lang”, para que la página se abra en el mismo idioma la próxima vez. Nunca sale de tu dispositivo y puedes borrarla cuando quieras eliminando los datos de este sitio en tu navegador.',
+          'El sitio no guarda nada en tu navegador. El idioma en que lo lees forma parte de la dirección de la página (/es para español, /en para inglés), así que cambiar de idioma cambia la dirección y no se guarda nada en tu dispositivo.',
         ],
       },
       {

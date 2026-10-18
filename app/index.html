@@ -13,6 +13,8 @@
     />
 
     <link rel="canonical" href="__SITE_URL__/" />
+    <!-- hreflang alternates for /en and /es, filled in by scripts/prerender.mjs. -->
+    <!--alternates-->
     <meta name="robots" content="index, follow, max-image-preview:large" />
 
     <meta property="og:type" content="website" />
@@ -46,44 +48,10 @@
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/dm-mono-400.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/newsreader-italic-display.woff2" crossorigin />
 
-    <!-- The prerendered markup is English. A Spanish reader's page is rendered
-         by the client instead (main.jsx sets data-client on #root), so the
-         English version is hidden for the moment before that happens. -->
-    <style>
-      html[lang='es'] #root:not([data-client]) {
-        visibility: hidden;
-      }
-    </style>
-
     <!-- Filled in per page by scripts/prerender.mjs. -->
     <!--jsonld-->
   </head>
   <body>
-    <!-- Runs before first paint so the page never renders in the wrong
-         language and flips. This is the only inline script on the page. -->
-    <script>
-      (function () {
-        var root = document.documentElement;
-        try {
-          var lang = localStorage.getItem('tidence-lang');
-          if (lang !== 'en' && lang !== 'es') {
-            var wanted = navigator.languages && navigator.languages.length
-              ? navigator.languages
-              : [navigator.language || 'en'];
-            lang = 'en';
-            for (var i = 0; i < wanted.length; i++) {
-              var base = String(wanted[i]).toLowerCase().split('-')[0];
-              if (base === 'en' || base === 'es') { lang = base; break; }
-            }
-          }
-          root.lang = lang;
-        } catch (e) {
-          // Private mode can throw on localStorage.
-          root.lang = 'en';
-        }
-      })();
-    </script>
-
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

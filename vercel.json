@@ -5,38 +5,85 @@
   "buildCommand": "cd app && npm run build",
   "outputDirectory": "app/dist",
   "cleanUrls": true,
-  "rewrites": [
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/en",
+      "permanent": false
+    },
     {
       "source": "/privacy",
-      "destination": "/privacy/index.html"
+      "destination": "/en/privacy",
+      "permanent": true
     },
     {
       "source": "/terms",
-      "destination": "/terms/index.html"
+      "destination": "/en/terms",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/:lang(en|es)",
+      "destination": "/:lang/index.html"
+    },
+    {
+      "source": "/:lang(en|es)/:doc(privacy|terms)",
+      "destination": "/:lang/:doc/index.html"
     }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), interest-cohort=()" },
-        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        }
       ]
     },
     {
       "source": "/assets/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
       "source": "/(wave-sunset-.*|favicon.*|apple-touch-icon.png|og.jpg)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000, stale-while-revalidate=604800" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000, stale-while-revalidate=604800"
+        }
+      ]
     },
     {
-      "source": "/(index.html|privacy|terms|)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
+      "source": "/(en|es)(/privacy|/terms)?",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
     }
   ]
 }

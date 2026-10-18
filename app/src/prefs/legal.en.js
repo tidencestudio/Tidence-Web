@@ -20,7 +20,7 @@ export default {
         heading: 'What the website collects',
         body: [
           'Nothing on its own. There are no accounts, no advertising, no analytics and no tracking cookies on this site. The only information that reaches us is what you type into the enquiry form or send us directly.',
-          'The only thing the site stores is your language choice, English or Spanish, saved in your own browser under the key “tidence-lang” so the page opens in the same language next time. It never leaves your device, and you can clear it at any time by clearing this site’s data in your browser.',
+          'The site stores nothing in your browser. The language you read it in is part of the page address (/en for English, /es for Spanish), so switching language changes the address and nothing is saved on your device.',
         ],
       },
       {

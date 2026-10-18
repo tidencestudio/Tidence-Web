@@ -2,7 +2,8 @@ import { ArrowLeft } from '@phosphor-icons/react';
 import Logo from './Logo';
 import LanguageSwitch from './LanguageSwitch';
 import Footer from './Footer';
-import { useT } from '../prefs/hooks';
+import { useLocale } from '../prefs/hooks';
+import { pathFor } from '../routes';
 
 import { EMAIL } from '../contact';
 
@@ -14,7 +15,7 @@ import { EMAIL } from '../contact';
  * choreography. Someone reading terms wants the words and nothing else.
  */
 export default function LegalPage({ doc }) {
-  const t = useT();
+  const { t, locale } = useLocale();
   const sections = t(`legal.${doc}.sections`);
 
   return (
@@ -24,12 +25,12 @@ export default function LegalPage({ doc }) {
       </a>
 
       <header className="nav is-lifted legal-bar">
-        <a className="nav-brand" href="/" aria-label="Tidence">
+        <a className="nav-brand" href={pathFor(locale)} aria-label="Tidence">
           <Logo />
         </a>
         <div className="nav-prefs">
           <LanguageSwitch />
-          <a className="link legal-back" href="/">
+          <a className="link legal-back" href={pathFor(locale)}>
             <ArrowLeft size={15} weight="regular" aria-hidden="true" />
             {t('legal.back')}
           </a>

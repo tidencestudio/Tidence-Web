@@ -16,7 +16,7 @@ const site = (
   'https://tidence.vercel.app'
 ).replace(/\/+$/, '')
 
-const { render, en } = await import(pathToFileURL(resolve(ssrDir, 'entry-server.js')).href)
+const { render, en, es } = await import(pathToFileURL(resolve(ssrDir, 'entry-server.js')).href)
 
 let template = readFileSync(resolve(dist, 'index.html'), 'utf8')
 
@@ -34,7 +34,7 @@ const jsonLd = JSON.stringify({
       '@type': 'Organization',
       '@id': `${site}/#org`,
       name: 'Tidence',
-      url: `${site}/`,
+      url: `${site}/en`,
       logo: `${site}/favicon.png`,
       email: 'tidencestudio@gmail.com',
       telephone: '+1-829-731-4605',
@@ -44,7 +44,7 @@ const jsonLd = JSON.stringify({
     {
       '@type': 'WebSite',
       '@id': `${site}/#site`,
-      url: `${site}/`,
+      url: `${site}/en`,
       name: 'Tidence',
       publisher: { '@id': `${site}/#org` },
       inLanguage: ['en', 'es'],
@@ -52,25 +52,47 @@ const jsonLd = JSON.stringify({
   ],
 })
 
-const pages = [
-  { path: '/', out: 'index.html', title: en.meta.title, ld: true },
-  ...['privacy', 'terms'].map((doc) => ({
-    path: `/${doc}`,
-    out: `${doc}/index.html`,
-    title: en.legal[doc].metaTitle,
-    ld: false,
-  })),
-]
+// Every page in both languages: /en, /es, /en/privacy, /es/privacy, /en/terms,
+// /es/terms. English is the default; / redirects to /en (vercel.json).
+const DICTS = { en, es }
+const OG_LOCALE = { en: 'en_US', es: 'es_ES' }
+const pathFor = (locale, doc) => `/${locale}${doc ? `/${doc}` : ''}`
+
+const pages = Object.entries(DICTS).flatMap(([locale, dict]) => [
+  { locale, doc: null, title: dict.meta.title, ld: true },
+  ...['privacy', 'terms'].map((doc) => ({ locale, doc, title: dict.legal[doc].metaTitle, ld: false })),
+]).map((page) => ({
+  ...page,
+  path: pathFor(page.locale, page.doc),
+  out: `${page.locale}${page.doc ? `/${page.doc}` : ''}/index.html`,
+  description: DICTS[page.locale].meta.description,
+}))
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
 
 for (const page of pages) {
-  const url = page.path === '/' ? `${site}/` : `${site}${page.path}`
+  const url = `${site}${page.path}`
+  const alternates = [
+    ...Object.keys(DICTS).map(
+      (locale) => `<link rel="alternate" hreflang="${locale}" href="${site}${pathFor(locale, page.doc)}" />`,
+    ),
+    `<link rel="alternate" hreflang="x-default" href="${site}${pathFor('en', page.doc)}" />`,
+    `<meta property="og:locale" content="${OG_LOCALE[page.locale]}" />`,
+    ...Object.keys(DICTS)
+      .filter((locale) => locale !== page.locale)
+      .map((locale) => `<meta property="og:locale:alternate" content="${OG_LOCALE[locale]}" />`),
+  ].join('\n    ')
+
   const html = template
+    .replace('<html lang="en">', () => `<html lang="${page.locale}">`)
     .replace('<div id="root"></div>', () => `<div id="root">${render(page.path)}</div>`)
     .replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(page.title)}</title>`)
+    .replace(/(<meta\s+name="description"\s+content=")[^"]*(")/, (_, a, b) => `${a}${esc(page.description)}${b}`)
     .replace(/(<meta property="og:title"\s+content=")[^"]*(")/, (_, a, b) => `${a}${esc(page.title)}${b}`)
+    .replace(/(<meta\s+property="og:description"\s+content=")[^"]*(")/, (_, a, b) => `${a}${esc(page.description)}${b}`)
     .replace(/(<meta name="twitter:title"\s+content=")[^"]*(")/, (_, a, b) => `${a}${esc(page.title)}${b}`)
+    .replace(/(<meta\s+name="twitter:description"\s+content=")[^"]*(")/, (_, a, b) => `${a}${esc(page.description)}${b}`)
+    .replace('<!--alternates-->', () => alternates)
     .replace('<!--jsonld-->', () => (page.ld ? `<script type="application/ld+json">${jsonLd}</script>` : ''))
     .replaceAll('"__SITE_URL__/"', `"${url}"`)
     .replaceAll('__SITE_URL__', site)
@@ -84,7 +106,7 @@ writeFileSync(resolve(dist, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: 
 
 const lastmod = new Date().toISOString().slice(0, 10)
 const urls = pages
-  .map((p) => `  <url><loc>${site}${p.path === '/' ? '/' : p.path}</loc><lastmod>${lastmod}</lastmod></url>`)
+  .map((p) => `  <url><loc>${site}${p.path}</loc><lastmod>${lastmod}</lastmod></url>`)
   .join('\n')
 writeFileSync(
   resolve(dist, 'sitemap.xml'),

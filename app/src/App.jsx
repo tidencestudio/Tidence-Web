@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import Nav from './components/Nav';
 import Hero from './components/Hero';
 import StartSection from './components/StartSection';
@@ -12,6 +13,7 @@ import useHashLanding from './components/useHashLanding';
 import useAnchorScroll from './components/useAnchorScroll';
 import LegalPage from './components/LegalPage';
 import { LocaleProvider } from './prefs/locale';
+import { canonicalPath, parsePath } from './routes';
 import { useT } from './prefs/hooks';
 import './App.css';
 
@@ -56,20 +58,27 @@ function Site() {
   );
 }
 
-// Two static pages beside the home page do not justify a router. The path is
-// read once; links between pages are ordinary navigations. vercel.json
-// rewrites these paths to index.html, and Vite's dev server already does.
-const LEGAL = { '/privacy': 'privacy', '/terms': 'terms' };
-
+// Two static pages beside the home page, in each language, do not justify a
+// router. The path is read once; links between pages are ordinary
+// navigations, except the language switch, which swaps the prefix in place.
+// See routes.js for the URL scheme.
 export default function App() {
   const path = typeof window === 'undefined' ? globalThis.__PRERENDER_PATH__ : window.location.pathname;
-  const doc = LEGAL[(path ?? '/').replace(/\/+$/, '') || '/'];
+  const { locale, doc } = parsePath(path ?? '/');
 
   // Section links scroll without ever writing `#section` into the URL.
   useAnchorScroll();
 
+  // The dev server has no redirects: show / as /en, /privacy as /en/privacy.
+  useEffect(() => {
+    const canonical = canonicalPath(window.location.pathname);
+    if (canonical !== window.location.pathname) {
+      history.replaceState(history.state, '', canonical + window.location.search + window.location.hash);
+    }
+  }, []);
+
   return (
-    <LocaleProvider titlePath={doc ? `legal.${doc}.metaTitle` : undefined}>
+    <LocaleProvider initialLocale={locale} titlePath={doc ? `legal.${doc}.metaTitle` : undefined}>
       {doc ? <LegalPage doc={doc} /> : <Site />}
     </LocaleProvider>
   );

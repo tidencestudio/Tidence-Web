@@ -15,14 +15,13 @@ const app = (
   </StrictMode>
 )
 
-// The HTML is prerendered in English. A reader whose language is Spanish
-// (resolved by the inline script in index.html before this runs) would
-// mismatch it, so they get a fresh client render instead of a hydration.
-if (root.hasChildNodes() && document.documentElement.lang === 'en') {
+// Every URL is prerendered in its own language (/en, /es and their legal
+// pages), so the HTML always matches the first render and can be hydrated.
+// Only a page served without prerendered markup (the dev server) is rendered
+// fresh.
+if (root.hasChildNodes()) {
   hydrateRoot(root, app)
 } else {
-  root.replaceChildren()
-  root.dataset.client = ''
   createRoot(root).render(app)
 }
 
