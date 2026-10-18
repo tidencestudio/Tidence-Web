@@ -30,8 +30,14 @@ function Site() {
       <Nav />
 
       <main id="main">
-        <Hero />
-        <StartSection />
+        {/* The hero is a screen over the start section; a hole opens in it on
+            scroll. One wrapper so both can stay pinned together (Hero.jsx). */}
+        <div className="opening">
+          <Hero />
+          <StartSection />
+          {/* Room for the hero's scroll; sized by Hero.jsx. */}
+          <div className="opening-spacer" aria-hidden="true" />
+        </div>
         <Services />
         <Journey />
         <Journal />

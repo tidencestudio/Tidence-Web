@@ -421,12 +421,13 @@ main {
    anchor T rebuilt from cubes in front of it (heroScene.js), three loose
    cubes floating around the word, and soft out-of-focus spheres for depth.
 
-   The section is a tall track; the stage inside it is sticky. Hero.jsx splits
-   the pinned scroll into phases and writes them onto the stage:
-     --pc  cubes leaving, 0 to 1 (the text falls away with them)
-     --pm  the window expansion, after the 21st.dev scroll expansion hero: a
-           window onto the next section grows from behind the word while the
-           word splits apart
+   The hero is a screen laid over the start section. Both live in .opening:
+   the hero's stage is sticky and the start section is sticky right behind
+   it, so the browser holds both still while the page scrolls. Hero.jsx
+   writes two values onto the stage:
+     --pc    cubes leaving, 0 to 1 (the text falls away with them)
+     --hole  the radius of the hole punched in the stage, which the stage's
+             mask reads; it grows from a dot until the form is uncovered
    The section pulls up under the sticky bar so the bar floats over it. */
 
 .hero {
@@ -492,62 +493,73 @@ main {
   color: transparent;
 }
 
-/* The two halves of the word. As the window grows they slide off opposite
-   sides, 150vw each, as the title does in the 21st.dev component. */
-.hero-word-a,
-.hero-word-b {
-  display: inline-block;
+/* --- The opening: hero over start section ------------------------------
+   Staged by Hero.jsx (.is-staged) on a full-motion page, which also sizes the
+   hero's track and pulls the start section up behind it. Without the class
+   (no script yet, or reduced motion) the two simply follow one another. */
+.opening {
+  position: relative;
+  isolation: isolate;
 }
 
-.hero-word-a {
-  translate: calc(var(--pm, 0) * -150vw) 0;
-}
-
-.hero-word-b {
-  translate: calc(var(--pm, 0) * 150vw) 0;
-}
-
-/* The window's outline. Hero.jsx places it every frame just outside the
-   rectangle the next section is clipped to, so the section looks as if it
-   is seen through a frame cut in the page. Square corners: the brand allows
-   no radius. */
-.hero-window {
-  position: absolute;
-  z-index: 0;
-  box-sizing: content-box;
-  margin: -1.5px 0 0 -1.5px;
-  border: 1.5px solid var(--fg);
-  box-shadow: 0 40px 90px -40px rgb(0 67 74 / 0.5);
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* The section seen through the window (the enquiry form). On a staged page
-   (Hero.jsx adds .is-staged) it overlaps the hero's last screen, so that it
-   sits right after the pin; while the hero is pinned Hero.jsx holds it at
-   the top of the screen with a transform and clips it to the window. */
 @media (prefers-reduced-motion: no-preference) {
-  .hero.is-staged + .section {
-    position: relative;
+  /* The screen: opaque, in the page's own ground and light, above the
+     section it hides. */
+  .opening.is-staged .hero-stage {
     z-index: 1;
-    margin-top: -100vh;
-    margin-top: -100svh;
+    background:
+      radial-gradient(ellipse 70% 45% at 50% -8%, rgb(127 245 216 / 0.16), transparent 70%),
+      radial-gradient(ellipse 55% 45% at 100% 100%, rgb(19 194 176 / 0.08), transparent 70%),
+      var(--bg);
+  }
+
+  /* The section behind, pinned at the top for as long as the hero needs. */
+  .opening.is-staged > .start {
+    position: sticky;
+    top: 0;
+    z-index: 0;
+  }
+
+  /* The hole. A mask with a clear circle in the middle cuts through
+     everything on the stage, word included, like a bullet hole through a
+     sheet. While it is open the stage lets clicks through to the form. */
+  .hero-stage.is-holed {
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent var(--hole), #000 calc(var(--hole) + 0.75px));
+    mask-image: radial-gradient(circle at 50% 50%, transparent var(--hole), #000 calc(var(--hole) + 0.75px));
+    pointer-events: none;
+  }
+
+  /* A hairline round the edge of the hole, in the outline style of the
+     chips and cubes, so the cut reads as an edge and not a blur. */
+  .hero-stage.is-holed::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background: radial-gradient(
+      circle at 50% 50%,
+      transparent var(--hole),
+      var(--fg) calc(var(--hole) + 0.75px),
+      var(--fg) calc(var(--hole) + 2px),
+      transparent calc(var(--hole) + 2.75px)
+    );
+    pointer-events: none;
   }
 }
 
 /* --- Start a project ---------------------------------------------------
    The enquiry form as the second section, on a mint ground. It is what the
-   hero's window opens onto. Heading and a line on the left,
-   form on the right; stacked on phones. */
+   hole in the hero uncovers. Heading and a line on the left, form on the
+   right; stacked on phones. */
 .start {
   background: var(--tide-panel);
 }
 
-/* Seen through the hero's window, the section has to fill the screen, or
-   the open window would show an empty strip under it. Content sits centred
-   in the space under the bar. */
+/* Behind the hero, the section has to fill the screen, or the open hole
+   would show an empty strip under it. Content sits centred in the space
+   under the bar. */
 @media (prefers-reduced-motion: no-preference) {
-  .hero.is-staged + .start {
+  .opening.is-staged > .start {
     min-height: 100vh;
     min-height: 100svh;
     display: grid;
@@ -601,7 +613,7 @@ main {
   aspect-ratio: 1;
   background: radial-gradient(circle at 35% 30%, #fff 0%, #c9dcd7 40%, var(--line-strong) 100%);
   filter: blur(7px);
-  opacity: calc(0.9 * (1 - var(--pm, 0)));
+  opacity: 0.9;
   transform: translate3d(calc(var(--pc, 0) * -60px), calc(var(--pc, 0) * -120px), 0);
 }
 
@@ -613,7 +625,7 @@ main {
   aspect-ratio: 1;
   background: radial-gradient(circle at 35% 30%, #fff 0%, #d8e8e3 45%, #6f8f89 100%);
   filter: blur(12px);
-  opacity: calc(0.85 * (1 - var(--pm, 0)));
+  opacity: 0.85;
   transform: translate3d(calc(var(--pc, 0) * 90px), calc(var(--pc, 0) * 160px), 0);
 }
 
@@ -625,7 +637,7 @@ main {
   aspect-ratio: 1;
   background: radial-gradient(circle at 35% 30%, #fff 0%, #bfe9dd 50%, var(--current) 100%);
   filter: blur(6px);
-  opacity: calc(0.75 * (1 - var(--pm, 0)));
+  opacity: 0.75;
   transform: translate3d(calc(var(--pc, 0) * -40px), calc(var(--pc, 0) * 140px), 0);
 }
 
@@ -733,10 +745,6 @@ main {
 
   .hero-stage {
     position: relative;
-  }
-
-  .hero-window {
-    display: none;
   }
 }
 
