@@ -31,7 +31,12 @@ export default function Nav() {
     const sentinel = document.getElementById('nav-sentinel');
     if (!sentinel) return;
     const observer = new IntersectionObserver(
-      ([entry]) => setLifted(!entry.isIntersecting),
+      ([entry]) => {
+        setLifted(!entry.isIntersecting);
+        // Back at the very top no section is being read, so no link is
+        // marked; otherwise the last one visited stays underlined.
+        if (entry.isIntersecting) setCurrent('');
+      },
       { threshold: 0 }
     );
     observer.observe(sentinel);

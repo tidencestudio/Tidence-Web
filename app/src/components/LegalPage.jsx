@@ -4,7 +4,7 @@ import LanguageSwitch from './LanguageSwitch';
 import Footer from './Footer';
 import { useT } from '../prefs/hooks';
 
-const EMAIL = 'tidencestudio@gmail.com';
+import { EMAIL } from '../contact';
 
 /**
  * Privacy policy and terms of service. One template for both: a contents rail
@@ -42,7 +42,7 @@ export default function LegalPage({ doc }) {
             <p className="eyebrow">{t(`legal.${doc}.eyebrow`)}</p>
             <h1 className="legal-title">{t(`legal.${doc}.title`)}</h1>
             <p className="legal-updated">
-              {t('legal.updated')} <time dateTime="2026-10-06">{t('legal.date')}</time>
+              {t('legal.updated')} <time dateTime="2026-10-18">{t('legal.date')}</time>
             </p>
             <p className="lead legal-intro">{t(`legal.${doc}.intro`)}</p>
           </header>

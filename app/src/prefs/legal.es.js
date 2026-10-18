@@ -2,7 +2,7 @@
 export default {
   back: 'Volver al sitio',
   updated: 'Última actualización',
-  date: '6 de octubre de 2026',
+  date: '18 de octubre de 2026',
   contents: 'En esta página',
   questions: '¿Preguntas sobre esta página? Escríbenos a',
 
@@ -17,7 +17,7 @@ export default {
         id: 'site',
         heading: 'Qué recoge el sitio',
         body: [
-          'Nada que te identifique. Este sitio no tiene formularios de contacto, cuentas, publicidad, analítica ni cookies de seguimiento.',
+          'Nada por sí solo. Este sitio no tiene cuentas, publicidad, analítica ni cookies de seguimiento. La única información que nos llega es la que escribes en el formulario de consulta o la que nos envías directamente.',
           'Lo único que guarda es tu elección de idioma, inglés o español, en tu propio navegador bajo la clave “tidence-lang”, para que la página se abra en el mismo idioma la próxima vez. Nunca sale de tu dispositivo y puedes borrarla cuando quieras eliminando los datos de este sitio en tu navegador.',
         ],
       },
@@ -29,8 +29,8 @@ export default {
           {
             list: [
               'Vercel, que aloja el sitio y guarda registros estándar del servidor.',
-              'Google Fonts, que sirve las tipografías.',
-              'Picsum Photos, que sirve algunas de las fotografías.',
+              'Unsplash, que sirve las fotografías.',
+              'Web3Forms, que entrega el formulario de consulta a nuestra bandeja. Solo recibe lo que envías.',
             ],
           },
           'No recibimos datos personales de ninguno de ellos ni los usamos para seguirte por internet.',
@@ -40,7 +40,7 @@ export default {
         id: 'contact',
         heading: 'Cuando nos contactas',
         body: [
-          'Si nos escribes por correo, Instagram o WhatsApp, recibimos lo que decidas enviar: normalmente tu nombre, tus datos de contacto y una descripción de tu proyecto. Lo usamos solo para responderte, preparar una propuesta y, si trabajamos juntos, entregar y mantener el proyecto.',
+          'Si usas el formulario de consulta, recibimos tu nombre, tu correo, el tipo de proyecto y lo que escribas en el mensaje. Si nos escribes por correo, Instagram o WhatsApp, recibimos lo que decidas enviar. Lo usamos solo para responderte, preparar una propuesta y, si trabajamos juntos, entregar y mantener el proyecto.',
           'Esas conversaciones también quedan en la plataforma que usaste (Google para el correo, Meta para Instagram y WhatsApp), que las gestiona según sus propios términos.',
         ],
       },

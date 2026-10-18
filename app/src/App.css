@@ -63,7 +63,7 @@ main {
 }
 
 /* The page background (Backdrop.jsx). Modern and quiet: Abyss with one
-   faint light from above, a softer glow in the far corner, and a fine grid
+   faint mint light from above, a softer glow in the far corner, and a fine grid
    that fades out from the top. Low saturation on purpose, so the content
    carries the colour. Static, fixed and inert: painted once, composited
    from then on, nothing to compute while scrolling. */
@@ -73,9 +73,9 @@ main {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 70% 45% at 50% -8%, rgb(127 245 216 / 0.075), transparent 70%),
-    radial-gradient(ellipse 55% 45% at 100% 100%, rgb(0 115 122 / 0.12), transparent 70%),
-    radial-gradient(ellipse 45% 40% at 0% 60%, rgb(19 194 176 / 0.04), transparent 70%),
+    radial-gradient(ellipse 70% 45% at 50% -8%, rgb(127 245 216 / 0.16), transparent 70%),
+    radial-gradient(ellipse 55% 45% at 100% 100%, rgb(19 194 176 / 0.08), transparent 70%),
+    radial-gradient(ellipse 45% 40% at 0% 60%, rgb(127 245 216 / 0.1), transparent 70%),
     var(--bg);
 }
 
@@ -84,8 +84,8 @@ main {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(to right, rgb(242 255 250 / 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(242 255 250 / 0.035) 1px, transparent 1px);
+    linear-gradient(to right, rgb(0 67 74 / 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(0 67 74 / 0.045) 1px, transparent 1px);
   background-size: 72px 72px;
   background-position: center top;
   -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 20%, transparent 75%);
@@ -417,170 +417,321 @@ main {
 }
 
 /* --- Hero ----------------------------------------------------------------
-   Laid out like a product launch: a badge, one centred proposition and its
-   action, then a wide panel tilted back in perspective that straightens as
-   it scrolls up. The moving light behind it is the page-wide Backdrop.
+   The brand banner, live: the wordmark as large as the screen allows, the
+   anchor T rebuilt from cubes in front of it (heroScene.js), three loose
+   cubes floating around the word, and soft out-of-focus spheres for depth.
 
+   The section is a tall track; the stage inside it is sticky. Hero.jsx splits
+   the pinned scroll into phases and writes them onto the stage:
+     --pc  cubes leaving, 0 to 1 (links and text fall away with them)
+     --pe  the next section's panel growing from behind the word, eased
+     --pw  the word fading as that section's heading arrives
    The section pulls up under the sticky bar so the bar floats over it. */
 
 .hero {
   position: relative;
+  margin-top: -76px;
+  height: 420vh;
+  height: 420svh;
+}
+
+.hero-stage {
+  position: sticky;
+  top: 0;
   isolation: isolate;
   overflow: hidden;
-  margin-top: -76px;
-  padding: calc(76px + clamp(3.5rem, 10vh, 7rem)) 0 clamp(4rem, 9vh, 6rem);
+  height: 100vh;
+  height: 100dvh;
+  min-height: 560px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  justify-items: center;
+  padding: calc(76px + clamp(0.75rem, 3vh, 2rem)) var(--gutter) clamp(1.25rem, 3.5vh, 2.25rem);
 }
 
-.hero-head {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-/* The headline is lit from above: Foam fading into Spray, as the light
-   behind it falls on it. It is set in three voices so it does not read as
-   one flat block: a light lead-in, the subject in an editorial italic in
-   Sunlit, and the verb heavy. */
-.hero-title {
-  max-width: 13ch;
-  margin-top: 0;
-  font-size: clamp(3rem, 1rem + 6.6vw, 6.75rem);
-  line-height: 0.96;
-  letter-spacing: var(--track-display);
-  color: var(--fg);
-}
-
-@supports (background-clip: text) or (-webkit-background-clip: text) {
-  .hero-title {
-    background: linear-gradient(to bottom, var(--fg) 35%, var(--accent-hover) 120%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-}
-
-.hero-lead {
-  font-weight: 300;
-  letter-spacing: -0.035em;
-}
-
-/* Newsreader Display italic: an editorial cut, 13 KB, preloaded. Its
-   x-height runs smaller than Bricolage's, so it is set a step larger and
-   pulled in tight to sit on the same line weight. */
-.hero-em {
-  font-family: 'Newsreader Display', 'Newsreader', Georgia, serif;
-  font-style: italic;
-  font-weight: 400;
-  font-size: 1.1em;
-  letter-spacing: -0.03em;
-  color: var(--sun);
-  -webkit-text-fill-color: var(--sun);
-}
-
-.hero-strong {
-  font-weight: 800;
-}
-
-.hero-sub {
-  max-width: 46ch;
-  margin-top: 1.5rem;
-  font-size: var(--step-1);
-  line-height: 1.55;
-  color: var(--fg);
-}
-
-.hero-actions {
+.hero-chips {
+  position: relative;
+  z-index: 3;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
-  gap: 1rem 1.75rem;
-  margin-top: 2.25rem;
+  gap: 0.6rem;
+  opacity: calc(1 - var(--pc, 0) * 3.5);
+  transform: translate3d(0, calc(var(--pc, 0) * -40px), 0);
 }
 
-/* --- The panel --------------------------------------------------------- */
-
-.hero-stage {
-  margin-top: clamp(3.5rem, 9vh, 6rem);
-  perspective: 1800px;
-}
-
-/* Tilted back 18 degrees, levelling out between 15% and 45% of the panel's
-   pass across the screen. Reduced motion sets --p to 1: flat from the start. */
-.hero-panel {
-  --tilt: calc(18deg * (1 - clamp(0, (var(--p, 0) - 0.15) / 0.3, 1)));
-  display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  grid-template-areas:
-    'shot form'
-    'tiles form';
-  gap: 1rem;
-  padding: clamp(0.85rem, 2vw, 1.5rem);
-  border: 1px solid color-mix(in oklab, var(--fg) 14%, transparent);
-  background: linear-gradient(to bottom, rgb(0 25 28 / 0.94), rgb(7 15 18 / 0.98));
-  box-shadow:
-    inset 0 1px 0 rgb(127 245 216 / 0.22),
-    0 50px 120px -40px rgb(0 0 0 / 0.85);
-  transform: rotateX(var(--tilt));
-  transform-origin: 50% 0;
-  will-change: transform;
-}
-
-.hero-shot {
-  grid-area: shot;
-  position: relative;
-  margin: 0;
-  overflow: hidden;
-  aspect-ratio: 16 / 10;
-  border: 1px solid var(--line);
-  background: var(--surface);
-}
-
-.hero-shot img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: saturate(0.92) contrast(1.04);
-}
-
-.hero-tiles {
-  grid-area: tiles;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-.hero-tile {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 1.25rem;
-  border: 1px solid var(--line-strong);
-  background: rgb(7 15 18 / 0.6);
-  font-size: var(--step-1);
-  font-weight: 600;
-  letter-spacing: var(--track-h2);
+.hero-chip {
+  padding: 0.5rem 1.1rem 0.55rem;
+  border: 1.5px solid var(--fg);
+  background: var(--bg);
+  font-size: var(--step-0);
+  font-weight: 500;
+  line-height: 1;
   color: var(--fg);
   text-decoration: none;
   transition:
-    border-color var(--dur-hover) var(--ease),
-    background var(--dur-hover) var(--ease);
+    background var(--dur-hover) var(--ease),
+    color var(--dur-hover) var(--ease);
 }
 
-.hero-tile svg {
-  color: var(--sun);
-  transition: transform var(--dur-hover) var(--ease);
+.hero-chip:hover {
+  background: var(--fg);
+  color: var(--bg);
 }
 
-.hero-tile:hover {
-  border-color: var(--accent);
-  background: var(--accent-soft);
+.hero-chip:active {
+  transform: translateY(1px);
 }
 
-.hero-tile:hover svg {
-  transform: translate(2px, -2px);
+/* The giant wordmark. Sized by width on landscape screens and by height on
+   short ones, so it always fills the stage without clipping. */
+.hero-word {
+  position: relative;
+  z-index: 1;
+  align-self: center;
+  margin: 0;
+  font-size: min(29.5vw, 56vh);
+  font-size: min(29.5vw, 56dvh);
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.055em;
+  white-space: nowrap;
+  color: var(--fg);
+  text-wrap: nowrap;
+  transform: scale(calc(1 + var(--pc, 0) * 0.04 + var(--pw, 0) * 0.06));
+  opacity: calc(1 - var(--pw, 0));
+}
+
+.hero-word > span[aria-hidden] {
+  display: block;
+  padding-bottom: 0.06em;
+}
+
+/* The next section, arriving from behind the word: a panel in the services
+   colour that grows from the word's centre to fill the stage, outlined like
+   the chips and cubes. It ends a few pixels past every edge so the outline
+   leaves the screen, and from then on the stage reads as the section itself.
+   Its size changes every frame, so it is fixed in place and fully contained:
+   only this one box is laid out again. */
+.hero-panel {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  top: calc(50% + var(--word-dy, 0px) * (1 - var(--pe, 0)));
+  width: calc(var(--pe, 0) * (100% + 8px));
+  height: calc(var(--pe, 0) * (100% + 8px));
+  translate: -50% -50%;
+  contain: strict;
+  border: 1.5px solid var(--fg);
+  background: var(--tide-panel);
+  opacity: min(1, calc(var(--pe, 0) * 40));
+  pointer-events: none;
+}
+
+/* The section the panel turns into. On a staged page (Hero.jsx adds
+   .is-staged) it is pulled up over the hero's track so that its top reaches
+   the top of the screen at 0.67 of the pinned scroll, the moment the panel
+   has filled the stage. Until then it is hidden; it then appears in place,
+   heading rising, already where it belongs. Nothing slides in from below.
+   Track 420svh, pin 320svh: 0.67 x 320svh - 420svh = -205.6svh. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero.is-staged + .services {
+    position: relative;
+    z-index: 1;
+    margin-top: calc(0.67 * 320vh - 420vh);
+    margin-top: calc(0.67 * 320svh - 420svh);
+  }
+
+  .hero.is-staged + .services:not(.is-arrived) {
+    visibility: hidden;
+  }
+
+  .hero.is-staged + .services.is-arrived .services-head {
+    animation: hero-rise 700ms var(--ease) both;
+  }
+}
+
+.services {
+  background: var(--tide-panel);
+}
+
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-orb-a {
+  z-index: 0;
+  left: 10%;
+  top: 24%;
+  width: clamp(70px, 8vw, 150px);
+  aspect-ratio: 1;
+  background: radial-gradient(circle at 35% 30%, #fff 0%, #c9dcd7 40%, var(--line-strong) 100%);
+  filter: blur(7px);
+  opacity: calc(0.9 * (1 - var(--pe, 0)));
+  transform: translate3d(calc(var(--pc, 0) * -60px), calc(var(--pc, 0) * -120px), 0);
+}
+
+.hero-orb-b {
+  z-index: 3;
+  right: 8%;
+  top: 54%;
+  width: clamp(110px, 12vw, 230px);
+  aspect-ratio: 1;
+  background: radial-gradient(circle at 35% 30%, #fff 0%, #d8e8e3 45%, #6f8f89 100%);
+  filter: blur(12px);
+  opacity: calc(0.85 * (1 - var(--pe, 0)));
+  transform: translate3d(calc(var(--pc, 0) * 90px), calc(var(--pc, 0) * 160px), 0);
+}
+
+.hero-orb-c {
+  z-index: 3;
+  left: 40%;
+  top: 72%;
+  width: clamp(48px, 5vw, 90px);
+  aspect-ratio: 1;
+  background: radial-gradient(circle at 35% 30%, #fff 0%, #bfe9dd 50%, var(--current) 100%);
+  filter: blur(6px);
+  opacity: calc(0.75 * (1 - var(--pe, 0)));
+  transform: translate3d(calc(var(--pc, 0) * -40px), calc(var(--pc, 0) * 140px), 0);
+}
+
+.hero-foot {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1rem, 2.4vh, 1.5rem);
+  text-align: center;
+  opacity: calc(1 - var(--pc, 0) * 3);
+  transform: translate3d(0, calc(var(--pc, 0) * 60px), 0);
+}
+
+.hero-sub {
+  max-width: 52ch;
+  font-size: clamp(1.0625rem, 0.9rem + 0.7vw, 1.75rem);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+}
+
+.hero-cta {
+  background: var(--fg);
+  color: var(--bg);
+  font-family: var(--font-body);
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  padding: 1.05rem 2.6rem;
+}
+
+.hero-cta:hover {
+  background: var(--accent);
+}
+
+.hero-news {
+  position: relative;
+  z-index: 3;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: clamp(0.75rem, 2vh, 1.5rem);
+  font: 400 var(--step--1) / 1.3 var(--font-mono);
+  color: var(--fg);
+  text-decoration: none;
+  opacity: calc(1 - var(--pc, 0) * 3);
+}
+
+.hero-news i {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  background: var(--sun);
+}
+
+.hero-news b {
+  flex: none;
+  font-weight: 500;
+}
+
+.hero-news:hover span:not(.sr-only) {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Arrival on the prerendered page, before any script: the word and the
+   text rise in. The cubes bring their own arrival in WebGL. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-chips,
+  .hero-word,
+  .hero-foot,
+  .hero-news {
+    animation: hero-rise var(--dur-enter) var(--ease) both;
+  }
+
+  .hero-word {
+    animation-delay: 80ms;
+  }
+
+  .hero-foot {
+    animation-delay: 220ms;
+  }
+
+  .hero-news {
+    animation-delay: 320ms;
+  }
+
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      translate: 0 20px;
+    }
+  }
+}
+
+/* Reduced motion: no pinning, no scroll scene, no panel. Hero.jsx writes no
+   phases, so everything stays in its resting place. */
+@media (prefers-reduced-motion: reduce) {
+  .hero {
+    height: auto;
+  }
+
+  .hero-stage {
+    position: relative;
+  }
+
+  .hero-panel {
+    display: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .hero-chip {
+    padding: 0.4rem 0.75rem 0.45rem;
+    font-size: var(--step--1);
+  }
+
+  .hero-word {
+    font-size: 30vw;
+  }
+
+  .hero-news {
+    justify-self: center;
+    text-align: left;
+  }
 }
 
 /* --- The enquiry form -------------------------------------------------- */
@@ -592,7 +743,7 @@ main {
   gap: 1.1rem;
   padding: clamp(1.25rem, 2.4vw, 1.75rem);
   border: 1px solid var(--line-strong);
-  background: rgb(7 15 18 / 0.6);
+  background: var(--surface);
   text-align: left;
 }
 
@@ -622,6 +773,7 @@ main {
 }
 
 .hero-form input[type='text'],
+.hero-form input[type='email'],
 .hero-form textarea {
   width: 100%;
   min-height: 44px;
@@ -645,12 +797,14 @@ main {
   color: var(--fg-dim);
 }
 
-.hero-form input[type='text']:hover,
+.hero-form input[type='text'],
+.hero-form input[type='email']:hover,
 .hero-form textarea:hover {
   border-color: var(--fg-dim);
 }
 
-.hero-form input[type='text']:focus-visible,
+.hero-form input[type='text'],
+.hero-form input[type='email']:focus-visible,
 .hero-form textarea:focus-visible {
   border-color: var(--accent);
   outline-offset: 0;
@@ -719,6 +873,61 @@ main {
   color: var(--fg-dim);
 }
 
+/* Name and email side by side; one column once the panel is narrow. */
+.hero-form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 1100px) and (min-width: 901px), (max-width: 520px) {
+  .hero-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* The honeypot: out of sight and out of the tab order, never display:none,
+   which some bots treat as a hint to skip the field. */
+.hero-form-honey {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* After a successful send the form becomes its own receipt. */
+.hero-form-done {
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.hero-form-done-icon {
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+
+.hero-form-done-text {
+  color: var(--fg-muted);
+  max-width: 34ch;
+}
+
+.hero-form-done .hero-form-actions {
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
+/* .link on a <button>: drop the native chrome, keep the underline. */
+button.link {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line-strong);
+  padding: 0 0 2px;
+  cursor: pointer;
+}
+
 /* The bar takes its backdrop as soon as the page starts to move. */
 #nav-sentinel {
   position: absolute;
@@ -727,52 +936,10 @@ main {
   width: 100%;
 }
 
-/* Arrival: the head rises in sequence on load. CSS only, so it runs on the
-   prerendered page before any script. */
-@media (prefers-reduced-motion: no-preference) {
-  .hero-head > * {
-    animation: hero-rise var(--dur-enter) var(--ease) both;
-  }
-
-  .hero-head > :nth-child(2) {
-    animation-delay: 90ms;
-  }
-
-  .hero-head > :nth-child(3) {
-    animation-delay: 180ms;
-  }
-
-  .hero-head > :nth-child(4) {
-    animation-delay: 270ms;
-  }
-
-  .hero-stage {
-    animation: hero-rise 900ms var(--ease) 320ms both;
-  }
-
-  @keyframes hero-rise {
-    from {
-      opacity: 0;
-      transform: translate3d(0, 20px, 0);
-    }
-  }
-}
-
-@media (max-width: 900px) {
-  .hero-panel {
-    --tilt: calc(8deg * (1 - clamp(0, (var(--p, 0) - 0.1) / 0.3, 1)));
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      'shot'
-      'form'
-      'tiles';
-  }
-}
-
-@media (max-width: 520px) {
-  .hero-tiles {
-    grid-template-columns: 1fr;
-  }
+/* The enquiry form's home in the contact section. */
+.contact-form {
+  max-width: 760px;
+  margin-top: clamp(3rem, 7vw, 5rem);
 }
 
 /* --- Eyebrow ------------------------------------------------------------
@@ -955,7 +1122,9 @@ main {
   box-shadow: var(--shadow);
   transform-origin: 50% 0;
   transform: scale(calc(1 - var(--buried) * 0.05));
-  filter: brightness(calc(1 - var(--buried) * 0.3));
+  /* On the light ground a deep dim reads as grime; a light one still sets
+     the buried card back. */
+  filter: brightness(calc(1 - var(--buried) * 0.07));
   will-change: transform;
 }
 
@@ -2305,9 +2474,16 @@ a.channel:hover .channel-arrow {
   color: var(--fg-dim);
 }
 
+/* On a phone the brand takes its own row and the two link columns sit side
+   by side beneath it, so neither column is left stranded under the logo. */
 @media (max-width: 760px) {
   .footer-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 2rem;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
   }
 }
 

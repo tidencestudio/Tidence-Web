@@ -4,11 +4,13 @@
    Brand guideline: Tidence-Brand (2026), "Transformative Teal".
      Foam    #F2FFFA   Spray  #7FF5D8   Lagoon #13C2B0   Current #0E8C86
      Reef    #00737A   Deep   #00434A   Trench #00191C   Abyss   #070F12
-   One theme: Abyss ground, Foam type, as the guideline sets it.
+   One theme, light: a pale Foam paper ground, Abyss type, Deep as the
+   accent, as the guideline allows for a whole light piece. It matches the
+   3D hero and the WhatsApp banner. Never mixed with dark sections.
    ========================================================================== */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
   /* The named palette. Components use the roles below, not these. */
   --foam: #f2fffa;
@@ -20,30 +22,36 @@
   --trench: #00191c;
   --abyss: #070f12;
 
-  /* Roles. Text floor: dim on surface-2 at 8.05:1. Pairs in MASTER.md. */
-  --bg: var(--abyss);
-  --surface: var(--trench);
-  --surface-2: #0b2427;
+  /* Roles, light. Text floor: dim on surface-2 at 5.3:1. On a light ground
+     the guideline's accent is Deep (10.8:1 on Foam), with Reef for hover. */
+  --paper: #f4faf8;
+  --bg: var(--paper);
+  --surface: #fbfefd;
+  --surface-2: #e8f2ef;
 
-  --fg: var(--foam);
-  --fg-muted: #b8d4ce;
-  --fg-dim: #9fbdb6;
+  --fg: var(--abyss);
+  --fg-muted: #2b4145;
+  --fg-dim: #4a6561;
 
-  --accent: var(--lagoon);
-  --accent-hover: var(--spray);
-  --accent-soft: rgba(19, 194, 176, 0.14);
-  --on-accent: var(--abyss);
+  --accent: var(--deep);
+  --accent-hover: var(--reef);
+  --accent-soft: rgba(0, 115, 122, 0.1);
+  --on-accent: var(--foam);
 
-  --line: #1c2b2e;
-  --line-strong: #2b4145;
+  /* The services section, and the panel that grows into it from behind the
+     hero's wordmark: a mint step off the paper ground. */
+  --tide-panel: #dcf3ec;
 
-  --dot: rgba(127, 245, 216, 0.05);
-  --grain-opacity: 0.035;
-  --shadow: 0 24px 60px -24px rgba(0, 10, 12, 0.9);
+  --line: #d4e4e0;
+  --line-strong: #aac4be;
 
-  /* The mark, per the guideline: bar Foam to Spray, stem Lagoon to Reef,
-     shadow fold in Trench. */
-  --mark-bar-0: var(--foam);
+  --dot: rgba(0, 67, 74, 0.06);
+  --grain-opacity: 0.06;
+  --shadow: 0 24px 60px -28px rgba(0, 67, 74, 0.28);
+
+  /* The mark on a light ground: the bar starts a step into mint so it does
+     not vanish, per the guideline. Stem and fold unchanged. */
+  --mark-bar-0: #a9f7e4;
   --mark-bar-1: var(--spray);
   --mark-stem-0: var(--lagoon);
   --mark-stem-1: var(--reef);
@@ -52,10 +60,10 @@
   /* Counter-accent: sunlight on the water. Teal carries the brand and every
      interactive state; this warm sand-gold takes the small marks (icons,
      numerals, bullets, emphasis) so the page is not blue end to end. Used
-     sparingly, never for buttons or links. 11.6:1 on Abyss, 9.7:1 on the
-     raised surface. */
-  --sun: #edc27a;
-  --sun-soft: rgba(237, 194, 122, 0.14);
+     sparingly, never for buttons or links. On the light ground Sunlit itself
+     is too pale to read (1.6:1), so marks use a deeper sand at 5.5:1. */
+  --sun: #a06d1f;
+  --sun-soft: rgba(237, 194, 122, 0.28);
 
   /* Icon and lockup panels: Spray through Current to Deep. */
   --gradient-icon: linear-gradient(135deg, var(--spray) 0%, var(--current) 52%, var(--deep) 100%);

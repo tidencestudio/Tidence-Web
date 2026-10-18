@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#070F12" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#F4FAF8" />
 
     <title>Tidence — Web design and development studio</title>
     <meta
@@ -45,17 +45,6 @@
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/bricolage.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/dm-mono-400.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/newsreader-italic-display.woff2" crossorigin />
-
-    <!-- The hero image is the LCP element on every viewport. Same srcset and
-         sizes as HeroMedia.jsx, so the preload and the <img> pick one file. -->
-    <link
-      rel="preload"
-      as="image"
-      type="image/webp"
-      imagesrcset="/lockup-640.webp 640w, /lockup-960.webp 960w, /lockup-1600.webp 1600w"
-      imagesizes="(min-width: 1200px) 640px, (min-width: 900px) 55vw, 100vw"
-      fetchpriority="high"
-    />
 
     <!-- The prerendered markup is English. A Spanish reader's page is rendered
          by the client instead (main.jsx sets data-client on #root), so the

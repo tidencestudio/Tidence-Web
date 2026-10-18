@@ -6,9 +6,10 @@ import {
   WhatsappLogo,
 } from '@phosphor-icons/react';
 import Reveal from './Reveal';
+import EnquiryForm from './EnquiryForm';
 import useScrollProgress from './useScrollProgress';
 import { useT } from '../prefs/hooks';
-import { EMAIL, INSTAGRAM, WHATSAPP, mailtoHref, whatsappHref, instagramHref } from '../contact';
+import { EMAIL, INSTAGRAM, WHATSAPP, WHATSAPP_SHOWN, mailtoHref, whatsappHref, instagramHref } from '../contact';
 
 /* Handles live in contact.js. An empty value renders the row as "coming
    soon" with no link, so nothing here points anywhere false. Email and
@@ -19,14 +20,19 @@ const CHANNELS = [
   { key: 'email', Icon: EnvelopeSimple, value: EMAIL, href: mailtoHref },
 ];
 
-const shown = (key, value) => (key === 'instagram' ? `@${value.replace(/^@/, '')}` : value);
+const shown = (key, value) => {
+  if (key === 'instagram') return `@${value.replace(/^@/, '')}`;
+  if (key === 'whatsapp') return WHATSAPP_SHOWN;
+  return value;
+};
 
 /**
  * The close of the journey: the slogan, set as large as the page allows and
  * filled with the tide, then every way to reach the studio as one list.
  *
- * There is no form. A studio is easiest to reach the way people already
- * talk to each other, so each row is a direct line out to that channel.
+ * Each channel row is a direct line out to that app. Beside them sits the
+ * enquiry form, for anyone who would rather write it all down once; it moved
+ * here when the hero became the 3D wordmark.
  */
 export default function Contact() {
   const t = useT();
@@ -80,6 +86,10 @@ export default function Contact() {
             })}
           </ul>
         </div>
+
+        <Reveal className="contact-form">
+          <EnquiryForm />
+        </Reveal>
       </div>
     </section>
   );

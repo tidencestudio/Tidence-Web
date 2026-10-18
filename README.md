@@ -50,6 +50,15 @@ is set in this shell, which makes npm omit devDependencies by default.
 - Fonts: Bricolage Grotesque (wordmark, headlines, body) / DM Mono (data, labels) / Newsreader (journal only)
 - Mark: `app/src/components/TidenceMark.jsx`; exports in `brand/`
 
+## Enquiry form
+
+The hero form posts to [Web3Forms](https://web3forms.com), which relays each
+submission to the studio inbox. Set `VITE_WEB3FORMS_KEY` (see
+`app/.env.example`) in the Vercel project's environment variables and
+redeploy. Without a key, or if the request fails, the form falls back to
+opening the visitor's email app with the message already written. Contact
+handles (email, WhatsApp, Instagram) live in `app/src/contact.js`.
+
 ## Open threads
 
 - Info page (portfolio/case studies + team) not yet built

@@ -4,7 +4,7 @@
 export default {
   back: 'Back to the site',
   updated: 'Last updated',
-  date: 'October 6, 2026',
+  date: 'October 18, 2026',
   contents: 'On this page',
   questions: 'Questions about this page? Write to',
 
@@ -19,7 +19,7 @@ export default {
         id: 'site',
         heading: 'What the website collects',
         body: [
-          'Nothing that identifies you. There are no contact forms, no accounts, no advertising, no analytics and no tracking cookies on this site.',
+          'Nothing on its own. There are no accounts, no advertising, no analytics and no tracking cookies on this site. The only information that reaches us is what you type into the enquiry form or send us directly.',
           'The only thing the site stores is your language choice, English or Spanish, saved in your own browser under the key “tidence-lang” so the page opens in the same language next time. It never leaves your device, and you can clear it at any time by clearing this site’s data in your browser.',
         ],
       },
@@ -31,8 +31,8 @@ export default {
           {
             list: [
               'Vercel, which hosts the site and keeps standard server logs.',
-              'Google Fonts, which serves the typefaces.',
-              'Picsum Photos, which serves some of the photographs.',
+              'Unsplash, which serves the photographs.',
+              'Web3Forms, which delivers the enquiry form to our inbox. It only receives what you submit.',
             ],
           },
           'We do not receive personal data from any of them, and we do not use them to follow you around the web.',
@@ -42,7 +42,7 @@ export default {
         id: 'contact',
         heading: 'When you contact us',
         body: [
-          'If you write to us by email, Instagram or WhatsApp, we receive whatever you choose to send: usually your name, your contact details and a description of your project. We use it only to answer you, prepare a proposal and, if we work together, deliver and support the project.',
+          'If you use the enquiry form, we receive your name, your email address, the kind of project and whatever you write in the message. If you write to us by email, Instagram or WhatsApp, we receive whatever you choose to send. We use it only to answer you, prepare a proposal and, if we work together, deliver and support the project.',
           'Those conversations also live on the platform you used (Google for email, Meta for Instagram and WhatsApp), which handles them under its own terms.',
         ],
       },

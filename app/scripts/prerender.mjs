@@ -37,6 +37,8 @@ const jsonLd = JSON.stringify({
       url: `${site}/`,
       logo: `${site}/favicon.png`,
       email: 'tidencestudio@gmail.com',
+      telephone: '+1-829-731-4605',
+      sameAs: ['https://www.instagram.com/tidence.dev/'],
       description: en.meta.description,
     },
     {
