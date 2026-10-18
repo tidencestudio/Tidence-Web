@@ -15,11 +15,13 @@ export const INSTAGRAM = 'tidence.dev';
  * The enquiry form posts to Web3Forms (https://web3forms.com), which relays
  * each submission to EMAIL. The access key is public by design: it only
  * identifies the inbox, and Web3Forms rate-limits and spam-filters on its
- * side. Set VITE_WEB3FORMS_KEY in the Vercel project (or a local .env file).
- * While it is empty the form falls back to opening the visitor's email app
- * with the message written, so nothing on the page is a dead end.
+ * side, so it lives here in the code. VITE_WEB3FORMS_KEY (Vercel project or
+ * a local .env) overrides it, for pointing a preview at another inbox. If
+ * sending fails the form falls back to opening the visitor's email app with
+ * the message written, so nothing on the page is a dead end.
  */
-export const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY ?? '';
+const STUDIO_KEY = '18a5487a-6392-4c04-9368-d8ec2c0f5bfc';
+export const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY || STUDIO_KEY;
 const WEB3FORMS_URL = 'https://api.web3forms.com/submit';
 
 /**
