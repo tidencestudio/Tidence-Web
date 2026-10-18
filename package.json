@@ -1,0 +1,12 @@
+{
+  "name": "tidence-design",
+  "private": true,
+  "type": "module",
+  "description": "Repo root: the site is in app/, the serverless functions in api/ (deployed by Vercel).",
+  "scripts": {
+    "test:api": "node --test api/_lib/enquiry.test.js"
+  },
+  "dependencies": {
+    "nodemailer": "^10.1.7"
+  }
+}

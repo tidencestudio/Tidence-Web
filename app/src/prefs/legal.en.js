@@ -32,7 +32,8 @@ export default {
             list: [
               'Vercel, which hosts the site and keeps standard server logs.',
               'Unsplash, which serves the photographs.',
-              'Web3Forms, which delivers the enquiry form to our inbox. It only receives what you submit.',
+              'Vercel also runs our enquiry handler: what you submit through the form is checked and sent by email to our Gmail inbox (Google). The handler keeps no copy.',
+              'Google reCAPTCHA, loaded only once you start filling in the enquiry form, to tell people from automated spam. It looks at how the page is used and receives your IP address, under Google’s privacy policy and terms.',
             ],
           },
           'We do not receive personal data from any of them, and we do not use them to follow you around the web.',

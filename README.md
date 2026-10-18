@@ -52,12 +52,29 @@ is set in this shell, which makes npm omit devDependencies by default.
 
 ## Enquiry form
 
-The hero form posts to [Web3Forms](https://web3forms.com), which relays each
-submission to the studio inbox. Set `VITE_WEB3FORMS_KEY` (see
-`app/.env.example`) in the Vercel project's environment variables and
-redeploy. Without a key, or if the request fails, the form falls back to
-opening the visitor's email app with the message already written. Contact
-handles (email, WhatsApp, Instagram) live in `app/src/contact.js`.
+The form (second section, `app/src/components/EnquiryForm.jsx`) posts to our
+own Vercel serverless function, `api/contact.js`. It checks the fields,
+verifies an invisible reCAPTCHA v3 token with Google, and emails the enquiry
+to the studio inbox with Nodemailer over SMTP, with the visitor as reply-to.
+The logic lives in `api/_lib/enquiry.js`, tested by `npm run test:api` at the
+repo root (fake mailer and fake reCAPTCHA; nothing is sent).
+
+Environment variables (Vercel project `tidence-web-app`):
+
+| Variable | Where | What |
+|---|---|---|
+| `VITE_RECAPTCHA_SITE_KEY` | build (public) | reCAPTCHA v3 site key |
+| `RECAPTCHA_SECRET` | function (secret) | reCAPTCHA v3 secret key |
+| `SMTP_USER` | function | sending account, e.g. the studio Gmail |
+| `SMTP_PASS` | function (secret) | its password; for Gmail an app password |
+| `SMTP_HOST`, `SMTP_PORT` | function, optional | default `smtp.gmail.com`, `465` |
+| `MAIL_TO` | function, optional | inbox for enquiries; defaults to `SMTP_USER` |
+| `RECAPTCHA_MIN_SCORE` | function, optional | default `0.5` |
+
+Without them, or if anything fails, the form falls back to opening the
+visitor's email app with the message already written. reCAPTCHA's script
+loads only once someone focuses the form. Contact handles (email, WhatsApp,
+Instagram) live in `app/src/contact.js`.
 
 ## Open threads
 

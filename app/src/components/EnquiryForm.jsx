@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { CheckCircle, PaperPlaneTilt, WhatsappLogo } from '@phosphor-icons/react';
 import { useLocale } from '../prefs/hooks';
-import { mailtoHref, mailtoWith, sendEnquiry, whatsappHref, whatsappWith } from '../contact';
+import { loadRecaptcha, mailtoHref, mailtoWith, sendEnquiry, whatsappHref, whatsappWith } from '../contact';
 
 const NEEDS = ['website', 'crm', 'automation', 'other'];
 
@@ -10,10 +10,11 @@ const NEEDS = ['website', 'crm', 'automation', 'other'];
  * (StartSection.jsx), which supplies the heading, so it is usually rendered
  * without its own title.
  *
- * It posts to Web3Forms (see contact.js), which delivers it to the studio
- * inbox. If that is not configured or fails, it composes the same message as
- * an email and the visitor's own app opens with it ready to send. The
- * WhatsApp button opens a chat with the message already typed.
+ * It posts to our own function, /api/contact (see contact.js and
+ * api/contact.js), behind an invisible reCAPTCHA v3 check, which emails it to
+ * the studio inbox. If that fails for any reason, it composes the same
+ * message as an email and the visitor's own app opens with it ready to send.
+ * The WhatsApp button opens a chat with the message already typed.
  */
 export default function EnquiryForm({ showTitle = true }) {
   const { t, locale } = useLocale();
@@ -64,9 +65,9 @@ export default function EnquiryForm({ showTitle = true }) {
       await sendEnquiry({
         name,
         email,
-        need: needLabel,
+        need,
+        needLabel,
         details,
-        subject,
         lang: locale,
       });
       setStatus('sent');
@@ -108,7 +109,14 @@ export default function EnquiryForm({ showTitle = true }) {
   }
 
   return (
-    <form className="hero-form" onSubmit={submit} action={mailtoHref(t)} noValidate={false}>
+    <form
+      className="hero-form"
+      onSubmit={submit}
+      // reCAPTCHA loads once someone starts on the form, not with the page.
+      onFocus={() => loadRecaptcha(locale).catch(() => {})}
+      action={mailtoHref(t)}
+      noValidate={false}
+    >
       {showTitle && <h2 className="hero-form-title">{t('form.title')}</h2>}
 
       <div className="hero-form-row">
@@ -130,8 +138,8 @@ export default function EnquiryForm({ showTitle = true }) {
         </div>
       </div>
 
-      {/* Honeypot: hidden from people, filled by bots. Web3Forms drops
-          submissions where it has a value; so does submit() above. */}
+      {/* Honeypot: hidden from people, filled by bots. submit() above drops any
+          submission where it has a value, and so does the server. */}
       <input
         type="checkbox"
         name="botcheck"
@@ -170,6 +178,19 @@ export default function EnquiryForm({ showTitle = true }) {
       </div>
       <p className="hero-form-note" aria-live="polite">
         {status === 'fallback' ? t('form.fallback') : t('form.note')}
+      </p>
+      {/* reCAPTCHA's own badge is hidden (App.css), so Google requires this
+          line in its place. */}
+      <p className="hero-form-legal">
+        {t('form.recaptchaA')}{' '}
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer noopener">
+          {t('form.recaptchaPrivacy')}
+        </a>{' '}
+        {t('form.recaptchaAnd')}{' '}
+        <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer noopener">
+          {t('form.recaptchaTerms')}
+        </a>{' '}
+        {t('form.recaptchaB')}
       </p>
     </form>
   );
