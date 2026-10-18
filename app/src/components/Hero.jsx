@@ -8,11 +8,14 @@ import { REDUCED_MOTION } from './useMedia';
 // The scroll, measured in screen heights from the top of the page:
 //   0    to 0.55  the cubes burst apart and leave the screen
 //   0.62 to 1.5   the hole opens, from a dot to the whole screen
-// At 1.5 the section behind (the enquiry form) is fully uncovered and starts
-// scrolling with the page (the track is sized for that, see sizeTrack).
+//   1.5  to 1.85  hold: the form is fully uncovered and nothing moves yet
+// Only at RELEASE does the section behind (the enquiry form) start scrolling
+// with the page (the track is sized for that, see sizeTrack). The hold makes
+// sure the hole is visibly complete before anything moves on.
 const CUBES_END = 0.55;
 const HOLE_START = 0.62;
 const HOLE_END = 1.5;
+const RELEASE = 1.85;
 
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
 
@@ -80,6 +83,9 @@ export default function Hero() {
 
     if (track.parentElement?.classList.contains('is-staged')) {
       const ph = clamp01((screens - HOLE_START) / (HOLE_END - HOLE_START));
+      // Fully open: drop the mask and its edge altogether, so the stage is
+      // plainly gone while the section waits to move.
+      stage.classList.toggle('is-open', ph >= 1);
       if (ph > 0) {
         // Ease in: a dot first, then quicker. Past the corners at the end.
         const max = Math.hypot(stage.clientWidth / 2, stage.clientHeight / 2) + 4;
@@ -110,13 +116,12 @@ export default function Hero() {
     if (!track || !opening || !behind || !spacer) return;
     if (window.matchMedia(REDUCED_MOTION).matches) return;
 
+    // Two numbers on the wrapper; CSS sizes the track, pulls the section up
+    // behind the stage and sizes the spacer from them (.opening.is-staged).
     const sizeTrack = () => {
-      const vh = window.innerHeight;
-      const room = Math.round(HOLE_END * vh);
-      const height = behind.offsetHeight + room;
-      track.style.height = `${height}px`;
-      behind.style.marginTop = `${-height}px`;
-      spacer.style.height = `${room}px`;
+      const room = Math.round(RELEASE * window.innerHeight);
+      opening.style.setProperty('--room', `${room}px`);
+      opening.style.setProperty('--behind', `${behind.offsetHeight}px`);
     };
 
     opening.classList.add('is-staged');
@@ -129,9 +134,8 @@ export default function Hero() {
       observer.disconnect();
       window.removeEventListener('resize', sizeTrack);
       opening.classList.remove('is-staged');
-      track.style.height = '';
-      behind.style.marginTop = '';
-      spacer.style.height = '';
+      opening.style.removeProperty('--room');
+      opening.style.removeProperty('--behind');
     };
   }, []);
 

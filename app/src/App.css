@@ -513,11 +513,26 @@ main {
       var(--bg);
   }
 
+  /* Sizes, from two numbers Hero.jsx measures: --behind, the start
+     section's height, and --room, the scroll the hero needs before that
+     section moves. The track is both together. The section is pulled up by
+     the whole track to sit behind the stage from the top, which takes it out
+     of the flow's height, so the spacer after it gives the scroll back (a
+     margin on the section itself would stop it from sticking). */
+  .opening.is-staged > .hero {
+    height: calc(var(--behind, 100vh) + var(--room, 185vh));
+  }
+
+  .opening.is-staged > .opening-spacer {
+    height: var(--room, 185vh);
+  }
+
   /* The section behind, pinned at the top for as long as the hero needs. */
   .opening.is-staged > .start {
     position: sticky;
     top: 0;
     z-index: 0;
+    margin-top: calc(-1 * (var(--behind, 100vh) + var(--room, 185vh)));
   }
 
   /* The hole. A mask with a clear circle in the middle cuts through
@@ -527,6 +542,11 @@ main {
     -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent var(--hole), #000 calc(var(--hole) + 0.75px));
     mask-image: radial-gradient(circle at 50% 50%, transparent var(--hole), #000 calc(var(--hole) + 0.75px));
     pointer-events: none;
+  }
+
+  /* Fully open, the stage is simply hidden: no mask edge, no hairline. */
+  .hero-stage.is-holed.is-open {
+    visibility: hidden;
   }
 
   /* A hairline round the edge of the hole, in the outline style of the
