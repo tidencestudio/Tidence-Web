@@ -38,8 +38,8 @@
   --accent-soft: rgba(0, 115, 122, 0.1);
   --on-accent: var(--foam);
 
-  /* The services section, and the panel that grows into it from behind the
-     hero's wordmark: a mint step off the paper ground. */
+  /* The start-a-project section after the hero: a mint step off the paper
+     ground. */
   --tide-panel: #dcf3ec;
 
   --line: #d4e4e0;

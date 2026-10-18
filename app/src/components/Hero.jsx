@@ -5,18 +5,15 @@ import { whatsappHref } from '../contact';
 import useScrollProgress from './useScrollProgress';
 import { REDUCED_MOTION } from './useMedia';
 
-// Where each phase sits in the pinned scroll, 0 to 1. The pin is short
-// (160svh, see .hero in App.css) so the whole hand-off takes about a screen
-// and a half of scrolling. The next section is placed so its top reaches the
-// top of the screen at 0.82 (the 0.82 in `.hero.is-staged + .section`). The
-// panel and the word's fade both finish just before that, so the swap from
-// panel to section happens on a screen that already looks like the section.
-// The section counts as arrived once its top is within 110px of the screen
-// top, which on a 900px screen is about 0.74, so everything here ends by 0.71.
-const PHASES = { cubesEnd: 0.38, expandStart: 0.44, expandEnd: 0.7, fadeStart: 0.6, fadeEnd: 0.71 };
+// Where each phase sits in the pinned scroll, 0 to 1 (pin: 150svh, see .hero
+// in App.css). The media expansion runs to the very end of the pin, so the
+// moment it is full size the stage lets go and the next section follows it up
+// the screen, as in the 21st.dev component.
+const PHASES = { cubesEnd: 0.36, expandStart: 0.4, expandEnd: 0.96 };
 
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
-const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const SIZES = [960, 1280, 1920];
+const waveSrcSet = SIZES.map((w) => `/wave-sunset-${w}.webp ${w}w`).join(', ');
 
 /**
  * The opening, built from the brand banner (brand/whatsapp/banner-3d.html):
@@ -25,17 +22,19 @@ const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) 
  * the word.
  *
  * The section is a tall track with a sticky stage. Its pinned scroll runs in
- * three phases (PHASES below):
+ * two phases (PHASES below):
  *   1. cubes: the mark bursts apart and every cube leaves the screen, while
- *      the text around the word falls away;
- *   2. hold: the wordmark alone, fully revealed;
- *   3. expand: the next section's panel grows out from behind the word until
- *      it fills the screen, and the word fades on it. That section (the
- *      enquiry form, StartSection.jsx) is placed so that its top sits at the
- *      top of the screen at that moment; it stays hidden until then and then
- *      simply appears in place. It never slides up from below.
- * The phases go to CSS as --pc, --pe and --pw, written straight onto the
- * stage, so React never re-renders while scrolling.
+ *      the text around the word falls away, leaving the wordmark alone;
+ *   2. media expansion, after the 21st.dev "scroll expansion hero"
+ *      (ScrollExpandMedia): a photo card opens behind the word at 300 x 400
+ *      and grows to 95vw x 85vh, while the word splits in two ("tide" and
+ *      "nce") and each half slides off its own side, and the soft spheres
+ *      fade. When the card is full size the pin ends and the next section
+ *      (the enquiry form) follows it up the page.
+ * Unlike the original, nothing hijacks the wheel or touch: the phases come
+ * from ordinary scroll, so the nav links, keyboard and deep links still work.
+ * They go to CSS as --pc and --pm, written straight onto the stage, so React
+ * never re-renders while scrolling.
  *
  * Everything but the cubes is plain markup, so the prerendered page shows
  * the word, the line under it and the button before any script runs. The 3D layer
@@ -57,16 +56,10 @@ export default function Hero() {
     if (!stage || window.matchMedia(REDUCED_MOTION).matches) return;
 
     const pc = clamp01(p / PHASES.cubesEnd);
-    const pe = easeInOut(clamp01((p - PHASES.expandStart) / (PHASES.expandEnd - PHASES.expandStart)));
-    const pw = clamp01((p - PHASES.fadeStart) / (PHASES.fadeEnd - PHASES.fadeStart));
+    // Linear, like the original: the card grows in step with the scroll.
+    const pm = clamp01((p - PHASES.expandStart) / (PHASES.expandEnd - PHASES.expandStart));
     stage.style.setProperty('--pc', pc.toFixed(4));
-    stage.style.setProperty('--pe', pe.toFixed(4));
-    stage.style.setProperty('--pw', pw.toFixed(4));
-
-    // The section takes over once its top has reached the nav. Measured, not
-    // derived from p, so a jump straight to it lands with it visible.
-    const next = stage.parentElement?.nextElementSibling;
-    if (next) next.classList.toggle('is-arrived', next.getBoundingClientRect().top <= 110);
+    stage.style.setProperty('--pm', pm.toFixed(4));
 
     progressRef.current = pc;
     // Once every cube has left, there is nothing more to draw.
@@ -84,17 +77,10 @@ export default function Hero() {
     let alive = true;
     let observer;
     const reduced = window.matchMedia(REDUCED_MOTION).matches;
-    // Only a scripted, full-motion page stages the hand-off to the next
-    // section; without it the sections simply follow one another.
-    const track = trackRef.current;
-    if (!reduced) track?.classList.add('is-staged');
 
     const measure = () => {
       const box = stage.getBoundingClientRect();
       const w = word.getBoundingClientRect();
-      // The panel starts at the word's centre, which sits a little off the
-      // stage's centre; it drifts to the true centre as it grows.
-      stage.style.setProperty('--word-dy', `${(w.top + w.height / 2 - (box.top + box.height / 2)).toFixed(1)}px`);
       sceneRef.current?.resize(box.width, box.height, {
         left: w.left - box.left,
         top: w.top - box.top,
@@ -122,7 +108,6 @@ export default function Hero() {
 
     return () => {
       alive = false;
-      track?.classList.remove('is-staged');
       observer?.disconnect();
       sceneRef.current?.dispose();
       sceneRef.current = null;
@@ -137,12 +122,27 @@ export default function Hero() {
       <div className="hero-stage" ref={stageRef}>
         <div className="hero-orb hero-orb-a" aria-hidden="true" />
 
-        {/* The next section's panel, growing from behind the word. */}
-        <div className="hero-panel" aria-hidden="true" />
+        {/* The media card that opens behind the word and grows to fill the
+            screen. The brand's sunset wave, in its natural colour. */}
+        <figure className="hero-media" aria-hidden="true">
+          <img
+            src="/wave-sunset-1280.webp"
+            srcSet={waveSrcSet}
+            sizes="95vw"
+            alt=""
+            width="1920"
+            height="1080"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
 
+        {/* The word splits in two as the card grows: "tide", where the name
+            comes from, slides off left and "nce" off right. */}
         <h1 className="hero-word">
           <span ref={wordRef} aria-hidden="true" translate="no">
-            tidence
+            <span className="hero-word-a">tide</span>
+            <span className="hero-word-b">nce</span>
           </span>
           <span className="sr-only">
             Tidence. {t('hero.lead')} {t('hero.em')} {t('hero.strong')}
