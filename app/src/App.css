@@ -424,8 +424,9 @@ main {
    The section is a tall track; the stage inside it is sticky. Hero.jsx splits
    the pinned scroll into phases and writes them onto the stage:
      --pc  cubes leaving, 0 to 1 (the text falls away with them)
-     --pm  the media expansion, after the 21st.dev scroll expansion hero: a
-           photo card grows from behind the word while the word splits apart
+     --pm  the window expansion, after the 21st.dev scroll expansion hero: a
+           window onto the next section grows from behind the word while the
+           word splits apart
    The section pulls up under the sticky bar so the bar floats over it. */
 
 .hero {
@@ -467,12 +468,31 @@ main {
   transform: scale(calc(1 + var(--pc, 0) * 0.04));
 }
 
-.hero-word > span[aria-hidden] {
+.hero-word > span[aria-hidden],
+.hero-word-front > span {
   display: block;
   padding-bottom: 0.06em;
 }
 
-/* The two halves of the word. As the card grows they slide off opposite
+/* The word and its front copy share one grid cell, so they line up exactly
+   whatever the screen size. */
+.hero-word {
+  grid-row: 1;
+  grid-column: 1;
+}
+
+/* The front copy sits above the cubes (the canvas is z-index 2) and shows
+   only the letters the anchor is woven behind. */
+.hero-word-front {
+  z-index: 3;
+  pointer-events: none;
+}
+
+.hero-word-front .is-back {
+  color: transparent;
+}
+
+/* The two halves of the word. As the window grows they slide off opposite
    sides, 150vw each, as the title does in the 21st.dev component. */
 .hero-word-a,
 .hero-word-b {
@@ -487,53 +507,54 @@ main {
   translate: calc(var(--pm, 0) * 150vw) 0;
 }
 
-/* The media card. It opens behind the word at 300 x 400 and grows in step
-   with the scroll to 95vw wide and the height under the bar less 6vh (85vh
-   on a laptop), the original's sizes. Square corners: the
-   brand allows no radius. Its size changes every frame, so it is fixed in
-   place and fully contained: only this one box is laid out again. */
-.hero-media {
+/* The window's outline. Hero.jsx places it every frame just outside the
+   rectangle the next section is clipped to, so the section looks as if it
+   is seen through a frame cut in the page. Square corners: the brand allows
+   no radius. */
+.hero-window {
   position: absolute;
   z-index: 0;
-  left: 50%;
-  /* Centred in the space under the 76px bar, so the full-size card is
-     never tucked behind it. */
-  top: calc(50% + 38px);
-  translate: -50% -50%;
-  width: calc(min(300px, 70vw) + var(--pm, 0) * (95vw - min(300px, 70vw)));
-  height: calc(400px + var(--pm, 0) * (100vh - 76px - 6vh - 400px));
-  height: calc(400px + var(--pm, 0) * (100dvh - 76px - 6dvh - 400px));
-  margin: 0;
-  overflow: hidden;
-  contain: strict;
-  background: var(--surface-2);
+  box-sizing: content-box;
+  margin: -1.5px 0 0 -1.5px;
+  border: 1.5px solid var(--fg);
   box-shadow: 0 40px 90px -40px rgb(0 67 74 / 0.5);
-  opacity: min(1, calc(var(--pm, 0) * 14));
+  opacity: 0;
   pointer-events: none;
 }
 
-.hero-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: saturate(0.85) contrast(1.04);
-}
-
-/* A light veil that lifts as the card opens, as in the original. */
-.hero-media::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--trench);
-  opacity: calc(0.35 - var(--pm, 0) * 0.3);
+/* The section seen through the window (the enquiry form). On a staged page
+   (Hero.jsx adds .is-staged) it overlaps the hero's last screen, so that it
+   sits right after the pin; while the hero is pinned Hero.jsx holds it at
+   the top of the screen with a transform and clips it to the window. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero.is-staged + .section {
+    position: relative;
+    z-index: 1;
+    margin-top: -100vh;
+    margin-top: -100svh;
+  }
 }
 
 /* --- Start a project ---------------------------------------------------
-   The enquiry form as the second section, on a mint ground, following the
-   hero's expanded media card up the page. Heading and a line on the left,
+   The enquiry form as the second section, on a mint ground. It is what the
+   hero's window opens onto. Heading and a line on the left,
    form on the right; stacked on phones. */
 .start {
   background: var(--tide-panel);
+}
+
+/* Seen through the hero's window, the section has to fill the screen, or
+   the open window would show an empty strip under it. Content sits centred
+   in the space under the bar. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero.is-staged + .start {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    align-content: center;
+    padding-top: calc(76px + clamp(2rem, 6vh, 4rem));
+    padding-bottom: clamp(2rem, 6vh, 4rem);
+  }
 }
 
 .start-grid {
@@ -714,7 +735,7 @@ main {
     position: relative;
   }
 
-  .hero-media {
+  .hero-window {
     display: none;
   }
 }
@@ -1266,7 +1287,7 @@ button.link {
 }
 
 .stage-num {
-  font-family: var(--font-display);
+  font-family: var(--font-outline);
   font-weight: 700;
   line-height: 0.8;
   color: transparent;
@@ -2156,6 +2177,7 @@ button.link {
 }
 
 .slogan-b {
+  font-family: var(--font-outline);
   --fill: clamp(0, calc((var(--p, 1) - 0.25) * 3.5), 1);
   align-self: flex-end;
   color: color-mix(in oklab, var(--accent) calc(var(--fill) * 100%), transparent);
@@ -2371,7 +2393,7 @@ a.channel:hover .channel-arrow {
 }
 
 .wordmark text {
-  font-family: var(--font-display);
+  font-family: var(--font-outline);
   font-weight: 800;
   font-size: 74px;
   /* As tight as the outlines allow: Bricolage 800 is wide, and any tighter

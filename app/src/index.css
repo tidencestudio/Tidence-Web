@@ -79,6 +79,8 @@
   --font-display: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
   --font-body: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
   --font-mono: 'DM Mono', ui-monospace, monospace;
+  /* Outlined display text: same letters, overlaps merged (fonts.css). */
+  --font-outline: 'Bricolage Outline', 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
   --font-editorial: 'Newsreader', Georgia, 'Times New Roman', serif;
 
   --step--1: 0.875rem; /* 14 */

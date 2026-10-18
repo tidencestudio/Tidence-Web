@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { scrollTargetY } from './smoothScroll';
 
 // The landing is corrected a few times over roughly half a second. Images and
 // webfonts settle after first paint and change the height of everything above
@@ -27,7 +28,10 @@ export default function useHashLanding() {
     // 'instant' rather than 'auto': `auto` defers to the computed
     // scroll-behavior, which is smooth here, and a smooth landing scroll
     // races the layout still settling above the target.
-    const jump = () => document.getElementById(id)?.scrollIntoView({ behavior: 'instant' });
+    const jump = () => {
+      const target = document.getElementById(id);
+      if (target) window.scrollTo({ top: scrollTargetY(target), behavior: 'instant' });
+    };
 
     const schedule = () => {
       CORRECTIONS.forEach((delay) => timers.push(window.setTimeout(jump, delay)));

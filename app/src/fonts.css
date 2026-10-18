@@ -45,3 +45,26 @@
   font-display: swap;
   src: url('./fonts/newsreader-italic-display.woff2') format('woff2');
 }
+
+/* Bricolage for outlined text only. The variable font builds each letter
+   from overlapping shapes, which a fill hides but an outline traces, so
+   stroked letters showed lines crossing through them. These are fixed
+   weight-800 and 700 cuts at the display optical size with the overlaps
+   merged, generated with fontTools' instancer. Used by the footer wordmark,
+   the outlined slogan line and the process numerals; never preloaded,
+   since nothing above the fold uses them. */
+@font-face {
+  font-family: 'Bricolage Outline';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('./fonts/bricolage-800-outline.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Bricolage Outline';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./fonts/bricolage-700-outline.woff2') format('woff2');
+}

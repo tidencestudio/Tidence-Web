@@ -8,6 +8,23 @@ const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 let cancelCurrent = null;
 
 /**
+ * Where the page has to be scrolled to for `target` to sit under the sticky
+ * nav. Measured from layout offsets, not getBoundingClientRect: the section
+ * after the hero is moved with a transform while the hero is pinned (Hero.jsx),
+ * and a transformed box would send the scroll to the wrong place. A target
+ * marked data-scroll-flush lands at the very top instead, with no allowance
+ * for the nav (the section seen through the hero's window does this, so it
+ * arrives exactly as the window finishes opening).
+ */
+export function scrollTargetY(target) {
+  let y = 0;
+  for (let el = target; el; el = el.offsetParent) y += el.offsetTop;
+  if (target.hasAttribute('data-scroll-flush')) return y;
+  const offset = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+  return y - offset;
+}
+
+/**
  * Scrolls to the element with `id`, clearing the sticky nav the same way the
  * CSS `scroll-padding-top` does. Any wheel, touch or key input from the reader
  * cancels it on the spot: they are never fighting the page for the scroll.
@@ -16,9 +33,8 @@ export default function smoothScrollTo(id) {
   const target = document.getElementById(id);
   if (!target) return;
 
-  const offset = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
   const start = window.scrollY;
-  const end = target.getBoundingClientRect().top + start - offset;
+  const end = scrollTargetY(target);
   const distance = end - start;
 
   const settle = () => {
