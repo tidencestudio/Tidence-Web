@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tidence WhatsApp poster</title>
+<style>
+  @font-face { font-family: "Bricolage Grotesque"; src: url("../../app/src/fonts/bricolage.woff2") format("woff2"); font-weight: 200 800; font-display: block; }
+  @font-face { font-family: "DM Mono"; src: url("../../app/src/fonts/dm-mono-400.woff2") format("woff2"); font-weight: 400; font-display: block; }
+  @font-face { font-family: "DM Mono"; src: url("../../app/src/fonts/dm-mono-500.woff2") format("woff2"); font-weight: 500; font-display: block; }
+  @font-face { font-family: "Newsreader"; src: url("../../app/src/fonts/newsreader-italic-display.woff2") format("woff2"); font-style: italic; font-weight: 200 800; font-display: block; }
+
+  :root {
+    --foam: #F2FFFA; --spray: #7FF5D8; --lagoon: #13C2B0; --current: #0E8C86;
+    --reef: #00737A; --deep: #00434A; --trench: #00191C; --abyss: #070F12;
+    --sunlit: #EDC27A; --muted: #B8D4CE; --hair: #1C2B2E; --hair2: #2B4145;
+    --m: 80px;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: var(--abyss); }
+  body { width: max-content; }
+
+  .poster {
+    position: relative; overflow: hidden;
+    width: 1080px; height: 1920px;
+    background: var(--abyss);
+    color: var(--foam);
+    font-family: "Bricolage Grotesque", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* dot lattice, 26px pitch */
+  .poster::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: radial-gradient(circle, var(--hair2) 1px, transparent 1.4px);
+    background-size: 26px 26px; background-position: 13px 13px;
+    opacity: .9;
+  }
+  /* film grain over everything */
+  .grain {
+    position: absolute; inset: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none;
+    opacity: .38; mix-blend-mode: soft-light;
+  }
+
+  .meta {
+    position: absolute; left: var(--m); right: var(--m); top: 262px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: "DM Mono", monospace; font-size: 19px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--spray);
+  }
+  .meta .lead { display: flex; align-items: center; gap: 18px; }
+  .meta .lead::before { content: ""; width: 32px; height: 1px; background: var(--spray); }
+  .meta .mid { color: var(--muted); }
+
+  .headline {
+    position: absolute; left: var(--m); right: var(--m); top: 350px;
+    line-height: .88; letter-spacing: -.045em; font-weight: 300;
+  }
+  .headline .l { display: block; width: max-content; font-size: 196px; white-space: nowrap; }
+  .headline .l.light { font-weight: 300; }
+  .headline .l.ital {
+    font-family: "Newsreader", serif; font-style: italic; font-weight: 300;
+    color: var(--sunlit); letter-spacing: -.02em; line-height: 1.0;
+    padding-bottom: 6px;
+  }
+  .headline .l.bold { font-weight: 800; }
+
+  .sub {
+    position: absolute; right: var(--m); top: 1168px; width: 580px;
+    font-size: 30px; line-height: 1.5; color: var(--muted);
+  }
+  .sub b { color: var(--foam); font-weight: 500; }
+
+  .band {
+    position: absolute; left: 0; right: 0; top: 1340px; bottom: 0;
+    background: linear-gradient(135deg, var(--spray) 0%, var(--current) 52%, var(--deep) 100%);
+    color: var(--trench);
+    padding: 56px var(--m) 0;
+  }
+  .band .slogan {
+    font-weight: 800; font-size: 64px; line-height: .95; letter-spacing: -.04em;
+  }
+  .band .labels {
+    position: absolute; right: var(--m); top: 62px; text-align: right;
+    font-family: "DM Mono", monospace; font-size: 20px; letter-spacing: .1em;
+    text-transform: uppercase; line-height: 1.7;
+  }
+  .lockup {
+    position: absolute; left: var(--m); top: 1556px; display: flex; align-items: flex-start; gap: 26px;
+  }
+  .lockup svg { width: 78px; height: auto; display: block; }
+  .lockup .word { font-weight: 800; font-size: 104px; letter-spacing: -.05em; line-height: 1; margin-top: -8px; color: var(--trench); }
+  .url {
+    position: absolute; right: var(--m); top: 1626px;
+    font-family: "DM Mono", monospace; font-size: 22px; letter-spacing: .06em; color: var(--trench);
+  }
+
+  /* ---------- square 1080x1080 (profile/catalog) ---------- */
+  .poster.square { height: 1080px; --m: 64px; }
+  .square .meta { top: 64px; font-size: 18px; }
+  .square .headline { top: 130px; }
+  .square .sub { display: none; }
+  .square .band { top: 790px; padding-top: 40px; }
+  .square .band .slogan { font-size: 44px; }
+  .square .band .labels { top: 44px; font-size: 16px; }
+  .square .lockup { top: 940px; gap: 18px; }
+  .square .lockup svg { width: 54px; }
+  .square .lockup .word { font-size: 72px; margin-top: -5px; }
+  .square .url { top: 992px; font-size: 16px; }
+</style>
+</head>
+<body>
+<div class="poster" id="poster">
+  <div class="meta">
+    <span class="lead">Tidence studio</span>
+    <span class="mid" data-i18n="services">Web, CRM and automation</span>
+    <span>@tidence.dev</span>
+  </div>
+
+  <h1 class="headline" data-i18n="headline">
+    <span class="l light">We build</span>
+    <span class="l light">the tools</span>
+    <span class="l ital">your business</span>
+    <span class="l bold">runs on.</span>
+  </h1>
+
+  <p class="sub" data-i18n="sub">Websites, CRMs and automations for your business. Built by a team of two. <b>You talk to the people writing the code.</b></p>
+
+  <div class="band">
+    <div class="slogan" data-i18n="slogan">Imagine it.<br>We build it.</div>
+    <div class="labels" data-i18n="labels">WhatsApp Business<br>Official account</div>
+  </div>
+
+  <div class="lockup">
+    <svg viewBox="0 0 374 384" aria-hidden="true">
+      <rect width="374" height="62" fill="#00191C"/>
+      <path d="M156 62H218V343H245L297 293L322 207H364L336 321L269 384H105L38 321L10 207H52L77 293L129 343H156Z" fill="#00191C"/>
+      <path d="M156 62H218V124Z" fill="#00191C"/>
+    </svg>
+    <span class="word">tidence</span>
+  </div>
+  <div class="url">tidence.vercel.app</div>
+
+  <svg class="grain" xmlns="http://www.w3.org/2000/svg">
+    <filter id="g"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="7" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <rect width="100%" height="100%" filter="url(#g)"/>
+  </svg>
+</div>
+
+<script>
+  const q = new URLSearchParams(location.search);
+  const poster = document.getElementById('poster');
+  if (q.get('size') === 'square') poster.classList.add('square');
+  if (q.get('lang') === 'es') {
+    document.documentElement.lang = 'es';
+    const t = {
+      services: 'Web, CRM y automatización',
+      headline: '<span class="l light">Construimos</span><span class="l light">las herramientas</span><span class="l ital">con las que</span><span class="l bold">funciona</span><span class="l bold">tu negocio.</span>',
+      sub: 'Sitios web, CRMs y automatizaciones para tu negocio. Hechos por un equipo de dos. <b>Hablas con las personas que escriben el código.</b>',
+      slogan: 'Imagínalo.<br>Lo construimos.',
+      labels: 'WhatsApp Business<br>Cuenta oficial',
+    };
+    for (const [k, v] of Object.entries(t)) document.querySelector('[data-i18n="' + k + '"]').innerHTML = v;
+    poster.classList.add('es');
+  }
+  // Fit every headline line to the full column width, poster style.
+  function fit() {
+    const h = document.querySelector('.headline');
+    const band = document.querySelector('.band');
+    const sub = document.querySelector('.sub');
+    const square = poster.classList.contains('square');
+    const w = h.clientWidth;
+    const lines = [...h.querySelectorAll('.l')];
+    // 1. every line fills the column width
+    for (const l of lines) {
+      let size = 420;
+      l.style.fontSize = size + 'px';
+      while (l.getBoundingClientRect().width > w && size > 40) { size -= 2; l.style.fontSize = size + 'px'; }
+    }
+    // 2. scale the whole block so headline + subhead sit above the band
+    const pr = poster.getBoundingClientRect();
+    const bandTop = band.getBoundingClientRect().top - pr.top;
+    const gapSub = square ? 0 : 64, subH = square ? 0 : sub.getBoundingClientRect().height;
+    const bottomPad = square ? 56 : 72;
+    const available = bandTop - bottomPad - subH - gapSub - (h.getBoundingClientRect().top - pr.top);
+    const height = h.getBoundingClientRect().height;
+    if (height > available) {
+      const k = available / height;
+      for (const l of lines) l.style.fontSize = (parseFloat(l.style.fontSize) * k) + 'px';
+    }
+    const r = h.getBoundingClientRect();
+    sub.style.top = Math.round(r.bottom - pr.top + gapSub) + 'px';
+  }
+  document.fonts.ready.then(fit);
+</script>
+</body>
+</html>

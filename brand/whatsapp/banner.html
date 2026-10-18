@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tidence WhatsApp banner</title>
+<style>
+  @font-face { font-family: "Bricolage Grotesque"; src: url("../../app/src/fonts/bricolage.woff2") format("woff2"); font-weight: 200 800; font-display: block; }
+  @font-face { font-family: "DM Mono"; src: url("../../app/src/fonts/dm-mono-400.woff2") format("woff2"); font-weight: 400; font-display: block; }
+  @font-face { font-family: "DM Mono"; src: url("../../app/src/fonts/dm-mono-500.woff2") format("woff2"); font-weight: 500; font-display: block; }
+  @font-face { font-family: "Newsreader"; src: url("../../app/src/fonts/newsreader-italic-display.woff2") format("woff2"); font-style: italic; font-weight: 200 800; font-display: block; }
+
+  :root {
+    --foam: #F2FFFA; --spray: #7FF5D8; --lagoon: #13C2B0; --current: #0E8C86;
+    --reef: #00737A; --deep: #00434A; --trench: #00191C; --abyss: #070F12;
+    --sunlit: #EDC27A; --paper: #EAF6F1; --rule: var(--abyss);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: var(--abyss); }
+  body { width: max-content; }
+
+  .banner {
+    position: relative; overflow: hidden;
+    width: 1920px; height: 1080px;
+    background: var(--foam);
+    color: var(--abyss);
+    font-family: "Bricolage Grotesque", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    display: grid;
+    grid-template-columns: 1150px 1fr;
+    border: 2px solid var(--rule);
+  }
+  .grain { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 20; pointer-events: none; opacity: .5; mix-blend-mode: multiply; }
+  .mono { font-family: "DM Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+
+  /* ---------- left column ---------- */
+  .left { display: grid; grid-template-rows: 150px 488px 70px 300px 70px; border-right: 2px solid var(--rule); }
+  .row { border-bottom: 2px solid var(--rule); }
+  .row:last-child { border-bottom: 0; }
+
+  .top { display: flex; align-items: center; justify-content: space-between; padding: 0 44px; }
+  .lockup { display: flex; align-items: flex-start; gap: 16px; }
+  .lockup svg { width: 46px; height: auto; display: block; }
+  .lockup .word { font-weight: 800; font-size: 62px; letter-spacing: -.05em; line-height: 1; margin-top: -5px; }
+  .top .claim { display: flex; align-items: center; gap: 22px; max-width: 520px; }
+  .top .claim .spark { width: 44px; height: 44px; flex: none; }
+  .top .claim p { font-weight: 700; font-size: 22px; line-height: 1.15; letter-spacing: -.01em; text-transform: uppercase; }
+
+  .hero { position: relative; min-height: 0; height: 488px; padding: 24px 40px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
+  .hero h1 { font-weight: 800; letter-spacing: -.045em; line-height: .86; text-transform: uppercase; color: var(--deep); }
+  .hero h1 .l { display: block; width: max-content; white-space: nowrap; }
+  .hero h1 .ital { font-family: "Newsreader", serif; font-style: italic; font-weight: 400; text-transform: none; letter-spacing: -.02em; color: var(--abyss); line-height: 1; }
+  .hero .seal { position: absolute; right: 30px; bottom: 22px; width: 172px; height: 172px; transform: rotate(-12deg); }
+  .hero .seal text { font-family: "DM Mono", monospace; font-size: 14px; letter-spacing: 0; text-transform: uppercase; fill: var(--abyss); }
+
+  .tabs { display: grid; grid-template-columns: repeat(4, 1fr); align-items: stretch; }
+  .tabs span { display: flex; align-items: center; padding: 0 28px; font-weight: 700; font-size: 20px; text-transform: uppercase; letter-spacing: .04em; border-right: 2px solid var(--rule); }
+  .tabs span:last-child { border-right: 0; }
+  .tabs span.on { background: var(--deep); color: var(--foam); }
+
+  .tiles { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .tile { position: relative; padding: 24px 26px; border-right: 2px solid var(--rule); display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
+  .tile:last-child { border-right: 0; }
+  .tile .n { font-family: "DM Mono", monospace; font-size: 15px; letter-spacing: .12em; }
+  .tile h3 { font-weight: 800; font-size: 56px; line-height: .9; letter-spacing: -.04em; text-transform: uppercase; }
+  .tile p { font-size: 17px; line-height: 1.35; max-width: 220px; }
+  .tile.dark { background: var(--abyss); color: var(--foam); }
+  .tile.dark .n { color: var(--sunlit); }
+  .tile.deep { background: var(--deep); color: var(--foam); }
+  .tile.deep .n { color: var(--spray); }
+  .tile.lagoon { background: var(--lagoon); color: var(--trench); }
+  .tile.frame { background: var(--paper); }
+  .tile .big { position: absolute; right: -10px; bottom: -34px; font-weight: 800; font-size: 200px; letter-spacing: -.06em; line-height: 1; opacity: .12; }
+
+  .foot { display: flex; align-items: center; padding: 0 44px; gap: 0; font-size: 16px; }
+  .foot span { display: flex; align-items: center; gap: 14px; padding-right: 40px; }
+  .foot span + span { padding-left: 40px; border-left: 2px solid var(--rule); }
+  .foot .dot { width: 10px; height: 10px; background: var(--deep); flex: none; }
+
+  /* ---------- right column: 2x2 panels ---------- */
+  .right { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+  .panel { position: relative; padding: 36px 34px; overflow: hidden; border-bottom: 2px solid var(--rule); border-right: 2px solid var(--rule); }
+  .panel:nth-child(2n) { border-right: 0; }
+  .panel:nth-child(n+3) { border-bottom: 0; }
+  .panel h2 { font-weight: 800; font-size: 64px; line-height: .9; letter-spacing: -.04em; text-transform: uppercase; }
+  .panel .rule { width: 100%; height: 2px; background: currentColor; margin: 18px 0 16px; }
+  .panel p { font-size: 18px; line-height: 1.35; max-width: 250px; }
+
+  .p-deep { background: var(--deep); color: var(--foam); }
+  .p-deep .spark { position: absolute; right: 26px; bottom: 26px; width: 120px; height: 120px; }
+  .p-deep .slogan { position: absolute; left: 34px; bottom: 34px; font-family: "Newsreader", serif; font-style: italic; font-weight: 400; font-size: 44px; line-height: 1; color: var(--spray); }
+
+  .p-paper { background: var(--paper); }
+  .p-paper ol { list-style: none; margin-top: 10px; }
+  .p-paper li { display: grid; grid-template-columns: 54px 1fr; align-items: baseline; padding: 11px 0; border-bottom: 2px solid var(--rule); font-weight: 700; font-size: 25px; letter-spacing: -.02em; }
+  .p-paper li:last-child { border-bottom: 0; }
+  .p-paper li .n { font-family: "DM Mono", monospace; font-size: 15px; letter-spacing: .12em; color: var(--reef); }
+
+  .p-dark { background: var(--abyss); color: var(--foam); display: flex; align-items: center; justify-content: center; }
+  .p-dark svg.mark { width: 250px; height: auto; display: block; }
+  .p-dark .tag { position: absolute; left: 34px; top: 34px; font-size: 15px; color: var(--spray); }
+  .p-dark .tag2 { position: absolute; right: 34px; bottom: 30px; font-size: 15px; color: var(--spray); text-align: right; }
+  .p-dark .corner { position: absolute; inset: 18px; border: 1px solid #2B4145; pointer-events: none; }
+
+  .p-lagoon { background: var(--lagoon); color: var(--trench); }
+  .p-lagoon .cta { position: absolute; left: 34px; right: 34px; bottom: 34px; display: flex; align-items: center; justify-content: space-between; background: var(--trench); color: var(--foam); padding: 22px 26px; font-weight: 700; font-size: 24px; letter-spacing: -.01em; }
+  .p-lagoon .cta .mono { font-size: 15px; color: var(--spray); }
+  .p-lagoon .bars { position: absolute; right: 34px; top: 40px; display: flex; gap: 10px; }
+  .p-lagoon .bars i { display: block; width: 14px; background: var(--trench); }
+
+  /* ---------- hero-only mode: lockup strip + headline ---------- */
+  .banner.only { grid-template-columns: 1fr; }
+  .only .right, .only .tabs, .only .tiles, .only .foot { display: none; }
+  .only .left { grid-template-rows: 180px 896px; border-right: 0; }
+  .only .top { padding: 0 56px; }
+  .only .lockup svg { width: 60px; }
+  .only .lockup .word { font-size: 80px; margin-top: -7px; }
+  .only .top .claim p { font-size: 28px; }
+  .only .top .claim .spark { width: 56px; height: 56px; }
+  .only .hero { height: 896px; padding: 48px 56px; }
+  .only .hero .seal { width: 290px; height: 290px; right: 64px; bottom: 56px; }
+  .only .hero .seal text { font-size: 14px; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="spark" viewBox="0 0 100 100"><path d="M50 0 L58 38 L88 12 L62 42 L100 50 L62 58 L88 88 L58 62 L50 100 L42 62 L12 88 L38 58 L0 50 L38 42 L12 12 L42 38 Z"/></symbol>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0.4"><stop offset="0" stop-color="#F2FFFA"/><stop offset="1" stop-color="#7FF5D8"/></linearGradient>
+    <linearGradient id="stem" gradientUnits="userSpaceOnUse" x1="140" y1="62" x2="234" y2="384"><stop offset="0" stop-color="#13C2B0"/><stop offset="1" stop-color="#00737A"/></linearGradient>
+  </defs>
+</svg>
+
+<div class="banner" id="banner">
+  <!-- LEFT -->
+  <div class="left">
+    <div class="row top">
+      <div class="lockup">
+        <svg viewBox="0 0 374 384" aria-hidden="true"><rect width="374" height="62" fill="#070F12"/><path d="M156 62H218V343H245L297 293L322 207H364L336 321L269 384H105L38 321L10 207H52L77 293L129 343H156Z" fill="#070F12"/><path d="M156 62H218V124Z" fill="#070F12"/></svg>
+        <span class="word">tidence</span>
+      </div>
+      <div class="claim">
+        <svg class="spark" style="fill:var(--sunlit)"><use href="#spark"/></svg>
+        <p data-i18n="claim">You talk to the people<br>writing the code.</p>
+      </div>
+    </div>
+
+    <div class="row hero">
+      <h1 data-i18n="headline">
+        <span class="l">We build the tools</span>
+        <span class="l ital">your business</span>
+        <span class="l">runs on.</span>
+      </h1>
+      <svg class="seal" viewBox="0 0 170 170" aria-hidden="true">
+        <circle cx="85" cy="85" r="82" fill="none" stroke="#070F12" stroke-width="2"/>
+        <circle cx="85" cy="85" r="56" fill="none" stroke="#070F12" stroke-width="2"/>
+        <defs><path id="ring" d="M85 85 m-69 0 a69 69 0 1 1 138 0 a69 69 0 1 1 -138 0"/></defs>
+        <text data-i18n="seal"><textPath href="#ring" textLength="428" lengthAdjust="spacing">Imagine it. We build it. Imagine it. We build it.</textPath></text>
+        <svg x="60" y="60" width="50" height="50" style="fill:#070F12"><use href="#spark"/></svg>
+      </svg>
+    </div>
+
+    <div class="row tabs" data-i18n="tabs">
+      <span class="on">Websites</span><span>CRM</span><span>Automation</span><span>Custom tools</span>
+    </div>
+
+    <div class="row tiles" data-i18n="tiles">
+      <div class="tile dark"><span class="n">01</span><h3>Web<br>sites</h3><p>Fast, found on Google, easy to update yourself.</p><span class="big">01</span></div>
+      <div class="tile frame"><span class="n">02</span><h3>CRM</h3><p>Every client, quote and follow-up in one place.</p><span class="big">02</span></div>
+      <div class="tile deep"><span class="n">03</span><h3>Auto<br>mation</h3><p>The copy-paste work your team does every Monday, gone.</p><span class="big">03</span></div>
+      <div class="tile lagoon"><span class="n">04</span><h3>Custom<br>tools</h3><p>Dashboards, bots and internal tools built around you.</p><span class="big">04</span></div>
+    </div>
+
+    <div class="row foot mono">
+      <span><i class="dot"></i>tidence.vercel.app</span>
+      <span><i class="dot"></i>@tidence.dev</span>
+      <span><i class="dot"></i>tidencestudio@gmail.com</span>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="panel p-deep">
+      <h2 data-i18n="p1h">Built<br>around<br>you</h2>
+      <div class="rule"></div>
+      <p data-i18n="p1p">Most businesses buy software off the shelf and spend years working around it.</p>
+      <svg class="spark" style="fill:var(--sunlit)"><use href="#spark"/></svg>
+    </div>
+
+    <div class="panel p-paper">
+      <h2 data-i18n="p2h">How it<br>works</h2>
+      <ol data-i18n="p2l">
+        <li><span class="n">01</span>We talk</li>
+        <li><span class="n">02</span>We plan</li>
+        <li><span class="n">03</span>We build</li>
+        <li><span class="n">04</span>We launch and stay</li>
+      </ol>
+    </div>
+
+    <div class="panel p-dark">
+      <div class="corner"></div>
+      <span class="tag mono" data-i18n="p3a">A two-person studio</span>
+      <svg class="mark" viewBox="0 0 374 384" aria-hidden="true">
+        <rect width="374" height="62" fill="url(#bar)"/>
+        <path d="M156 62H218V343H245L297 293L322 207H364L336 321L269 384H105L38 321L10 207H52L77 293L129 343H156Z" fill="url(#stem)"/>
+        <path d="M156 62H218V124Z" fill="#00191C"/>
+      </svg>
+      <span class="tag2 mono" data-i18n="p3b">Spanish and English<br>Web, CRM, automation</span>
+    </div>
+
+    <div class="panel p-lagoon">
+      <h2 data-i18n="p4h">Write<br>to us</h2>
+      <div class="bars"><i style="height:40px"></i><i style="height:64px"></i><i style="height:28px"></i></div>
+      <div class="rule"></div>
+      <p data-i18n="p4p">Tell us what eats your week. We reply ourselves, in your language.</p>
+      <div class="cta"><span data-i18n="cta">Start a project</span><span class="mono" data-i18n="ctal">WhatsApp Business</span></div>
+    </div>
+  </div>
+
+  <svg class="grain" xmlns="http://www.w3.org/2000/svg">
+    <filter id="g"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".55"/></feComponentTransfer></filter>
+    <rect width="100%" height="100%" filter="url(#g)"/>
+  </svg>
+</div>
+
+<script>
+  const q = new URLSearchParams(location.search);
+  if (q.get('only')) document.getElementById('banner').classList.add('only');
+  if (q.get('lang') === 'es') {
+    document.documentElement.lang = 'es';
+    const t = {
+      claim: 'Hablas con las personas<br>que escriben el código.',
+      headline: '<span class="l">Construimos las herramientas</span><span class="l ital">con las que funciona</span><span class="l">tu negocio.</span>',
+      seal: '<textPath href="#ring" textLength="428" lengthAdjust="spacing">Imagínalo. Lo construimos. Imagínalo. Lo construimos.</textPath>',
+      tabs: '<span class="on">Sitios web</span><span>CRM</span><span>Automatización</span><span>A medida</span>',
+      tiles: '<div class="tile dark"><span class="n">01</span><h3>Sitios<br>web</h3><p>Rápidos, visibles en Google y fáciles de actualizar tú.</p><span class="big">01</span></div>'
+           + '<div class="tile frame"><span class="n">02</span><h3>CRM</h3><p>Cada cliente, cotización y seguimiento en un solo lugar.</p><span class="big">02</span></div>'
+           + '<div class="tile deep"><span class="n">03</span><h3>Auto<br>matiza</h3><p>El copiar y pegar de cada lunes, eliminado.</p><span class="big">03</span></div>'
+           + '<div class="tile lagoon"><span class="n">04</span><h3>A tu<br>medida</h3><p>Dashboards, bots y herramientas internas hechas para ti.</p><span class="big">04</span></div>',
+      p1h: 'Hecho<br>para<br>ti', p1p: 'La mayoría compra software genérico y pasa años adaptándose a él.',
+      p2h: 'Cómo<br>trabajamos', p2l: '<li><span class="n">01</span>Hablamos</li><li><span class="n">02</span>Planeamos</li><li><span class="n">03</span>Construimos</li><li><span class="n">04</span>Lanzamos y te acompañamos</li>',
+      p3a: 'Un estudio de dos personas', p3b: 'Español e inglés<br>Web, CRM, automatización',
+      p4h: 'Escríbe<br>nos', p4p: 'Cuéntanos qué te come la semana. Te respondemos nosotros, en tu idioma.',
+      cta: 'Empezar un proyecto', ctal: 'WhatsApp Business',
+    };
+    for (const [k, v] of Object.entries(t)) document.querySelector('[data-i18n="' + k + '"]').innerHTML = v;
+  }
+  // Headline lines fill the hero width (minus the seal), then scale into the row height.
+  function fit() {
+    const hero = document.querySelector('.hero'), h1 = hero.querySelector('h1');
+    const only = document.getElementById('banner').classList.contains('only');
+    const w = hero.clientWidth - (only ? 112 : 80);
+    const lines = [...h1.querySelectorAll('.l')];
+    lines.forEach((l, i) => {
+      const budget = (only && i === lines.length - 1) ? w - 360 : w;
+      let size = 320; l.style.fontSize = size + 'px';
+      while (l.getBoundingClientRect().width > budget && size > 30) { size -= 2; l.style.fontSize = size + 'px'; }
+    });
+    const avail = hero.clientHeight - (only ? 96 : 48);
+    const hgt = h1.getBoundingClientRect().height;
+    if (hgt > avail) { const k = avail / hgt; for (const l of lines) l.style.fontSize = (parseFloat(l.style.fontSize) * k) + 'px'; }
+    // headings that overflow their panel shrink until they fit
+    for (const el of document.querySelectorAll('.panel h2, .tile h3')) {
+      const box = el.parentElement, max = box.clientWidth - parseFloat(getComputedStyle(box).paddingLeft) - parseFloat(getComputedStyle(box).paddingRight);
+      let size = parseFloat(getComputedStyle(el).fontSize);
+      while (el.scrollWidth > max && size > 20) { size -= 1; el.style.fontSize = size + 'px'; }
+    }
+  }
+  document.fonts.ready.then(fit);
+</script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tidence 3D banner</title>
+<style>
+  @font-face { font-family: "Bricolage Grotesque"; src: url("../../app/src/fonts/bricolage.woff2") format("woff2"); font-weight: 200 800; font-display: block; }
+  @font-face { font-family: "DM Mono"; src: url("../../app/src/fonts/dm-mono-400.woff2") format("woff2"); font-weight: 400; font-display: block; }
+  @font-face { font-family: "DM Mono"; src: url("../../app/src/fonts/dm-mono-500.woff2") format("woff2"); font-weight: 500; font-display: block; }
+
+  :root {
+    --foam: #F2FFFA; --spray: #7FF5D8; --lagoon: #13C2B0; --current: #0E8C86;
+    --reef: #00737A; --deep: #00434A; --trench: #00191C; --abyss: #070F12;
+    --sunlit: #EDC27A; --paper: #F6FBF9;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: var(--paper); }
+  body { width: max-content; }
+
+  .banner {
+    position: relative; overflow: hidden;
+    width: 1920px; height: 1080px;
+    background: var(--paper);
+    color: var(--abyss);
+    font-family: "Bricolage Grotesque", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .grain { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 50; pointer-events: none; opacity: .35; mix-blend-mode: multiply; }
+  .mono { font-family: "DM Mono", monospace; letter-spacing: .06em; }
+
+  /* top bar */
+  .top { position: absolute; left: 72px; right: 72px; top: 52px; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
+  .lockup { display: flex; align-items: flex-start; gap: 12px; }
+  .lockup svg { width: 34px; height: auto; display: block; }
+  .lockup .word { font-weight: 800; font-size: 44px; letter-spacing: -.05em; line-height: 1; margin-top: -4px; }
+  .links { display: flex; gap: 40px; font-size: 20px; }
+  .links span:last-child { border-bottom: 2px solid var(--abyss); padding-bottom: 3px; }
+
+  /* chip row */
+  .chips { position: absolute; left: 0; right: 0; top: 150px; display: flex; justify-content: center; gap: 14px; z-index: 10; }
+  .chips span { border: 2px solid var(--abyss); padding: 9px 22px 10px; font-size: 22px; font-weight: 500; line-height: 1; background: var(--paper); }
+
+  /* giant wordmark */
+  .giant {
+    position: absolute; left: 0; right: 0; top: 196px; height: 640px;
+    display: flex; align-items: center; justify-content: center; z-index: 1;
+  }
+  .giant span { font-weight: 800; letter-spacing: -.055em; line-height: .8; white-space: nowrap; color: var(--abyss); }
+
+  /* stamp, in place of the reference's registered mark */
+  .seal { position: absolute; width: 150px; height: 150px; z-index: 3; transform: rotate(-12deg); }
+  .seal text { font-family: "DM Mono", monospace; font-size: 13px; fill: var(--abyss); }
+
+  /* soft out-of-focus spheres for depth */
+  .orb { position: absolute; border-radius: 50%; pointer-events: none; }
+  .orb.a { width: 150px; height: 150px; left: 196px; top: 236px; z-index: 0;
+    background: radial-gradient(circle at 35% 30%, #ffffff 0%, #c9dcd7 40%, #2B4145 100%); filter: blur(7px); opacity: .9; }
+  .orb.b { width: 230px; height: 230px; right: 170px; top: 560px; z-index: 4;
+    background: radial-gradient(circle at 35% 30%, #ffffff 0%, #d8e8e3 45%, #6f8f89 100%); filter: blur(12px); opacity: .85; }
+  .orb.c { width: 90px; height: 90px; left: 760px; top: 760px; z-index: 4;
+    background: radial-gradient(circle at 35% 30%, #ffffff 0%, #bfe9dd 50%, #0E8C86 100%); filter: blur(6px); opacity: .75; }
+
+  canvas#scene { position: absolute; inset: 0; width: 1920px; height: 1080px; z-index: 2; }
+
+  /* bottom */
+  .sub { position: absolute; left: 0; right: 0; top: 862px; text-align: center; font-size: 30px; font-weight: 500; letter-spacing: -.01em; z-index: 10; }
+  .cta { position: absolute; left: 50%; top: 926px; transform: translateX(-50%); z-index: 10;
+    background: var(--abyss); color: var(--foam); font-size: 24px; font-weight: 600; padding: 22px 64px; white-space: nowrap; }
+  .foot { position: absolute; left: 72px; right: 72px; bottom: 44px; display: flex; justify-content: space-between; align-items: center; font-size: 18px; z-index: 10; }
+  .foot .news { display: flex; align-items: center; gap: 12px; }
+  .foot .news i { width: 9px; height: 9px; background: var(--sunlit); display: block; }
+  .foot .news b { font-weight: 700; }
+  .foot .right { display: flex; gap: 36px; }
+
+  /* simplified: only the wordmark and the cubes, centred */
+  .simple .top, .simple .chips, .simple .sub, .simple .cta, .simple .foot, .simple .seal { display: none; }
+  .simple .giant { top: 220px; }
+  .simple canvas#scene, .simple .orb { translate: 0 24px; }
+</style>
+</head>
+<body>
+<div class="banner" id="banner">
+  <div class="top">
+    <div class="lockup">
+      <svg viewBox="0 0 374 384" aria-hidden="true"><rect width="374" height="62" fill="#070F12"/><path d="M156 62H218V343H245L297 293L322 207H364L336 321L269 384H105L38 321L10 207H52L77 293L129 343H156Z" fill="#070F12"/><path d="M156 62H218V124Z" fill="#070F12"/></svg>
+      <span class="word">tidence</span>
+    </div>
+    <div class="links mono"><span>tidence.vercel.app</span><span data-i18n="wa">WhatsApp Business</span></div>
+  </div>
+
+  <div class="chips" data-i18n="chips"><span>Websites</span><span>CRM</span><span>Automation</span><span>Custom tools</span><span>Contact</span></div>
+
+  <div class="orb a"></div>
+  <div class="giant"><span id="giant">tidence</span></div>
+
+  <svg class="seal" id="seal" viewBox="0 0 150 150" aria-hidden="true">
+    <circle cx="75" cy="75" r="72" fill="#F6FBF9" stroke="#070F12" stroke-width="2.5"/>
+    <circle cx="75" cy="75" r="48" fill="none" stroke="#070F12" stroke-width="2"/>
+    <defs><path id="ring" d="M75 75 m-60 0 a60 60 0 1 1 120 0 a60 60 0 1 1 -120 0"/></defs>
+    <text data-i18n="seal"><textPath href="#ring" textLength="372" lengthAdjust="spacing">Imagine it. We build it. Imagine it. We build it.</textPath></text>
+    <path transform="translate(53 53) scale(.44)" fill="#070F12" d="M50 0 L58 38 L88 12 L62 42 L100 50 L62 58 L88 88 L58 62 L50 100 L42 62 L12 88 L38 58 L0 50 L38 42 L12 12 L42 38 Z"/>
+  </svg>
+
+  <canvas id="scene" width="1920" height="1080"></canvas>
+  <div class="orb b"></div>
+  <div class="orb c"></div>
+
+  <p class="sub" data-i18n="sub">Websites, CRMs and automations for your business. Built by a team of two.</p>
+  <div class="cta" data-i18n="cta">Start a project</div>
+
+  <div class="foot mono">
+    <span class="news"><i></i><b data-i18n="newsb">New:</b><span data-i18n="news">we are on WhatsApp Business. Write to us directly.</span></span>
+    <span class="right"><span>@tidence.dev</span><span>tidencestudio@gmail.com</span></span>
+  </div>
+
+  <svg class="grain" xmlns="http://www.w3.org/2000/svg">
+    <filter id="g"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".5"/></feComponentTransfer></filter>
+    <rect width="100%" height="100%" filter="url(#g)"/>
+  </svg>
+</div>
+
+<script src="vendor/three.min.js"></script>
+<script>
+  window.__ready = false;
+  const q = new URLSearchParams(location.search);
+  if (q.get('simple')) document.getElementById('banner').classList.add('simple');
+  if (q.get('lang') === 'es') {
+    document.documentElement.lang = 'es';
+    const t = {
+      wa: 'WhatsApp Business',
+      chips: '<span>Sitios web</span><span>CRM</span><span>Automatización</span><span>A medida</span><span>Contacto</span>',
+      seal: '<textPath href="#ring" textLength="372" lengthAdjust="spacing">Imagínalo. Lo construimos. Imagínalo. Lo construimos.</textPath>',
+      sub: 'Sitios web, CRMs y automatizaciones para tu negocio. Hechos por un equipo de dos.',
+      cta: 'Empezar un proyecto',
+      newsb: 'Nuevo:', news: 'ya estamos en WhatsApp Business. Escríbenos directo.',
+    };
+    for (const [k, v] of Object.entries(t)) document.querySelector('[data-i18n="' + k + '"]').innerHTML = v;
+  }
+
+  // ---------- giant wordmark: fill the width, park the stamp on its shoulder ----------
+  function layoutType() {
+    const g = document.getElementById('giant');
+    let size = 900; g.style.fontSize = size + 'px';
+    while (g.getBoundingClientRect().width > 1700 && size > 100) { size -= 4; g.style.fontSize = size + 'px'; }
+    const r = g.getBoundingClientRect(), b = document.getElementById('banner').getBoundingClientRect();
+    const seal = document.getElementById('seal');
+    seal.style.left = (r.right - b.left - 190) + 'px';
+    seal.style.top = '232px';
+  }
+
+  // ---------- 3D: the anchor T rebuilt as cubes ----------
+  const C = { foam: 0xF2FFFA, spray: 0x7FF5D8, lagoon: 0x13C2B0, reef: 0x00737A, deep: 0x00434A, trench: 0x00191C, abyss: 0x070F12, sunlit: 0xEDC27A };
+
+  function faceTexture(bg, draw) {
+    const c = document.createElement('canvas'); c.width = c.height = 256;
+    const x = c.getContext('2d');
+    x.fillStyle = bg; x.fillRect(0, 0, 256, 256);
+    x.strokeStyle = '#070F12'; x.fillStyle = '#070F12'; x.lineWidth = 9; x.lineJoin = 'miter';
+    draw(x);
+    const t = new THREE.CanvasTexture(c); t.anisotropy = 8; return t;
+  }
+  const glyph = {
+    ring: x => { x.beginPath(); x.arc(128, 128, 34, 0, Math.PI * 2); x.stroke(); },
+    square: x => { x.fillRect(100, 100, 56, 56); },
+    arrow: x => { x.beginPath(); x.moveTo(84, 172); x.lineTo(172, 84); x.stroke(); x.beginPath(); x.moveTo(110, 84); x.lineTo(172, 84); x.lineTo(172, 146); x.stroke(); },
+    bars: x => { x.fillRect(78, 140, 22, 46); x.fillRect(117, 108, 22, 78); x.fillRect(156, 76, 22, 110); },
+    chat: x => { x.beginPath(); x.moveTo(70, 80); x.lineTo(186, 80); x.lineTo(186, 160); x.lineTo(118, 160); x.lineTo(86, 190); x.lineTo(90, 160); x.lineTo(70, 160); x.closePath(); x.stroke(); },
+    label: s => x => { x.font = '500 54px "DM Mono"'; x.textAlign = 'left'; x.textBaseline = 'alphabetic'; x.fillText(s, 34, 214); x.lineWidth = 5; x.beginPath(); x.moveTo(34, 64); x.lineTo(110, 64); x.stroke(); },
+  };
+  const hex = n => '#' + n.toString(16).padStart(6, '0');
+
+  function cube(size, color, faces = {}) {
+    // faces: { px, nx, py, ny, pz, nz } -> glyph drawer
+    const order = ['px', 'nx', 'py', 'ny', 'pz', 'nz'];
+    const mats = order.map(k => faces[k]
+      ? new THREE.MeshLambertMaterial({ map: faceTexture(hex(color), faces[k]) })
+      : new THREE.MeshLambertMaterial({ color }));
+    const geo = new THREE.BoxGeometry(size, size, size);
+    const mesh = new THREE.Mesh(geo, mats);
+    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color: C.abyss, transparent: true, opacity: .85 }));
+    mesh.add(edges);
+    const hull = new THREE.Mesh(new THREE.BoxGeometry(size + 4, size + 4, size + 4), new THREE.MeshBasicMaterial({ color: C.abyss, side: THREE.BackSide }));
+    mesh.add(hull);
+    return mesh;
+  }
+
+  function build() {
+    const canvas = document.getElementById('scene');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+    renderer.setPixelRatio(2);
+    renderer.setSize(1920, 1080, false);
+
+    const scene = new THREE.Scene();
+    const cam = new THREE.OrthographicCamera(-960, 960, 540, -540, -4000, 4000);
+    cam.position.set(0, 0, 1000);
+
+    scene.add(new THREE.HemisphereLight(0xffffff, 0xb9d6d0, 0.92));
+    const key = new THREE.DirectionalLight(0xffffff, 0.42); key.position.set(-0.5, 1, 0.55); scene.add(key);
+    const rim = new THREE.DirectionalLight(0xffffff, 0.1); rim.position.set(1, -0.3, 0.3); scene.add(rim);
+
+    // The mark on a 7 x 6 grid, two cubes deep. Row 0 is the bar.
+    const S = 70, G = 2;
+    const cells = [];
+    for (let x = 0; x < 7; x++) cells.push([x, 0, x === 0 || x === 6 ? 'sunlit' : 'bar']);
+    for (let y = 1; y <= 5; y++) cells.push([3, y, y === 1 ? 'fold' : 'stem']);
+    cells.push([0, 3, 'sunlit'], [6, 3, 'sunlit'], [0, 4, 'stem'], [6, 4, 'stem'], [1, 5, 'stem'], [5, 5, 'stem']);
+    for (let x = 2; x <= 4; x++) cells.push([x, 6, 'stem']);
+    const palette = { bar: 0xB4FBEA, stem: 0x5FD9C4, sunlit: C.sunlit, fold: C.reef };
+    const deco = {
+      '2,0,0': { pz: glyph.ring }, '5,0,1': { py: glyph.square }, '3,3,0': { pz: glyph.arrow },
+      '1,0,1': { py: glyph.ring }, '0,3,0': { pz: glyph.bars }, '1,5,0': { pz: glyph.chat },
+      '3,6,0': { pz: glyph.square }, '6,3,1': { px: glyph.ring },
+    };
+
+    const mark = new THREE.Group();
+    for (const [x, y, kind] of cells) {
+      for (let z = 0; z < 2; z++) {
+        const m = cube(S, palette[kind], deco[x + ',' + y + ',' + z] || {});
+        m.position.set((x - 3) * (S + G), (3 - y) * (S + G), (z - 0.5) * (S + G));
+        // a couple of cubes knocked loose, like the reference's tumbling pieces
+        if (x === 6 && y === 0 && z === 1) { m.position.x += 34; m.position.y += 40; m.rotation.set(.25, .35, .1); }
+        if (x === 0 && y === 4 && z === 0) { m.position.x -= 30; m.position.y -= 26; m.rotation.set(-.2, -.15, .22); }
+        mark.add(m);
+      }
+    }
+    mark.rotation.set(0.42, -0.62, 0.16);
+    mark.position.set(-30, -4, 0);
+    scene.add(mark);
+
+    // floating cubes around the word
+    const isEs = document.documentElement.lang === 'es';
+    const floaters = [
+      { s: 120, c: C.sunlit, pos: [-640, -150, 200], rot: [0.5, 0.7, -0.25], f: { pz: glyph.label('CRM'), py: glyph.ring, px: glyph.bars } },
+      { s: 104, c: 0xB4FBEA, pos: [560, 205, 200], rot: [0.6, -0.5, 0.3], f: { pz: glyph.label('WEB'), py: glyph.arrow, px: glyph.square } },
+      { s: 112, c: 0x5FD9C4, pos: [520, -170, 200], rot: [-0.35, 0.65, 0.2], f: { pz: glyph.label('BOTS'), px: glyph.chat, py: glyph.ring } },
+    ];
+    for (const fl of floaters) {
+      const m = cube(fl.s, fl.c, fl.f);
+      m.position.set(...fl.pos); m.rotation.set(...fl.rot); scene.add(m);
+    }
+
+    renderer.render(scene, cam);
+    window.__ready = true;
+  }
+
+  document.fonts.ready.then(() => { layoutType(); build(); });
+</script>
+</body>
+</html>
