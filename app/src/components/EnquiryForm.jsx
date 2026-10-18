@@ -6,15 +6,16 @@ import { mailtoHref, mailtoWith, sendEnquiry, whatsappHref, whatsappWith } from 
 const NEEDS = ['website', 'crm', 'automation', 'other'];
 
 /**
- * The enquiry form. It used to sit in the hero panel; it now lives in the
- * contact section, under the list of channels.
+ * The enquiry form. It lives in its own section right after the hero
+ * (StartSection.jsx), which supplies the heading, so it is usually rendered
+ * without its own title.
  *
  * It posts to Web3Forms (see contact.js), which delivers it to the studio
  * inbox. If that is not configured or fails, it composes the same message as
  * an email and the visitor's own app opens with it ready to send. The
  * WhatsApp button opens a chat with the message already typed.
  */
-export default function EnquiryForm() {
+export default function EnquiryForm({ showTitle = true }) {
   const { t, locale } = useLocale();
   const [need, setNeed] = useState('website');
   // 'idle' | 'sending' | 'sent' | 'fallback'. Fallback means the service was
@@ -108,7 +109,7 @@ export default function EnquiryForm() {
 
   return (
     <form className="hero-form" onSubmit={submit} action={mailtoHref(t)} noValidate={false}>
-      <h2 className="hero-form-title">{t('form.title')}</h2>
+      {showTitle && <h2 className="hero-form-title">{t('form.title')}</h2>}
 
       <div className="hero-form-row">
         <div className="field">

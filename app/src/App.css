@@ -423,7 +423,7 @@ main {
 
    The section is a tall track; the stage inside it is sticky. Hero.jsx splits
    the pinned scroll into phases and writes them onto the stage:
-     --pc  cubes leaving, 0 to 1 (links and text fall away with them)
+     --pc  cubes leaving, 0 to 1 (the text falls away with them)
      --pe  the next section's panel growing from behind the word, eased
      --pw  the word fading as that section's heading arrives
    The section pulls up under the sticky bar so the bar floats over it. */
@@ -431,8 +431,8 @@ main {
 .hero {
   position: relative;
   margin-top: -76px;
-  height: 420vh;
-  height: 420svh;
+  height: 260vh;
+  height: 260svh;
 }
 
 .hero-stage {
@@ -444,43 +444,9 @@ main {
   height: 100dvh;
   min-height: 560px;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  grid-template-rows: minmax(0, 1fr) auto auto;
   justify-items: center;
   padding: calc(76px + clamp(0.75rem, 3vh, 2rem)) var(--gutter) clamp(1.25rem, 3.5vh, 2.25rem);
-}
-
-.hero-chips {
-  position: relative;
-  z-index: 3;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.6rem;
-  opacity: calc(1 - var(--pc, 0) * 3.5);
-  transform: translate3d(0, calc(var(--pc, 0) * -40px), 0);
-}
-
-.hero-chip {
-  padding: 0.5rem 1.1rem 0.55rem;
-  border: 1.5px solid var(--fg);
-  background: var(--bg);
-  font-size: var(--step-0);
-  font-weight: 500;
-  line-height: 1;
-  color: var(--fg);
-  text-decoration: none;
-  transition:
-    background var(--dur-hover) var(--ease),
-    color var(--dur-hover) var(--ease);
-}
-
-.hero-chip:hover {
-  background: var(--fg);
-  color: var(--bg);
-}
-
-.hero-chip:active {
-  transform: translateY(1px);
 }
 
 /* The giant wordmark. Sized by width on landscape screens and by height on
@@ -528,31 +494,57 @@ main {
   pointer-events: none;
 }
 
-/* The section the panel turns into. On a staged page (Hero.jsx adds
-   .is-staged) it is pulled up over the hero's track so that its top reaches
-   the top of the screen at 0.67 of the pinned scroll, the moment the panel
-   has filled the stage. Until then it is hidden; it then appears in place,
-   heading rising, already where it belongs. Nothing slides in from below.
-   Track 420svh, pin 320svh: 0.67 x 320svh - 420svh = -205.6svh. */
+/* The section the panel turns into: whichever comes next (the enquiry form,
+   StartSection.jsx). On a staged page (Hero.jsx adds .is-staged) it is
+   pulled up over the hero's track so that its top reaches the top of the
+   screen at 0.82 of the pinned scroll, the moment the panel has filled the
+   stage. Until then it is hidden; it then appears in place, already where it
+   belongs. Nothing slides in from below.
+   Track 260svh, pin 160svh: 0.82 x 160svh - 260svh = -128.8svh. */
 @media (prefers-reduced-motion: no-preference) {
-  .hero.is-staged + .services {
+  .hero.is-staged + .section {
     position: relative;
     z-index: 1;
-    margin-top: calc(0.67 * 320vh - 420vh);
-    margin-top: calc(0.67 * 320svh - 420svh);
+    margin-top: calc(0.82 * 160vh - 260vh);
+    margin-top: calc(0.82 * 160svh - 260svh);
   }
 
-  .hero.is-staged + .services:not(.is-arrived) {
+  .hero.is-staged + .section:not(.is-arrived) {
     visibility: hidden;
   }
 
-  .hero.is-staged + .services.is-arrived .services-head {
+  .hero.is-staged + .section.is-arrived > .container {
     animation: hero-rise 700ms var(--ease) both;
   }
 }
 
-.services {
+/* --- Start a project ---------------------------------------------------
+   The enquiry form as the second section, on the same mint ground as the
+   panel that grows into it. Heading and a line on the left, form on the
+   right; stacked on phones. */
+.start {
   background: var(--tide-panel);
+}
+
+.start-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.start-title {
+  font-size: var(--step-6);
+}
+
+.start-lead {
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .start-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .hero-canvas {
@@ -675,7 +667,6 @@ main {
 /* Arrival on the prerendered page, before any script: the word and the
    text rise in. The cubes bring their own arrival in WebGL. */
 @media (prefers-reduced-motion: no-preference) {
-  .hero-chips,
   .hero-word,
   .hero-foot,
   .hero-news {
@@ -719,11 +710,6 @@ main {
 }
 
 @media (max-width: 620px) {
-  .hero-chip {
-    padding: 0.4rem 0.75rem 0.45rem;
-    font-size: var(--step--1);
-  }
-
   .hero-word {
     font-size: 30vw;
   }
@@ -737,7 +723,6 @@ main {
 /* --- The enquiry form -------------------------------------------------- */
 
 .hero-form {
-  grid-area: form;
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
@@ -934,12 +919,6 @@ button.link {
   top: 24px;
   height: 1px;
   width: 100%;
-}
-
-/* The enquiry form's home in the contact section. */
-.contact-form {
-  max-width: 760px;
-  margin-top: clamp(3rem, 7vw, 5rem);
 }
 
 /* --- Eyebrow ------------------------------------------------------------

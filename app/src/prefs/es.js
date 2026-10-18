@@ -27,16 +27,12 @@ export default {
     em: 'con las que trabaja',
     strong: 'tu negocio.',
     sub: 'Sitios web, CRMs y automatizaciones para tu negocio. Hechos por un equipo de dos.',
-    chipsLabel: 'Qué construimos',
-    chips: {
-      website: 'Sitios web',
-      crm: 'CRM',
-      automation: 'Automatización',
-      custom: 'A medida',
-      contact: 'Contacto',
-    },
     newsTag: 'Nuevo:',
     news: 'ya estamos en WhatsApp Business. Escríbenos directo.',
+  },
+
+  start: {
+    lead: 'Cuéntanos qué te quita tiempo cada semana. Hablas directo con las dos personas que lo van a construir.',
   },
 
   form: {

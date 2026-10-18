@@ -106,7 +106,7 @@ export default function Nav() {
       <div className="nav-prefs">
         <LanguageSwitch />
 
-        <a className="btn btn-sm nav-cta" href="#contact">
+        <a className="btn btn-sm nav-cta" href="#start">
           {t('nav.cta')}
           <ArrowUpRight size={15} weight="regular" aria-hidden="true" />
         </a>

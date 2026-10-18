@@ -1,5 +1,6 @@
 import Nav from './components/Nav';
 import Hero from './components/Hero';
+import StartSection from './components/StartSection';
 import Services from './components/Services';
 import Journey from './components/Journey';
 import Journal from './components/Journal';
@@ -30,6 +31,7 @@ function Site() {
 
       <main id="main">
         <Hero />
+        <StartSection />
         <Services />
         <Journey />
         <Journal />

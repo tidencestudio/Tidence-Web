@@ -26,16 +26,12 @@ export default {
     em: 'your business',
     strong: 'runs on.',
     sub: 'Websites, CRMs and automations for your business. Built by a team of two.',
-    chipsLabel: 'What we build',
-    chips: {
-      website: 'Websites',
-      crm: 'CRM',
-      automation: 'Automation',
-      custom: 'Custom tools',
-      contact: 'Contact',
-    },
     newsTag: 'New:',
     news: 'we are on WhatsApp Business. Write to us directly.',
+  },
+
+  start: {
+    lead: 'Tell us what eats your week. You talk straight to the two people who will build it.',
   },
 
   form: {

@@ -5,23 +5,18 @@ import { whatsappHref } from '../contact';
 import useScrollProgress from './useScrollProgress';
 import { REDUCED_MOTION } from './useMedia';
 
-// Where each phase sits in the pinned scroll, 0 to 1. The services section is
-// placed so its top reaches the top of the screen at 0.67 (the 0.67 in
-// `.hero.is-staged + .services`, App.css). The panel and the word's fade both
-// finish just before that, so the swap from panel to section happens on a
-// screen that already looks like the section.
-const PHASES = { cubesEnd: 0.34, expandStart: 0.42, expandEnd: 0.62, fadeStart: 0.54, fadeEnd: 0.63 };
+// Where each phase sits in the pinned scroll, 0 to 1. The pin is short
+// (160svh, see .hero in App.css) so the whole hand-off takes about a screen
+// and a half of scrolling. The next section is placed so its top reaches the
+// top of the screen at 0.82 (the 0.82 in `.hero.is-staged + .section`). The
+// panel and the word's fade both finish just before that, so the swap from
+// panel to section happens on a screen that already looks like the section.
+// The section counts as arrived once its top is within 110px of the screen
+// top, which on a 900px screen is about 0.74, so everything here ends by 0.71.
+const PHASES = { cubesEnd: 0.38, expandStart: 0.44, expandEnd: 0.7, fadeStart: 0.6, fadeEnd: 0.71 };
 
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
 const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-
-const CHIPS = [
-  ['website', '#build'],
-  ['crm', '#build'],
-  ['automation', '#build'],
-  ['custom', '#build'],
-  ['contact', '#contact'],
-];
 
 /**
  * The opening, built from the brand banner (brand/whatsapp/banner-3d.html):
@@ -32,18 +27,18 @@ const CHIPS = [
  * The section is a tall track with a sticky stage. Its pinned scroll runs in
  * three phases (PHASES below):
  *   1. cubes: the mark bursts apart and every cube leaves the screen, while
- *      the links and text around the word fall away;
+ *      the text around the word falls away;
  *   2. hold: the wordmark alone, fully revealed;
  *   3. expand: the next section's panel grows out from behind the word until
- *      it fills the screen, and the word fades on it. The services section
- *      is placed (App.css) so that its top sits at the top of the screen at
- *      that moment; it stays hidden until then and then simply appears, its
- *      heading rising in place. The section never slides up from below.
+ *      it fills the screen, and the word fades on it. That section (the
+ *      enquiry form, StartSection.jsx) is placed so that its top sits at the
+ *      top of the screen at that moment; it stays hidden until then and then
+ *      simply appears in place. It never slides up from below.
  * The phases go to CSS as --pc, --pe and --pw, written straight onto the
  * stage, so React never re-renders while scrolling.
  *
  * Everything but the cubes is plain markup, so the prerendered page shows
- * the word, the links and the button before any script runs. The 3D layer
+ * the word, the line under it and the button before any script runs. The 3D layer
  * is a separate chunk loaded after mount.
  */
 export default function Hero() {
@@ -69,9 +64,9 @@ export default function Hero() {
     stage.style.setProperty('--pw', pw.toFixed(4));
 
     // The section takes over once its top has reached the nav. Measured, not
-    // derived from p, so a jump straight to #build lands with it visible.
-    const services = stage.parentElement?.nextElementSibling;
-    if (services) services.classList.toggle('is-arrived', services.getBoundingClientRect().top <= 110);
+    // derived from p, so a jump straight to it lands with it visible.
+    const next = stage.parentElement?.nextElementSibling;
+    if (next) next.classList.toggle('is-arrived', next.getBoundingClientRect().top <= 110);
 
     progressRef.current = pc;
     // Once every cube has left, there is nothing more to draw.
@@ -140,14 +135,6 @@ export default function Hero() {
       <div id="nav-sentinel" aria-hidden="true" />
 
       <div className="hero-stage" ref={stageRef}>
-        <nav className="hero-chips" aria-label={t('hero.chipsLabel')}>
-          {CHIPS.map(([key, href]) => (
-            <a key={key} className="hero-chip" href={href}>
-              {t(`hero.chips.${key}`)}
-            </a>
-          ))}
-        </nav>
-
         <div className="hero-orb hero-orb-a" aria-hidden="true" />
 
         {/* The next section's panel, growing from behind the word. */}
@@ -169,7 +156,7 @@ export default function Hero() {
 
         <div className="hero-foot">
           <p className="hero-sub">{t('hero.sub')}</p>
-          <a className="btn btn-lg hero-cta" href="#contact">
+          <a className="btn btn-lg hero-cta" href="#start">
             {t('nav.cta')}
           </a>
         </div>

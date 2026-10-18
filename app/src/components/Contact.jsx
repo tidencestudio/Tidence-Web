@@ -6,7 +6,6 @@ import {
   WhatsappLogo,
 } from '@phosphor-icons/react';
 import Reveal from './Reveal';
-import EnquiryForm from './EnquiryForm';
 import useScrollProgress from './useScrollProgress';
 import { useT } from '../prefs/hooks';
 import { EMAIL, INSTAGRAM, WHATSAPP, WHATSAPP_SHOWN, mailtoHref, whatsappHref, instagramHref } from '../contact';
@@ -30,9 +29,8 @@ const shown = (key, value) => {
  * The close of the journey: the slogan, set as large as the page allows and
  * filled with the tide, then every way to reach the studio as one list.
  *
- * Each channel row is a direct line out to that app. Beside them sits the
- * enquiry form, for anyone who would rather write it all down once; it moved
- * here when the hero became the 3D wordmark.
+ * Each channel row is a direct line out to that app. The enquiry form is
+ * its own section near the top of the page (StartSection.jsx).
  */
 export default function Contact() {
   const t = useT();
@@ -86,10 +84,6 @@ export default function Contact() {
             })}
           </ul>
         </div>
-
-        <Reveal className="contact-form">
-          <EnquiryForm />
-        </Reveal>
       </div>
     </section>
   );
