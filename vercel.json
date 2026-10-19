@@ -68,7 +68,7 @@
       ]
     },
     {
-      "source": "/(wave-sunset-.*|favicon.*|apple-touch-icon.png|og.jpg)",
+      "source": "/(wave-sunset-.*|favicon.*|icon-.*|apple-touch-icon.png|og.jpg|site.webmanifest)",
       "headers": [
         {
           "key": "Cache-Control",

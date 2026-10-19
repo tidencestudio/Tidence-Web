@@ -1,0 +1,17 @@
+{
+  "name": "Tidence",
+  "short_name": "Tidence",
+  "description": "A two-person digital studio building websites, CRMs, office automation and the everyday tools a business runs on.",
+  "start_url": "/en",
+  "scope": "/",
+  "display": "browser",
+  "lang": "en",
+  "background_color": "#F4FAF8",
+  "theme_color": "#F4FAF8",
+  "icons": [
+    { "src": "/favicon.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
