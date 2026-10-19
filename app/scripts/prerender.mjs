@@ -97,7 +97,7 @@ const jsonLdFor = (dict, locale) =>
   })
 
 // Every page in both languages: /en, /es, /en/privacy, /es/privacy, /en/terms,
-// /es/terms. English is the default; / redirects to /en (vercel.json).
+// /es/terms. English is the default; / redirects permanently to /en (vercel.json).
 const DICTS = { en, es }
 const OG_LOCALE = { en: 'en_US', es: 'es_ES' }
 const pathFor = (locale, doc) => `/${locale}${doc ? `/${doc}` : ''}`
