@@ -911,28 +911,6 @@ main {
   padding: 0.8rem 1.3rem;
 }
 
-/* Google's line, required when its badge is hidden. Quiet, under the note. */
-.hero-form-legal {
-  font-size: 0.75rem;
-  line-height: 1.5;
-  color: var(--fg-dim);
-}
-
-.hero-form-legal a {
-  color: inherit;
-  text-underline-offset: 2px;
-}
-
-.hero-form-legal a:hover {
-  color: var(--accent);
-}
-
-/* reCAPTCHA v3's floating badge. Hidden as Google allows, because the form
-   carries the notice above instead. */
-.grecaptcha-badge {
-  visibility: hidden;
-}
-
 .hero-form-note {
   font-size: 0.8125rem;
   line-height: 1.5;

@@ -30,8 +30,7 @@ export default {
             list: [
               'Vercel, que aloja el sitio y guarda registros estándar del servidor.',
               'Unsplash, que sirve las fotografías.',
-              'Vercel también ejecuta nuestro gestor de consultas: lo que envías por el formulario se revisa y se manda por correo a nuestra bandeja de Gmail (Google). El gestor no guarda ninguna copia.',
-              'Google reCAPTCHA, que se carga solo cuando empiezas a llenar el formulario de consulta, para distinguir a las personas del spam automático. Observa cómo se usa la página y recibe tu dirección IP, según la política de privacidad y los términos de Google.',
+              'Web3Forms, que entrega el formulario de consulta a nuestra bandeja. Solo recibe lo que envías.',
             ],
           },
           'No recibimos datos personales de ninguno de ellos ni los usamos para seguirte por internet.',
