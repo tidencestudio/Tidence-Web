@@ -24,6 +24,10 @@
   ],
   "rewrites": [
     {
+      "source": "/google49754703d50db677.html",
+      "destination": "/google49754703d50db677"
+    },
+    {
       "source": "/:lang(en|es)",
       "destination": "/:lang/index.html"
     },
@@ -33,6 +37,15 @@
     }
   ],
   "headers": [
+    {
+      "source": "/google49754703d50db677.html",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/html; charset=utf-8"
+        }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [
